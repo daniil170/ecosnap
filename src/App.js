@@ -1,102 +1,70 @@
-import React, { useState } from 'react';
-import './App.css';
+import React, { useState } from "react";
+// Импорт основных компонентов
+import Navbar from "./components/Navbar";
+import Hero from "./components/Hero";
+import Features from "./components/Features";
+import Footer from "./components/Footer";
+// Импорт модальных окон
+import AuthModal from "./components/AuthModal";
+import AboutModal from "./components/AboutModal"; // Тот самый импорт, который вызывал ошибку
 
-export default function App() {
-  // Состояние: авторизован ли пользователь (находится ли в личном кабинете)
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  
-  const [stats, setStats] = useState({
-    scans: 15,
-    recycled: 42,
-    co2: 2.5
-  });
+function App() {
+  // Состояния для открытия модалок
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
+  const [isAboutOpen, setIsAboutOpen] = useState(false);
 
-  const [language, setLanguage] = useState('RU');
+  // Функции-хендлеры
+  const openAuth = () => setIsAuthOpen(true);
+  const closeAuth = () => setIsAuthOpen(false);
 
-  // --- Компонент: Главная страница (SaaS Landing) ---
-  const renderLandingPage = () => (
-    <div className="landing-page">
-      <header className="navbar">
-        <div className="logo">🌿 EcoSnap</div>
-        <div className="nav-controls">
-          <select value={language} onChange={(e) => setLanguage(e.target.value)} className="language-selector">
-            <option value="RU">🇷🇺 RU</option>
-            <option value="EN">🇬🇧 EN</option>
-            <option value="DE">🇩🇪 DE</option>
-          </select>
-          <button className="login-btn" onClick={() => setIsLoggedIn(true)}>Войти / Кабинет</button>
-        </div>
-      </header>
+  const openAbout = () => setIsAboutOpen(true);
+  const closeAbout = () => setIsAboutOpen(false);
+
+  return (
+    <div className="min-h-screen bg-white">
+      {/* Передаем функцию авторизации в Навбар */}
+      <Navbar onAuthClick={openAuth} />
 
       <main>
-        {/* Главный блок */}
-        <section className="hero-section">
-          <h1>Умная сортировка мусора с помощью AI</h1>
-          <p>Сканируй отходы камерой смартфона, узнавай правила утилизации и спасай планету вместе с нами.</p>
-          <button className="cta-button" onClick={() => setIsLoggedIn(true)}>Начать бесплатно</button>
-        </section>
+        {/* В Hero передаем обе функции: и вход, и инфо о проекте */}
+        <Hero onAuthClick={openAuth} onAboutClick={openAbout} />
 
-        {/* Блок: Кто мы и что делаем */}
-        <section className="about-section">
-          <div className="about-card">
-            <h3>🌍 Кто мы такие?</h3>
-            <p>Мы — команда энтузиастов, создающая удобный инструмент для студентов и эко-осознанных людей. Мы помогаем разобраться в сложных правилах сортировки мусора.</p>
-          </div>
-          <div className="about-card">
-            <h3>📸 Что у нас можно делать?</h3>
-            <p>Достаточно навести камеру на предмет, и наш AI подскажет, в какой контейнер его выбросить. Выполняй задания и соревнуйся с друзьями!</p>
-          </div>
-          <div className="about-card">
-            <h3>🎯 Для чего мы?</h3>
-            <p>Наша цель — сделать переработку простой привычкой, снизить выбросы CO₂ и сделать мир чище.</p>
+        {/* Декоративная линия */}
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+        </div>
+
+        <Features />
+
+        {/* Секция CTA (Призыв к действию) */}
+        <section className="max-w-7xl mx-auto px-6 py-20">
+          <div className="bg-slate-900 rounded-[3rem] p-8 md:p-24 text-center relative overflow-hidden shadow-2xl">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/20 blur-[100px]" />
+            <div className="relative z-10 space-y-6">
+              <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
+                Сделаем планету чище вместе
+              </h2>
+              <p className="text-slate-400 max-w-lg mx-auto text-base md:text-lg">
+                Присоединяйся к тысячам людей, которые уже используют EcoSnap.
+              </p>
+              <button
+                onClick={openAuth}
+                className="w-full sm:w-auto bg-emerald-500 text-white px-10 py-4 rounded-2xl font-bold hover:bg-emerald-400 transition-all hover:scale-105 shadow-xl shadow-emerald-500/20"
+              >
+                Зарегистрироваться
+              </button>
+            </div>
           </div>
         </section>
       </main>
-    </div>
-  );
 
-  // --- Компонент: Личный кабинет (Dashboard) ---
-  const renderDashboard = () => (
-    <div className="dashboard">
-      <header className="navbar">
-        <div className="logo">🌿 EcoSnap Dashboard</div>
-        <button className="logout-btn" onClick={() => setIsLoggedIn(false)}>Выйти</button>
-      </header>
+      {/* Модальные окна */}
+      <AuthModal isOpen={isAuthOpen} onClose={closeAuth} />
+      <AboutModal isOpen={isAboutOpen} onClose={closeAbout} />
 
-      <div className="dashboard-content">
-        <h2>Привет, Эко-герой! 👋</h2>
-        
-        {/* Глобальная статистика кабинета */}
-        <div className="stats-grid">
-          <div className="stat-card">
-            <div className="stat-value">{stats.scans}</div>
-            <div className="stat-name">Всего сканов</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{stats.recycled}</div>
-            <div className="stat-name">Переработано</div>
-          </div>
-          <div className="stat-card">
-            <div className="stat-value">{stats.co2} кг</div>
-            <div className="stat-name">Сэкономлено CO₂</div>
-          </div>
-        </div>
-
-        {/* Основное действие */}
-        <div className="action-area">
-          <div className="camera-placeholder">
-            📷 Камера (AI сканер)
-          </div>
-          <button className="scan-button-large">Сканировать предмет</button>
-        </div>
-      </div>
-    </div>
-  );
-
-  // Отрисовываем либо кабинет, либо главную страницу
-  return (
-    <div className="app-wrapper">
-      {isLoggedIn ? renderDashboard() : renderLandingPage()}
+      <Footer />
     </div>
   );
 }
+
+export default App;
