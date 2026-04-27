@@ -9,6 +9,7 @@ import {
   Calendar,
   MapPin,
   Globe,
+  Contact, // Иконка для Имени/Фамилии
 } from "lucide-react";
 import { auth, googleProvider, db } from "../firebase";
 import { doc, setDoc, getDoc } from "firebase/firestore";
@@ -28,6 +29,8 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
+  const [firstName, setFirstName] = useState(""); // Новое поле
+  const [lastName, setLastName] = useState(""); // Новое поле
   const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
@@ -43,8 +46,10 @@ const AuthModal = ({ isOpen, onClose }) => {
       await setDoc(userRef, {
         uid: user.uid,
         email: user.email,
-        nickname:
+        displayName:
           additionalData.nickname || user.displayName || email.split("@")[0],
+        firstName: additionalData.firstName || "",
+        lastName: additionalData.lastName || "",
         birthDate: additionalData.birthDate || "",
         country: additionalData.country || "",
         city: additionalData.city || "",
@@ -52,6 +57,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         xp: 0,
         treesSaved: 0,
         level: 1,
+        photoGradient: "from-emerald-500 to-teal-600",
         createdAt: new Date(),
       });
     }
@@ -87,6 +93,8 @@ const AuthModal = ({ isOpen, onClose }) => {
         );
         await initializeUserData(result.user, {
           nickname,
+          firstName,
+          lastName,
           birthDate,
           country,
           city,
@@ -100,14 +108,12 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
-      {/* Фон-затемнение */}
       <div
         className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
         onClick={onClose}
       />
 
-      {/* Карточка модального окна */}
-      <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-300">
+      <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-300 shadow-emerald-500/10">
         <button
           onClick={onClose}
           className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors z-10"
@@ -132,9 +138,9 @@ const AuthModal = ({ isOpen, onClose }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Доп. поля только для регистрации */}
             {!isLogin && !isReset && (
               <>
+                {/* Никнейм */}
                 <div className="relative">
                   <User
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
@@ -142,13 +148,46 @@ const AuthModal = ({ isOpen, onClose }) => {
                   />
                   <input
                     type="text"
-                    placeholder="Никнейм"
+                    placeholder="Никнейм (ID)"
                     className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
                   />
                 </div>
+
+                {/* Имя и Фамилия */}
+                <div className="grid grid-cols-2 gap-3">
+                  <div className="relative">
+                    <Contact
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                      size={18}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Имя"
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                      required
+                    />
+                  </div>
+                  <div className="relative">
+                    <Contact
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                      size={18}
+                    />
+                    <input
+                      type="text"
+                      placeholder="Фамилия"
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                      required
+                    />
+                  </div>
+                </div>
+
                 <div className="relative">
                   <Calendar
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
@@ -162,6 +201,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     required
                   />
                 </div>
+
                 <div className="grid grid-cols-2 gap-3">
                   <div className="relative">
                     <Globe
@@ -195,7 +235,6 @@ const AuthModal = ({ isOpen, onClose }) => {
               </>
             )}
 
-            {/* Базовые поля */}
             <div className="relative">
               <Mail
                 className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
@@ -235,24 +274,11 @@ const AuthModal = ({ isOpen, onClose }) => {
               </div>
             )}
 
-            {isLogin && !isReset && (
-              <div className="text-right">
-                <button
-                  type="button"
-                  onClick={() => setIsReset(true)}
-                  className="text-xs font-semibold text-emerald-600 hover:text-emerald-700"
-                >
-                  Забыли пароль?
-                </button>
-              </div>
-            )}
-
             <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg mt-2">
               {isReset ? "Сбросить" : isLogin ? "Войти" : "Создать аккаунт"}
             </button>
           </form>
 
-          {/* Социальный вход */}
           {!isReset && (
             <>
               <div className="relative my-6">
@@ -265,7 +291,6 @@ const AuthModal = ({ isOpen, onClose }) => {
                   </span>
                 </div>
               </div>
-
               <button
                 type="button"
                 onClick={handleGoogleLogin}
