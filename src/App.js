@@ -5,9 +5,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { auth, db } from "./firebase"; // Добавили db
+import { auth, db } from "./firebase";
 import { onAuthStateChanged } from "firebase/auth";
-import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore"; // Для работы с профилем
+import { doc, getDoc, setDoc, onSnapshot, updateDoc } from "firebase/firestore";
 
 // Импорт основных компонентов
 import Navbar from "./components/Navbar";
@@ -18,10 +18,11 @@ import Scanner from "./components/Scanner";
 import AuthModal from "./components/AuthModal";
 import AboutModal from "./components/AboutModal";
 import Profile from "./pages/Profile/Profile";
+import Shop from "./pages/Shop/Shop"; // Импортируем новый компонент магазина
 
 function App() {
   const [user, setUser] = useState(null);
-  const [userProfile, setUserProfile] = useState(null); // Состояние для данных геймификации
+  const [userProfile, setUserProfile] = useState(null);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -31,28 +32,37 @@ function App() {
       setUser(currentUser);
 
       if (currentUser) {
-        // Ссылка на документ пользователя
         const userRef = doc(db, "users", currentUser.uid);
-
-        // 1. Проверяем, существует ли профиль, если нет — создаем
         const userSnap = await getDoc(userRef);
 
         if (!userSnap.exists()) {
+          // ЛОГИКА ДЛЯ НОВЫХ: Создаем профиль с нуля
           const newProfile = {
             uid: currentUser.uid,
             email: currentUser.email,
             xp: 0,
             level: 1,
-            ozone: 0,
+            ozone: 500, // Даем 500 для теста сразу
             streak: 0,
+            inventory: [],
             lastScanDate: null,
             createdAt: new Date().toISOString(),
           };
           await setDoc(userRef, newProfile);
           setUserProfile(newProfile);
+        } else {
+          // ЛОГИКА ДЛЯ СУЩЕСТВУЮЩИХ: Проверяем наличие новых полей
+          const userData = userSnap.data();
+          if (userData.ozone === undefined || !userData.inventory) {
+            console.log("Добавляем недостающие поля ozone и inventory...");
+            await updateDoc(userRef, {
+              ozone: userData.ozone ?? 500, // Начисляем 500 если поля не было
+              inventory: userData.inventory ?? []
+            });
+          }
         }
 
-        // 2. Подписываемся на обновления профиля в реальном времени
+        // Подписка на изменения (она подхватит данные сразу после updateDoc)
         const unsubProfile = onSnapshot(userRef, (doc) => {
           if (doc.exists()) {
             setUserProfile(doc.data());
@@ -75,7 +85,7 @@ function App() {
   const openAbout = () => setIsAboutOpen(true);
   const closeAbout = () => setIsAboutOpen(false);
 
-  if (loading) return null; // Или спиннер загрузки
+  if (loading) return null;
 
   return (
     <Router>
@@ -140,6 +150,25 @@ function App() {
                     profile={userProfile}
                   />
                   <Profile user={user} profile={userProfile} />
+                </>
+              ) : (
+                <Navigate to="/" />
+              )
+            }
+          />
+
+          {/* СТРАНИЦА МАГАЗИНА */}
+          <Route
+            path="/shop"
+            element={
+              user ? (
+                <>
+                  <Navbar
+                    onAuthClick={openAuth}
+                    user={user}
+                    profile={userProfile}
+                  />
+                  <Shop user={user} profile={userProfile} />
                 </>
               ) : (
                 <Navigate to="/" />

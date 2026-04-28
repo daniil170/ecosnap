@@ -7,6 +7,9 @@ import {
   arrayUnion,
 } from "firebase/firestore";
 
+/**
+ * Логика обработки сканирования (XP, O3, Стрики, Уровни)
+ */
 export const processEcoScan = async (userId, scanType) => {
   const userRef = doc(db, "users", userId);
   const userSnap = await getDoc(userRef);
@@ -14,12 +17,12 @@ export const processEcoScan = async (userId, scanType) => {
   if (!userSnap.exists()) return;
   const userData = userSnap.data();
 
-  // 1. Расширенные награды
+  // 1. Награды по типам мусора
   const rewards = {
     plastic: { xp: 20, ozone: 5 },
     paper: { xp: 10, ozone: 2 },
     glass: { xp: 30, ozone: 10 },
-    metal: { xp: 25, ozone: 7 }, // Добавили металл
+    metal: { xp: 25, ozone: 7 },
   };
 
   const { xp: addXp, ozone: addOzone } = rewards[scanType] || {
@@ -27,7 +30,7 @@ export const processEcoScan = async (userId, scanType) => {
     ozone: 1,
   };
 
-  // 2. Логика Стрика
+  // 2. Логика Стрика (Ежедневная серия)
   const today = new Date().toISOString().split("T")[0];
   const lastDate = userData.lastScanDate;
   let newStreak = userData.streak || 0;
@@ -44,25 +47,24 @@ export const processEcoScan = async (userId, scanType) => {
     }
   }
 
-  // 3. Расчет уровня (синхронно с Profile.jsx: 100 XP на уровень)
+  // 3. Расчет уровня
   const totalXp = (userData.xp || 0) + addXp;
   const newLevel = Math.floor(totalXp / 100) + 1;
 
-  // 4. ПРОВЕРКА ДОСТИЖЕНИЙ (Achievements)
+  // 4. Проверка новых достижений
   const newAchievements = [];
 
-  // Ачивка за первый скан
   if (!userData.achievements?.includes("first_scan")) {
     newAchievements.push("first_scan");
   }
 
-  // Ачивки за стрики
   const streakMilestones = {
     10: "streak_10",
     50: "streak_50",
     100: "streak_100",
     300: "streak_300",
   };
+
   if (
     streakMilestones[newStreak] &&
     !userData.achievements?.includes(streakMilestones[newStreak])
@@ -70,23 +72,21 @@ export const processEcoScan = async (userId, scanType) => {
     newAchievements.push(streakMilestones[newStreak]);
   }
 
-  // Ачивки за уровни
   if (newLevel >= 10 && !userData.achievements?.includes("lvl_10"))
     newAchievements.push("lvl_10");
   if (newLevel >= 50 && !userData.achievements?.includes("lvl_50"))
     newAchievements.push("lvl_50");
 
-  // 5. Обновление в БД
+  // 5. Обновление в Firestore
   const updateData = {
     xp: increment(addXp),
     ozone: increment(addOzone),
     streak: newStreak,
     level: newLevel,
     lastScanDate: today,
-    scannedItems: increment(1), // Считаем общее кол-во сканов
+    scannedItems: increment(1),
   };
 
-  // Если есть новые ачивки, добавляем их в массив через arrayUnion
   if (newAchievements.length > 0) {
     updateData.achievements = arrayUnion(...newAchievements);
   }
@@ -100,5 +100,39 @@ export const processEcoScan = async (userId, scanType) => {
     newStreak,
     leveledUp: newLevel > (userData.level || 1),
     newAchievements,
+  };
+};
+
+/**
+ * НОВАЯ ФУНКЦИЯ: Покупка товара в магазине
+ */
+export const buyShopItem = async (userId, item) => {
+  const userRef = doc(db, "users", userId);
+  const userSnap = await getDoc(userRef);
+
+  if (!userSnap.exists()) throw new Error("Пользователь не найден");
+
+  const userData = userSnap.data();
+  const userOzone = userData.ozone || 0;
+
+  // Проверка: хватает ли валюты
+  if (userOzone < item.price) {
+    throw new Error("Недостаточно O3 для покупки");
+  }
+
+  // Проверка: нет ли уже этого товара (для цифровых аватаров/рамок)
+  if (userData.inventory?.includes(item.id)) {
+    throw new Error("У вас уже есть этот предмет");
+  }
+
+  // Списываем O3 и добавляем в инвентарь
+  await updateDoc(userRef, {
+    ozone: increment(-item.price),
+    inventory: arrayUnion(item.id),
+  });
+
+  return {
+    success: true,
+    remainingOzone: userOzone - item.price,
   };
 };
