@@ -5,8 +5,9 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import { auth } from "./firebase";
+import { auth, db } from "./firebase"; // Добавили db
 import { onAuthStateChanged } from "firebase/auth";
+import { doc, getDoc, setDoc, onSnapshot } from "firebase/firestore"; // Для работы с профилем
 
 // Импорт основных компонентов
 import Navbar from "./components/Navbar";
@@ -16,17 +17,56 @@ import Footer from "./components/Footer";
 import Scanner from "./components/Scanner";
 import AuthModal from "./components/AuthModal";
 import AboutModal from "./components/AboutModal";
-import Profile from "./pages/Profile/Profile"; // НОВЫЙ ИМПОРТ
+import Profile from "./pages/Profile/Profile";
 
 function App() {
   const [user, setUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null); // Состояние для данных геймификации
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [isAboutOpen, setIsAboutOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
+
+      if (currentUser) {
+        // Ссылка на документ пользователя
+        const userRef = doc(db, "users", currentUser.uid);
+
+        // 1. Проверяем, существует ли профиль, если нет — создаем
+        const userSnap = await getDoc(userRef);
+
+        if (!userSnap.exists()) {
+          const newProfile = {
+            uid: currentUser.uid,
+            email: currentUser.email,
+            xp: 0,
+            level: 1,
+            ozone: 0,
+            streak: 0,
+            lastScanDate: null,
+            createdAt: new Date().toISOString(),
+          };
+          await setDoc(userRef, newProfile);
+          setUserProfile(newProfile);
+        }
+
+        // 2. Подписываемся на обновления профиля в реальном времени
+        const unsubProfile = onSnapshot(userRef, (doc) => {
+          if (doc.exists()) {
+            setUserProfile(doc.data());
+          }
+        });
+
+        setLoading(false);
+        return () => unsubProfile();
+      } else {
+        setUserProfile(null);
+        setLoading(false);
+      }
     });
+
     return () => unsubscribe();
   }, []);
 
@@ -34,6 +74,8 @@ function App() {
   const closeAuth = () => setIsAuthOpen(false);
   const openAbout = () => setIsAboutOpen(true);
   const closeAbout = () => setIsAboutOpen(false);
+
+  if (loading) return null; // Или спиннер загрузки
 
   return (
     <Router>
@@ -44,7 +86,11 @@ function App() {
             path="/"
             element={
               <>
-                <Navbar onAuthClick={openAuth} user={user} />
+                <Navbar
+                  onAuthClick={openAuth}
+                  user={user}
+                  profile={userProfile}
+                />
                 <main>
                   <Hero
                     onAuthClick={openAuth}
@@ -62,7 +108,7 @@ function App() {
                       <div className="relative z-10 space-y-6">
                         <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
                           {user
-                            ? "Рады видеть вас снова!"
+                            ? `Рады видеть вас, уровень ${userProfile?.level || 1}!`
                             : "Сделаем планету чище вместе"}
                         </h2>
                         {!user && (
@@ -88,8 +134,12 @@ function App() {
             element={
               user ? (
                 <>
-                  <Navbar onAuthClick={openAuth} user={user} />
-                  <Profile user={user} />
+                  <Navbar
+                    onAuthClick={openAuth}
+                    user={user}
+                    profile={userProfile}
+                  />
+                  <Profile user={user} profile={userProfile} />
                 </>
               ) : (
                 <Navigate to="/" />
@@ -100,7 +150,13 @@ function App() {
           {/* СТРАНИЦА СКАНЕРА */}
           <Route
             path="/scanner"
-            element={user ? <Scanner /> : <Navigate to="/" />}
+            element={
+              user ? (
+                <Scanner user={user} profile={userProfile} />
+              ) : (
+                <Navigate to="/" />
+              )
+            }
           />
         </Routes>
 
