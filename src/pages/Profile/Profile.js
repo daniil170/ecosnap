@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { ACHIEVEMENTS_LIST } from "../../data/achievements";
 import { Link } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, onSnapshot, updateDoc } from "firebase/firestore";
@@ -18,7 +19,10 @@ import {
   ChevronUp,
   Loader2,
   Calendar,
+  Package,
 } from "lucide-react";
+import { getItemById } from "../../data/shopItems";
+import { applyItemEffect } from "../../data/itemEffects";
 
 const avatarGradients = [
   "from-emerald-500 to-teal-600",
@@ -26,129 +30,6 @@ const avatarGradients = [
   "from-orange-500 to-red-600",
   "from-purple-500 to-pink-600",
   "from-slate-700 to-slate-900",
-];
-
-const ACHIEVEMENTS_LIST = [
-  {
-    id: "streak_10",
-    icon: "🔟",
-    title: "10 дней",
-    desc: "Вы с EcoSnap уже 10 дней подряд!",
-  },
-  {
-    id: "streak_50",
-    icon: "🥈",
-    title: "Полгорода",
-    desc: "50 дней активной заботы об экологии",
-  },
-  {
-    id: "streak_100",
-    icon: "🥇",
-    title: "Центурион",
-    desc: "100 дней! Вами гордится планета",
-  },
-  {
-    id: "streak_300",
-    icon: "💎",
-    title: "Эко-Бог",
-    desc: "300 дней. Статус легенды достигнут",
-  },
-  {
-    id: "first_scan",
-    icon: "🌱",
-    title: "Старт",
-    desc: "Ваш первый вклад в чистоту планеты",
-  },
-  {
-    id: "plastic_10",
-    icon: "🥤",
-    title: "Пластик-стоп",
-    desc: "10 объектов спасено от свалки",
-  },
-  {
-    id: "glass_10",
-    icon: "🍾",
-    title: "Стеклянный глаз",
-    desc: "10 стеклянных бутылок собрано",
-  },
-  {
-    id: "paper_10",
-    icon: "📦",
-    title: "Бумажный тигр",
-    desc: "10 картонных упаковок переработано",
-  },
-  {
-    id: "metal_10",
-    icon: "🥫",
-    title: "Железный чел",
-    desc: "10 жестяных банок в деле",
-  },
-  {
-    id: "rich_100",
-    icon: "💰",
-    title: "Сотка",
-    desc: "Вы заработали первые 100 O3",
-  },
-  {
-    id: "rich_1000",
-    icon: "👑",
-    title: "Миллионер",
-    desc: "На вашем счету более 1000 O3",
-  },
-  {
-    id: "lvl_10",
-    icon: "🎖️",
-    title: "Десятка",
-    desc: "Вы достигли 10 уровня прогресса",
-  },
-  {
-    id: "lvl_50",
-    icon: "🚀",
-    title: "На Марс!",
-    desc: "Вы достигли 50 уровня!",
-  },
-  {
-    id: "night_owl",
-    icon: "🦉",
-    title: "Сова",
-    desc: "Сканирование мусора в ночное время",
-  },
-  {
-    id: "early_bird",
-    icon: "☀️",
-    title: "Пташка",
-    desc: "Сканирование мусора до 8 утра",
-  },
-  {
-    id: "traveler",
-    icon: "🌍",
-    title: "Турист",
-    desc: "Скан в другом городе или стране",
-  },
-  {
-    id: "fast_scanner",
-    icon: "⚡",
-    title: "Скорость",
-    desc: "3 скана менее чем за минуту",
-  },
-  {
-    id: "eco_hero",
-    icon: "🦸‍♂️",
-    title: "Герой",
-    desc: "Спасено более 10 виртуальных деревьев",
-  },
-  {
-    id: "perfect_profile",
-    icon: "🖼️",
-    title: "Перфекционист",
-    desc: "Все данные профиля заполнены",
-  },
-  {
-    id: "inviter",
-    icon: "🤝",
-    title: "Друг",
-    desc: "Ваш реферальный код был использован",
-  },
 ];
 
 const Profile = ({ user }) => {
@@ -159,6 +40,7 @@ const Profile = ({ user }) => {
     ozone: 0,
     streak: 0,
     achievements: [],
+    inventory: [], // Убедись, что это поле есть в БД
     firstName: "",
     lastName: "",
     city: "",
@@ -169,10 +51,35 @@ const Profile = ({ user }) => {
   });
 
   const [isEditing, setIsEditing] = useState(false);
+  const [showInventory, setShowInventory] = useState(false); // Состояние для модалки
   const [uploading, setUploading] = useState(false);
   const [selectedAch, setSelectedAch] = useState(null);
   const [showAllAch, setShowAllAch] = useState(false);
   const [editFields, setEditFields] = useState({});
+
+  // Логика получения данных инвентаря
+  const myInventory = (userData.inventory || [])
+    .map((id) => getItemById(id))
+    .filter((item) => item !== undefined);
+
+  const handleEquip = async (item) => {
+    if (!user?.uid) return;
+    const userRef = doc(db, "users", user.uid);
+
+    try {
+      // Применяем эффект и обновляем Firebase
+      applyItemEffect(item, userData, async (updatedUser) => {
+        await updateDoc(userRef, {
+          ...updatedUser,
+          [`activeItems.${item.category}`]: item.id,
+        });
+        alert(`Эффект "${item.name}" применен!`);
+      });
+    } catch (e) {
+      console.error(e);
+      alert("Ошибка применения");
+    }
+  };
 
   useEffect(() => {
     if (!user?.uid) return;
@@ -236,10 +143,22 @@ const Profile = ({ user }) => {
     <div className="min-h-screen bg-slate-50 pt-24 pb-12 font-sans text-slate-900">
       <div className="max-w-6xl mx-auto px-6">
         {/* HEADER */}
-        <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-8 flex flex-col md:flex-row items-center gap-10 relative">
+        <div
+          className={`bg-white rounded-[2.5rem] p-8 shadow-sm border border-slate-100 mb-8 flex flex-col md:flex-row items-center gap-10 relative
+  ${
+    userData.profileBackground === "animated_space"
+      ? "bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 text-white"
+      : ""
+  }
+`}
+        >
           <div className="relative flex-shrink-0">
             <div
-              className={`w-40 h-40 rounded-[2.5rem] overflow-hidden shadow-2xl bg-gradient-to-tr ${userData.photoGradient} p-1`}
+              className={`w-40 h-40 rounded-[2.5rem] overflow-hidden shadow-2xl ${
+                userData.profileFrame === "gold"
+                  ? "bg-yellow-400"
+                  : `bg-gradient-to-tr ${userData.photoGradient}`
+              } p-1`}
             >
               <div className="w-full h-full rounded-[2.2rem] overflow-hidden bg-white/10 backdrop-blur-md flex items-center justify-center border border-white/20">
                 {userData.photoURL ? (
@@ -264,9 +183,34 @@ const Profile = ({ user }) => {
           </div>
 
           <div className="flex-1 text-center md:text-left">
-            <h1 className="text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1
+              className={`text-3xl font-extrabold tracking-tight
+  ${
+    userData.nicknameColor === "rainbow"
+      ? "bg-gradient-to-r from-pink-500 via-yellow-500 to-blue-500 bg-clip-text text-transparent"
+      : "text-slate-900"
+  }`}
+            >
               {userData.firstName} {userData.lastName}
             </h1>
+
+            <div className="flex gap-2 mt-2 flex-wrap justify-center md:justify-start">
+              {userData.badges?.includes("recycle") && (
+                <span className="text-xs bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full font-bold">
+                  ♻️ Эко
+                </span>
+              )}
+              {userData.badges?.includes("founder") && (
+                <span className="text-xs bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full font-bold">
+                  👑 Founder
+                </span>
+              )}
+            </div>
+            {userData.title && (
+              <div className="mt-1 text-xs font-black uppercase text-emerald-500">
+                {userData.title}
+              </div>
+            )}
             <div className="flex items-center gap-2 justify-center md:justify-start text-emerald-600 font-bold text-sm mt-1">
               <span>@{userData.displayName || "eco_hero"}</span>
               <span className="w-1 h-1 bg-slate-300 rounded-full" />
@@ -300,7 +244,6 @@ const Profile = ({ user }) => {
 
         <div className="grid lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            {/* STATS */}
             <div className="grid grid-cols-3 gap-4">
               {[
                 {
@@ -344,7 +287,6 @@ const Profile = ({ user }) => {
               ))}
             </div>
 
-            {/* ACHIEVEMENTS (COLLAPSIBLE) */}
             <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
               <div className="flex items-center justify-between mb-8">
                 <h3 className="text-xl font-extrabold flex items-center gap-2 uppercase tracking-tight text-orange-400">
@@ -385,7 +327,6 @@ const Profile = ({ user }) => {
               </div>
             </div>
 
-            {/* HISTORY */}
             <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
               <h3 className="text-xl font-extrabold flex items-center gap-2 mb-6 uppercase tracking-tight text-emerald-500">
                 <History size={24} /> История активности
@@ -420,9 +361,7 @@ const Profile = ({ user }) => {
             </div>
           </div>
 
-          {/* SIDEBAR */}
           <div className="space-y-6">
-            {/* SCANNER WIDGET */}
             <Link
               to="/scanner"
               className="block bg-slate-900 p-8 rounded-[2.5rem] text-white relative overflow-hidden group shadow-2xl transition-all hover:-translate-y-2"
@@ -443,7 +382,7 @@ const Profile = ({ user }) => {
               </div>
             </Link>
 
-            {/* LEADERBOARD WIDGET */}
+            {/* LEADERBOARD */}
             <div className="bg-emerald-500 p-8 rounded-[2.5rem] text-white shadow-xl shadow-emerald-100 relative overflow-hidden">
               <div className="absolute -bottom-6 -right-6 text-emerald-400/30">
                 <Trophy size={120} />
@@ -464,13 +403,13 @@ const Profile = ({ user }) => {
                 Открыть таблицу
               </button>
             </div>
+
+            {/* SHOP */}
             <Link
               to="/shop"
               className="block bg-gradient-to-br from-orange-400 to-orange-600 p-8 rounded-[2.5rem] text-white relative overflow-hidden group shadow-xl transition-all hover:-translate-y-2"
             >
-              <div className="absolute -bottom-4 -left-4 text-white/20 rotate-12">
-                <Zap size={100} />
-              </div>
+              {/* ... (код SHOP link) ... */}
               <div className="relative z-10">
                 <div className="flex justify-between items-start mb-6">
                   <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center">
@@ -489,11 +428,30 @@ const Profile = ({ user }) => {
                 </p>
               </div>
             </Link>
+
+            {/* INVENTORY WIDGET */}
+            <button
+              onClick={() => setShowInventory(true)}
+              className="w-full bg-indigo-500 p-8 rounded-[2.5rem] text-white shadow-xl shadow-indigo-100 relative overflow-hidden transition-all hover:-translate-y-2 active:scale-95 text-left"
+            >
+              <div className="absolute -bottom-4 -left-4 text-white/20 rotate-12">
+                <Package size={100} />
+              </div>
+              <div className="relative z-10">
+                <div className="w-12 h-12 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6">
+                  <Package size={24} className="text-white" />
+                </div>
+                <h3 className="text-xl font-bold mb-1 italic">Инвентарь</h3>
+                <p className="text-indigo-100 text-[10px] font-black uppercase tracking-widest">
+                  Твои предметы: {myInventory.length}
+                </p>
+              </div>
+            </button>
           </div>
         </div>
       </div>
 
-      {/* ACHIEVEMENT MODAL */}
+      {/* MODALS */}
       {selectedAch && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[70] flex items-center justify-center p-4">
           <div className="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl text-center relative animate-in zoom-in duration-300">
@@ -521,8 +479,6 @@ const Profile = ({ user }) => {
           </div>
         </div>
       )}
-
-      {/* EDIT PROFILE MODAL */}
       {isEditing && (
         <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-6">
           <div className="bg-white rounded-[2.5rem] p-10 max-w-lg w-full shadow-2xl relative max-h-[90vh] overflow-y-auto custom-scrollbar border border-white/20">
@@ -661,6 +617,86 @@ const Profile = ({ user }) => {
                 </button>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* INVENTORY MODAL */}
+      {showInventory && (
+        <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-md z-50 flex items-center justify-center p-6">
+          <div className="bg-white rounded-[2.5rem] p-10 max-w-2xl w-full shadow-2xl relative max-h-[80vh] overflow-y-auto border border-white/20">
+            <button
+              onClick={() => setShowInventory(false)}
+              className="absolute top-8 right-8 text-slate-300 hover:text-slate-900 transition-all"
+            >
+              <X size={28} />
+            </button>
+
+            <h2 className="text-2xl font-black mb-8 uppercase tracking-tighter">
+              Твой инвентарь
+            </h2>
+
+            {myInventory.length > 0 ? (
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                {/* Сортируем: сначала активные, потом остальные */}
+                {[...myInventory]
+                  .sort((a, b) => {
+                    const isAActive =
+                      userData.activeItems?.[a.category] === a.id;
+                    const isBActive =
+                      userData.activeItems?.[b.category] === b.id;
+                    return isBActive - isAActive;
+                  })
+                  .map((item) => {
+                    const isEquipped =
+                      userData.activeItems?.[item.category] === item.id;
+
+                    return (
+                      <div
+                        key={item.id}
+                        className={`p-6 rounded-[2rem] border-2 flex flex-col items-center text-center transition-all relative ${
+                          isEquipped
+                            ? "border-emerald-500 bg-emerald-50/30"
+                            : "border-slate-100 bg-slate-50"
+                        }`}
+                      >
+                        {/* Бейдж, если предмет активен */}
+                        {isEquipped && (
+                          <div className="absolute top-3 right-3 bg-emerald-500 text-white text-[9px] font-black px-2 py-1 rounded-full uppercase tracking-widest shadow-lg">
+                            Активно
+                          </div>
+                        )}
+
+                        <div className="text-4xl mb-4 bg-white p-3 rounded-2xl shadow-sm">
+                          {item.icon}
+                        </div>
+                        <h4 className="font-bold text-slate-900 text-sm mb-1">
+                          {item.name}
+                        </h4>
+                        <p className="text-[10px] text-slate-400 font-medium mb-4">
+                          {item.desc}
+                        </p>
+
+                        {item.category === "digital" && (
+                          <button
+                            onClick={() => handleEquip(item)}
+                            className={`w-full py-3 rounded-xl font-black uppercase text-[10px] transition-all ${
+                              isEquipped
+                                ? "bg-emerald-500 text-white opacity-50 cursor-default" // Немного приглушаем кнопку, если уже активно
+                                : "bg-white border border-emerald-500 text-emerald-500 hover:bg-emerald-500 hover:text-white"
+                            }`}
+                          >
+                            {isEquipped ? "Выбрано" : "Применить"}
+                          </button>
+                        )}
+                      </div>
+                    );
+                  })}
+              </div>
+            ) : (
+              /* Блок пустого инвентаря */
+              <div className="text-center py-12">...</div>
+            )}
           </div>
         </div>
       )}

@@ -1,0 +1,140 @@
+export const SHOP_ITEMS = [
+  // 🟢 COMMON
+  {
+    id: "eco_sticker_pack",
+    name: "Эко-стикеры",
+    price: 50,
+    rarity: "common",
+    category: "digital",
+    icon: "🌿",
+    desc: "Набор стикеров для профиля",
+  },
+  {
+    id: "green_theme",
+    name: "Зелёная тема",
+    price: 80,
+    rarity: "common",
+    category: "digital",
+    icon: "🟢",
+    desc: "Базовая эко-тема профиля",
+  },
+  {
+    id: "recycle_badge",
+    name: "Бейдж переработки",
+    price: 100,
+    rarity: "common",
+    category: "digital",
+    icon: "♻️",
+    desc: "Показывает твою активность",
+  },
+
+  // 🔵 RARE
+  {
+    id: "animated_avatar",
+    name: "Анимированный аватар",
+    price: 250,
+    rarity: "rare",
+    category: "digital",
+    icon: "🎭",
+    desc: "Живой аватар для профиля",
+  },
+  {
+    id: "eco_trail",
+    name: "Эко-эффект",
+    price: 300,
+    rarity: "rare",
+    category: "digital",
+    icon: "✨",
+    desc: "След из листьев при активности",
+  },
+  {
+    id: "nickname_color",
+    name: "Цветной ник",
+    price: 200,
+    rarity: "rare",
+    category: "digital",
+    icon: "🎨",
+    desc: "Выделяйся среди других",
+  },
+
+  // 🟣 EPIC
+  {
+    id: "golden_frame",
+    name: "Золотая рамка",
+    price: 600,
+    rarity: "epic",
+    category: "digital",
+    icon: "✨",
+    desc: "Рамка VIP-пользователя",
+  },
+  {
+    id: "profile_background_animated",
+    name: "Анимированный фон",
+    price: 800,
+    rarity: "epic",
+    category: "digital",
+    icon: "🌌",
+    desc: "Двигающийся фон профиля",
+  },
+  {
+    id: "eco_title",
+    name: "Титул 'Эко-герой'",
+    price: 500,
+    rarity: "epic",
+    category: "digital",
+    icon: "🏅",
+    desc: "Особый статус в профиле",
+  },
+
+  // 🟠 LEGENDARY
+  {
+    id: "eco_tote",
+    name: "Эко-сумка",
+    price: 1200,
+    rarity: "legendary",
+    category: "real",
+    icon: "🛍️",
+    desc: "Реальный мерч",
+  },
+  {
+    id: "tree_donation",
+    name: "Посадка дерева",
+    price: 1500,
+    rarity: "legendary",
+    category: "charity",
+    icon: "🌳",
+    desc: "Ты реально помогаешь планете",
+  },
+  {
+    id: "eco_hoodie",
+    name: "Эко-худи",
+    price: 2000,
+    rarity: "legendary",
+    category: "real",
+    icon: "👕",
+    desc: "Мерч для топ пользователей",
+  },
+
+  // 🔴 MYTHIC
+  {
+    id: "forest_sponsor",
+    name: "Спонсор леса",
+    price: 4000,
+    rarity: "mythic",
+    category: "charity",
+    icon: "🌲",
+    desc: "Финансирование посадки нескольких деревьев",
+  },
+  {
+    id: "founder_badge",
+    name: "Бейдж основателя",
+    price: 3000,
+    rarity: "mythic",
+    category: "digital",
+    icon: "👑",
+    desc: "Уникальный статус (ограниченный)",
+  },
+];
+
+export const getItemById = (id) =>
+  SHOP_ITEMS.find((item) => item.id === id);

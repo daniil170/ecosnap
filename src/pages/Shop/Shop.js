@@ -1,60 +1,65 @@
 import React, { useState } from "react";
+import { SHOP_ITEMS } from "../../data/shopItems";
+import { applyItemEffect } from "../../data/itemEffects"; // Убедись, что путь верный
 import { db } from "../../firebase";
 import { doc, updateDoc, arrayUnion, increment } from "firebase/firestore";
-import { ShoppingBag, Zap, CheckCircle, ArrowLeft } from "lucide-react";
+import { Zap, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 
-const SHOP_ITEMS = [
-  {
-    id: "gradient_midnight",
-    name: 'Градиент "Полночь"',
-    price: 100,
-    category: "digital",
-    icon: "🌌",
-    desc: "Эксклюзивный стиль для профиля",
-  },
-  {
-    id: "golden_frame",
-    name: "Золотая рамка",
-    price: 500,
-    category: "digital",
-    icon: "✨",
-    desc: "Рамка VIP-пользователя",
-  },
-  {
-    id: "eco_tote",
-    name: "Эко-сумка",
-    price: 1000,
-    category: "real",
-    icon: "🛍️",
-    desc: "Стильный шопер из хлопка",
-  },
-  {
-    id: "tree_donation",
-    name: "Посадка дерева",
-    price: 2000,
-    category: "charity",
-    icon: "🌳",
-    desc: "Реальный вклад в экологию",
-  },
-];
+// Настройки стилей для редкости
+const RARITY_STYLES = {
+  common: "border-slate-200 bg-slate-50",
+  rare: "border-blue-200 bg-blue-50/30",
+  epic: "border-purple-200 bg-purple-50/30",
+  legendary: "border-yellow-200 bg-yellow-50/30",
+  mythic: "border-red-200 bg-red-50/30",
+};
 
 const Shop = ({ user, profile }) => {
   const [loading, setLoading] = useState(null);
+  const [activeTab, setActiveTab] = useState("all");
+
+  // Фильтрация товаров
+  const filteredItems =
+    activeTab === "all"
+      ? SHOP_ITEMS
+      : SHOP_ITEMS.filter((item) => item.category === activeTab);
 
   const handlePurchase = async (item) => {
     if (!user?.uid || (profile.ozone || 0) < item.price) return;
-
     setLoading(item.id);
     try {
-      const userRef = doc(db, "users", user.uid);
-      await updateDoc(userRef, {
+      await updateDoc(doc(db, "users", user.uid), {
         ozone: increment(-item.price),
         inventory: arrayUnion(item.id),
       });
       alert("Покупка успешна!");
-    } catch (error) {
-      console.error(error);
+    } catch (e) {
+      alert("Ошибка покупки");
+    }
+    setLoading(null);
+  };
+
+  const handleEquip = async (item) => {
+    if (!user?.uid) return;
+    setLoading(item.id);
+
+    try {
+      const userRef = doc(db, "users", user.uid);
+
+      // Используем твою функцию эффектов
+      // Мы передаем callback, который обновит Firebase данными из эффекта
+      applyItemEffect(item, profile, async (updatedUser) => {
+        // Мы сохраняем эффект + помечаем товар как активный
+        await updateDoc(userRef, {
+          ...updatedUser, // Все изменения, которые вернула функция эффектов
+          [`activeItems.${item.category}`]: item.id, // Помечаем как активный
+        });
+        alert(`Эффект "${item.name}" применен!`);
+      });
+    } catch (e) {
+      console.error(e);
+      alert("Ошибка применения");
     } finally {
       setLoading(null);
     }
@@ -63,92 +68,76 @@ const Shop = ({ user, profile }) => {
   return (
     <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
       <div className="max-w-4xl mx-auto">
+        {/* Header и Баланс */}
         <div className="flex items-center justify-between mb-8">
           <Link
             to="/profile"
-            className="flex items-center gap-2 text-slate-500 hover:text-slate-900 transition-colors"
+            className="flex items-center gap-2 text-slate-500 hover:text-slate-900"
           >
-            <ArrowLeft size={20} />
-            <span className="font-bold uppercase text-xs tracking-widest">
-              Назад в профиль
-            </span>
+            <ArrowLeft size={20} />{" "}
+            <span className="font-bold uppercase text-xs">Назад</span>
           </Link>
           <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
-            <div className="w-8 h-8 bg-orange-100 text-orange-500 rounded-lg flex items-center justify-center">
-              <Zap size={18} className="fill-orange-500" />
-            </div>
-            <div>
-              <p className="text-[10px] font-black text-slate-400 uppercase tracking-tight">
-                Ваш баланс
-              </p>
-              <p className="text-lg font-black text-slate-900">
-                {profile.ozone || 0} O3
-              </p>
-            </div>
+            <Zap size={18} className="text-orange-500 fill-orange-500" />
+            <span className="font-black text-lg">{profile.ozone || 0} O3</span>
           </div>
         </div>
 
-        <h1 className="text-4xl font-black text-slate-900 mb-2 italic uppercase">
-          EcoMarket
-        </h1>
-        <p className="text-slate-500 mb-10 text-sm">
-          Трать накопленные баллы на эксклюзивные бонусы
-        </p>
+        {/* Табы */}
+        <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
+          {["all", "digital", "real", "charity"].map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`px-6 py-2 rounded-full font-bold uppercase text-xs transition-all ${activeTab === tab ? "bg-slate-900 text-white" : "bg-white text-slate-400"}`}
+            >
+              {tab}
+            </button>
+          ))}
+        </div>
 
+        {/* Список товаров */}
         <div className="grid md:grid-cols-2 gap-6">
-          {SHOP_ITEMS.map((item) => {
+          {filteredItems.map((item) => {
             const isOwned = profile.inventory?.includes(item.id);
+            const isEquipped = profile.activeItems?.[item.category] === item.id;
             const canAfford = (profile.ozone || 0) >= item.price;
 
             return (
               <div
                 key={item.id}
-                className="bg-white p-6 rounded-[2.5rem] border border-slate-100 shadow-sm relative overflow-hidden group"
+                className={`p-6 rounded-[2.5rem] border-2 shadow-sm transition-all ${RARITY_STYLES[item.rarity] || "bg-white"}`}
               >
-                <div className="flex justify-between items-start relative z-10">
-                  <div className="text-4xl mb-4">{item.icon}</div>
-                  <div className="text-right">
-                    <span className="text-[10px] font-black uppercase px-3 py-1 bg-slate-100 rounded-full text-slate-500">
-                      {item.category === "digital"
-                        ? "Цифровой"
-                        : item.category === "real"
-                          ? "Товар"
-                          : "Миссия"}
-                    </span>
-                  </div>
+                <div className="flex justify-between items-start mb-4">
+                  <div className="text-4xl">{item.icon}</div>
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                    {item.rarity}
+                  </span>
                 </div>
-
-                <h3 className="text-xl font-bold text-slate-900 mb-1">
-                  {item.name}
-                </h3>
+                <h3 className="font-bold text-lg">{item.name}</h3>
                 <p className="text-slate-500 text-sm mb-6">{item.desc}</p>
 
-                <button
-                  disabled={isOwned || !canAfford || loading === item.id}
-                  onClick={() => handlePurchase(item)}
-                  className={`w-full py-4 rounded-2xl font-black uppercase tracking-widest text-sm transition-all flex items-center justify-center gap-2
-                    ${
-                      isOwned
-                        ? "bg-emerald-50 text-emerald-500 cursor-default"
-                        : canAfford
-                          ? "bg-slate-900 text-white hover:shadow-xl hover:-translate-y-1 active:scale-95"
-                          : "bg-slate-100 text-slate-400 cursor-not-allowed"
-                    }`}
-                >
-                  {isOwned ? (
-                    <>
-                      <CheckCircle size={18} /> Куплено
-                    </>
-                  ) : (
-                    <>
-                      <Zap
-                        size={18}
-                        className={canAfford ? "fill-white" : ""}
-                      />{" "}
-                      {item.price} O3
-                    </>
-                  )}
-                </button>
+                {isOwned ? (
+                  <button
+                    disabled={loading === item.id}
+                    onClick={() => handleEquip(item)}
+                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${isEquipped ? "bg-emerald-500 text-white" : "bg-white border border-emerald-500 text-emerald-500"}`}
+                  >
+                    {loading === item.id
+                      ? "Применяем..."
+                      : isEquipped
+                        ? "Активно"
+                        : "Применить"}
+                  </button>
+                ) : (
+                  <button
+                    disabled={!canAfford || loading === item.id}
+                    onClick={() => handlePurchase(item)}
+                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${canAfford ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-400 cursor-not-allowed"}`}
+                  >
+                    {loading === item.id ? "Покупка..." : `${item.price} O3`}
+                  </button>
+                )}
               </div>
             );
           })}
