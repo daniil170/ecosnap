@@ -18,7 +18,7 @@ export const applyItemEffect = (item, user, updateUser) => {
 
     recycle_badge: (user) => ({
       ...user,
-      badges: Array.from(new Set([...(user.badges || []), "recycle"]))
+      badges: Array.from(new Set([...(user.badges || []), "recycle"])),
     }),
 
     // 🔵 RARE
@@ -56,7 +56,7 @@ export const applyItemEffect = (item, user, updateUser) => {
     // 🔴 MYTHIC
     founder_badge: (user) => ({
       ...user,
-      badges: Array.from(new Set([...(user.badges || []), "founder"]))
+      badges: Array.from(new Set([...(user.badges || []), "founder"])),
     }),
   };
 
@@ -68,7 +68,23 @@ export const applyItemEffect = (item, user, updateUser) => {
   }
 
   const updatedUser = effect(user);
-
-  // обновляем пользователя (Firebase / state / localStorage)
   updateUser(updatedUser);
+};
+
+// Сбрасывает эффект предмета — возвращает объект полей для updateDoc
+export const removeItemEffect = (itemId) => {
+  const removals = {
+    eco_sticker_pack: { "inventory.stickers": [] },
+    green_theme: { activeTheme: null },
+    recycle_badge: null, // бейджи не убираем
+    animated_avatar: { avatarEffect: null },
+    eco_trail: { trailEffect: null },
+    nickname_color: { nicknameColor: null },
+    golden_frame: { profileFrame: null },
+    profile_background_animated: { profileBackground: null },
+    eco_title: { title: null },
+    founder_badge: null, // бейджи не убираем
+  };
+
+  return removals[itemId] || null;
 };

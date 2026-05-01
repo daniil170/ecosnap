@@ -113,6 +113,7 @@ const Profile = ({ user }) => {
       {isInventoryOpen && (
         <InventoryModal
           userData={userData}
+          userId={user.uid}
           onClose={() => setIsInventoryOpen(false)}
           onUseItem={handleUseItem}
         />

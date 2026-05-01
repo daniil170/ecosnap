@@ -17,7 +17,6 @@ export const processEcoScan = async (userId, scanType) => {
   if (!userSnap.exists()) return;
   const userData = userSnap.data();
 
-  // 1. Награды по типам мусора
   const rewards = {
     plastic: { xp: 20, ozone: 5 },
     paper: { xp: 10, ozone: 2 },
@@ -30,7 +29,6 @@ export const processEcoScan = async (userId, scanType) => {
     ozone: 1,
   };
 
-  // 2. Логика Стрика (Ежедневная серия)
   const today = new Date().toISOString().split("T")[0];
   const lastDate = userData.lastScanDate;
   let newStreak = userData.streak || 0;
@@ -47,16 +45,12 @@ export const processEcoScan = async (userId, scanType) => {
     }
   }
 
-  // 3. Расчет уровня
   const totalXp = (userData.xp || 0) + addXp;
   const newLevel = Math.floor(totalXp / 100) + 1;
 
-  // 4. Проверка новых достижений
   const newAchievements = [];
-
-  if (!userData.achievements?.includes("first_scan")) {
+  if (!userData.achievements?.includes("first_scan"))
     newAchievements.push("first_scan");
-  }
 
   const streakMilestones = {
     10: "streak_10",
@@ -64,7 +58,6 @@ export const processEcoScan = async (userId, scanType) => {
     100: "streak_100",
     300: "streak_300",
   };
-
   if (
     streakMilestones[newStreak] &&
     !userData.achievements?.includes(streakMilestones[newStreak])
@@ -77,7 +70,6 @@ export const processEcoScan = async (userId, scanType) => {
   if (newLevel >= 50 && !userData.achievements?.includes("lvl_50"))
     newAchievements.push("lvl_50");
 
-  // 5. Обновление в Firestore
   const updateData = {
     xp: increment(addXp),
     ozone: increment(addOzone),
@@ -104,7 +96,7 @@ export const processEcoScan = async (userId, scanType) => {
 };
 
 /**
- * НОВАЯ ФУНКЦИЯ: Покупка товара в магазине
+ * Покупка товара
  */
 export const buyShopItem = async (userId, item) => {
   const userRef = doc(db, "users", userId);
@@ -115,24 +107,31 @@ export const buyShopItem = async (userId, item) => {
   const userData = userSnap.data();
   const userOzone = userData.ozone || 0;
 
-  // Проверка: хватает ли валюты
-  if (userOzone < item.price) {
-    throw new Error("Недостаточно O3 для покупки");
-  }
-
-  // Проверка: нет ли уже этого товара (для цифровых аватаров/рамок)
-  if (userData.inventory?.includes(item.id)) {
+  if (userOzone < item.price) throw new Error("Недостаточно O3");
+  if (userData.inventory?.includes(item.id))
     throw new Error("У вас уже есть этот предмет");
-  }
 
-  // Списываем O3 и добавляем в инвентарь
   await updateDoc(userRef, {
     ozone: increment(-item.price),
     inventory: arrayUnion(item.id),
   });
 
-  return {
-    success: true,
-    remainingOzone: userOzone - item.price,
-  };
+  return { success: true, remainingOzone: userOzone - item.price };
+};
+
+/**
+ * Экипировка предметов — перезаписывает массив активных предметов.
+ * Передавай массив строк: ["id1", "id2"]
+ * Чтобы снять все предметы — передавай пустой массив []
+ */
+export const updateActiveItems = async (userId, activeItemIds) => {
+  if (!userId) throw new Error("userId не передан в updateActiveItems");
+
+  const userRef = doc(db, "users", userId);
+
+  await updateDoc(userRef, {
+    activeItems: activeItemIds.map(String), // гарантируем строки перед записью
+  });
+
+  return { success: true };
 };
