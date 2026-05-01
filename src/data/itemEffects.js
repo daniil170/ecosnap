@@ -1,3 +1,4 @@
+import { arrayRemove } from "firebase/firestore";
 export const applyItemEffect = (item, user, updateUser) => {
   if (!item || item.category !== "digital") return;
 
@@ -74,16 +75,16 @@ export const applyItemEffect = (item, user, updateUser) => {
 // Сбрасывает эффект предмета — возвращает объект полей для updateDoc
 export const removeItemEffect = (itemId) => {
   const removals = {
-    eco_sticker_pack: { "inventory.stickers": [] },
+    eco_sticker_pack: { "inventory.stickers": arrayRemove("eco_pack") },
     green_theme: { activeTheme: null },
-    recycle_badge: null, // бейджи не убираем
+    recycle_badge: { badges: arrayRemove("recycle") },
     animated_avatar: { avatarEffect: null },
     eco_trail: { trailEffect: null },
     nickname_color: { nicknameColor: null },
     golden_frame: { profileFrame: null },
     profile_background_animated: { profileBackground: null },
     eco_title: { title: null },
-    founder_badge: null, // бейджи не убираем
+    founder_badge: { badges: arrayRemove("founder") },
   };
 
   return removals[itemId] || null;

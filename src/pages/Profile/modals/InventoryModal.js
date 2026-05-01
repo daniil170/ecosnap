@@ -8,16 +8,11 @@ import { db } from "../../../firebase";
 const InventoryModal = ({ onClose, userData, userId }) => {
   const inventory = (userData.inventory || [])
     .map((id) => getItemById(id))
-    .filter((item) => item !== undefined && item.category === "digital");
+    .filter((item) => item !== undefined);
 
-  // Восстанавливаем активные предметы из реальных эффектов в userData
-  console.log("userData.inventory:", userData.inventory);
-console.log("inventory после map+filter:", inventory);
-  // чтобы не зависеть от activeItems который мог рассинхронизироваться
+  // Вспомогательная функция для получения текущих активных эффектов из данных пользователя
   const inferActiveItems = () => {
-  console.log("inventory внутри infer:", inventory);
-  console.log("userData.badges:", userData.badges);
-  const result = {};
+    const result = {};
     for (const item of inventory) {
       switch (item.id) {
         case "recycle_badge":
@@ -63,7 +58,16 @@ console.log("inventory после map+filter:", inventory);
   const [selectedItems, setSelectedItems] = useState(inferActiveItems);
   const [isSaving, setIsSaving] = useState(false);
 
+  // Получаем состояние, которое сейчас в БД, чтобы сравнить
+  const prevActive = inferActiveItems();
+
+  // Логика изменений: если объекты разные, значит пользователь что-то изменил
+  const hasChanges =
+    JSON.stringify(prevActive) !== JSON.stringify(selectedItems);
+
   const toggleItem = (item) => {
+    if (item.category !== "digital") return;
+
     const { category, id } = item;
     setSelectedItems((prev) => {
       if (prev[category] === id) {
@@ -82,13 +86,11 @@ console.log("inventory после map+filter:", inventory);
     try {
       const userRef = doc(db, "users", userId);
       const update = {};
-      const prevActive = inferActiveItems(); // берём из реальных эффектов, не из activeItems
 
-      // 1. Снятые предметы — удаляем из activeItems и сбрасываем эффекты
+      // 1. Снятые предметы
       for (const [category, itemId] of Object.entries(prevActive)) {
         if (selectedItems[category] !== itemId) {
           update[`activeItems.${category}`] = deleteField();
-
           const removalFields = removeItemEffect(itemId, userData);
           if (removalFields) {
             for (const [field, value] of Object.entries(removalFields)) {
@@ -98,10 +100,9 @@ console.log("inventory после map+filter:", inventory);
         }
       }
 
-      // 2. Новые/изменённые предметы — применяем эффект и пишем в activeItems
+      // 2. Новые/изменённые предметы
       for (const [category, itemId] of Object.entries(selectedItems)) {
         update[`activeItems.${category}`] = itemId;
-
         if (prevActive[category] !== itemId) {
           const item = getItemById(itemId);
           if (item) {
@@ -131,26 +132,26 @@ console.log("inventory после map+filter:", inventory);
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
-      <div className="bg-white rounded-[2.5rem] p-8 w-full max-w-lg shadow-2xl">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-extrabold text-slate-800 flex items-center gap-2">
-            <Backpack className="text-emerald-500" /> Выбор эффектов
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
+      <div className="bg-white rounded-[2.5rem] p-10 w-full max-w-2xl shadow-2xl">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl font-extrabold text-slate-800 flex items-center gap-3">
+            <Backpack className="text-emerald-500 w-8 h-8" /> Выбор эффектов
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-full"
+            className="p-3 hover:bg-slate-100 rounded-full transition-colors"
           >
-            <X size={20} className="text-slate-400" />
+            <X size={24} className="text-slate-400" />
           </button>
         </div>
 
         {inventory.length === 0 ? (
-          <p className="text-center text-slate-400 py-12">
-            У вас пока нет цифровых предметов
+          <p className="text-center text-slate-400 py-12 text-lg">
+            У вас пока нет предметов
           </p>
         ) : (
-          <div className="grid grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto pr-2">
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-6 max-h-[60vh] overflow-y-auto pr-2">
             {inventory.map((item) => {
               const isActive = selectedItems[item.category] === item.id;
 
@@ -158,42 +159,50 @@ console.log("inventory после map+filter:", inventory);
                 <button
                   key={item.id}
                   onClick={() => toggleItem(item)}
-                  className={`group flex flex-col items-center gap-2 p-4 rounded-2xl transition-all border-2 duration-200 ${
+                  className={`group flex flex-col items-center gap-4 p-6 rounded-3xl transition-all border-2 duration-300 transform ${
                     isActive
-                      ? "bg-emerald-50 border-emerald-500 shadow-inner"
-                      : "bg-slate-50 border-transparent hover:border-emerald-200"
+                      ? "bg-emerald-50 border-emerald-500 shadow-lg scale-[1.02]"
+                      : "bg-white border-slate-100 hover:border-emerald-200 hover:shadow-md"
                   }`}
                 >
-                  <div className="text-3xl relative">
+                  <div className="text-5xl relative">
                     {item.icon || "📦"}
                     {isActive && (
-                      <div className="absolute -top-1 -right-1 bg-emerald-500 rounded-full p-0.5">
-                        <Check size={12} className="text-white" />
+                      <div className="absolute -top-2 -right-2 bg-emerald-500 rounded-full p-1.5 shadow-md">
+                        <Check size={16} className="text-white" />
                       </div>
                     )}
                   </div>
-                  <span
-                    className={`text-xs font-bold ${isActive ? "text-emerald-700" : "text-slate-500"}`}
-                  >
-                    {item.name}
-                  </span>
+                  <div className="flex flex-col items-center text-center">
+                    <span
+                      className={`text-sm font-extrabold ${isActive ? "text-emerald-800" : "text-slate-800"}`}
+                    >
+                      {item.name}
+                    </span>
+                    <span className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
+                      {item.desc || "Нет описания"}
+                    </span>
+                  </div>
                 </button>
               );
             })}
           </div>
         )}
 
-        <button
-          onClick={handleApply}
-          disabled={isSaving}
-          className="w-full mt-6 py-4 bg-emerald-500 text-white font-bold rounded-2xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-2"
-        >
-          {isSaving ? (
-            <Loader2 className="animate-spin" size={20} />
-          ) : (
-            "Применить изменения"
-          )}
-        </button>
+        {/* Теперь кнопка показывается, если есть изменения, а не просто наличие выбора */}
+        {hasChanges && (
+          <button
+            onClick={handleApply}
+            disabled={isSaving}
+            className="w-full mt-8 py-5 bg-emerald-500 text-white text-lg font-bold rounded-2xl hover:bg-emerald-600 transition-all flex items-center justify-center gap-3 shadow-lg hover:shadow-emerald-200 active:scale-[0.98] animate-in fade-in zoom-in duration-300"
+          >
+            {isSaving ? (
+              <Loader2 className="animate-spin" size={24} />
+            ) : (
+              "Применить изменения"
+            )}
+          </button>
+        )}
       </div>
     </div>
   );
