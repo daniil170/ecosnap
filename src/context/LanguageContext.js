@@ -11,19 +11,18 @@ export const LanguageProvider = ({ children }) => {
     document.documentElement.lang = language;
   }, [language]);
 
+  // ИСПРАВЛЕННАЯ ФУНКЦИЯ t
   const t = (key) => {
-    const keys = key.split(".");
-    let value = translations[language];
-    
-    for (const k of keys) {
-      if (value && typeof value === "object") {
-        value = value[k];
-      } else {
-        return key;
-      }
+    // Получаем текущий словарь для выбранного языка
+    const currentDict = translations[language];
+
+    // Проверяем, есть ли такой ключ напрямую в объекте
+    if (currentDict && currentDict[key]) {
+      return currentDict[key];
     }
-    
-    return typeof value === "string" ? value : key;
+
+    // Если ключ не найден, возвращаем сам ключ, чтобы вы видели, чего не хватает
+    return key;
   };
 
   const changeLanguage = (lang) => {
@@ -42,7 +41,9 @@ export const LanguageProvider = ({ children }) => {
 export const useLanguage = () => {
   const context = useContext(LanguageContext);
   if (!context) {
-    throw new Error("useLanguage должен использоваться внутри LanguageProvider");
+    throw new Error(
+      "useLanguage должен использоваться внутри LanguageProvider",
+    );
   }
   return context;
 };

@@ -19,7 +19,9 @@ const Sidebar = ({
   const myInventory = (userData.inventory || [])
     .map((id) => getItemById(id))
     .filter((item) => item !== undefined);
-  const digitalCount = myInventory.filter((item) => item.category === "digital").length;
+  const digitalCount = myInventory.filter(
+    (item) => item.category === "digital",
+  ).length;
   const regularCount = myInventory.length - digitalCount;
   const currentLevel = userData.level || 1;
   const nextLevel = currentLevel + 1;
@@ -46,14 +48,19 @@ const Sidebar = ({
         </h2>
         <p className="text-sm leading-snug" style={{ color: "#8fa3b8" }}>
           {t("sidebar.fightDesc")}{" "}
-          <span className="text-white font-bold">+{currentRewards.ecoScore} {t("profile.ecoScore")}</span> {t("common.and")}{" "}
+          <span className="text-white font-bold">
+            +{currentRewards.ecoScore} {t("profile.ecoScore")}
+          </span>{" "}
+          {t("common.and")}{" "}
           <span style={{ color: "#1db97e" }} className="font-bold">
             +{currentRewards.ozone} O3
           </span>{" "}
           {t("common.perScan")}.
         </p>
         <p className="text-xs mt-2" style={{ color: "#b3c2d1" }}>
-          {t("sidebar.nextLevel")} ({nextLevel}): +{nextRewards.ecoScore} {t("profile.ecoScore")} {t("common.and")} +{nextRewards.ozone} O3 {t("common.perScan")}.
+          {t("sidebar.nextLevel")} ({nextLevel}): +{nextRewards.ecoScore}{" "}
+          {t("profile.ecoScore")} {t("common.and")} +{nextRewards.ozone} O3{" "}
+          {t("common.perScan")}.
         </p>
       </div>
 
@@ -75,7 +82,9 @@ const Sidebar = ({
           <span className="text-white font-bold text-sm uppercase tracking-widest">
             {t("sidebar.yourLeague")}
           </span>
-          <span className="text-white font-black text-lg">{league.currentLeague.icon} {league.currentLeague.name}</span>
+          <span className="text-white font-black text-lg">
+            {league.currentLeague.icon} {league.currentLeague.name}
+          </span>
         </div>
         <div
           className="rounded-2xl flex items-center justify-between px-4 py-3 mb-4"
@@ -84,9 +93,14 @@ const Sidebar = ({
           <span className="text-white font-bold text-sm uppercase tracking-widest">
             {t("sidebar.ecoScoreLeague")}
           </span>
-          <span className="text-white font-black text-xl">{league.score.toLocaleString()}</span>
+          <span className="text-white font-black text-xl">
+            {league.score.toLocaleString()}
+          </span>
         </div>
-        <p className="text-[11px] leading-snug mb-3" style={{ color: "rgba(255,255,255,0.9)" }}>
+        <p
+          className="text-[11px] leading-snug mb-3"
+          style={{ color: "rgba(255,255,255,0.9)" }}
+        >
           {t("sidebar.leagueInfo")}
         </p>
         <button
@@ -128,7 +142,7 @@ const Sidebar = ({
               className="text-xs font-bold uppercase tracking-widest"
               style={{ color: "rgba(255,255,255,0.7)" }}
             >
-              Твой баланс
+              {t("sidebar.balance")}
             </p>
             <p className="text-white font-black text-2xl leading-tight">
               {(userData.ozone || 0).toLocaleString()} ОЗ
@@ -137,13 +151,13 @@ const Sidebar = ({
         </div>
         <div className="relative">
           <h3 className="text-white font-black text-lg leading-tight">
-            Маркетплейс
+            {t("sidebar.marketplace")}
           </h3>
           <p
             className="text-xs font-bold uppercase tracking-widest"
             style={{ color: "rgba(255,255,255,0.65)" }}
           >
-            Обменяй энергию на призы
+            {t("sidebar.exchange")}
           </p>
         </div>
       </div>
@@ -168,13 +182,13 @@ const Sidebar = ({
             <Package size={20} color="#fff" />
           </div>
           <h3 className="text-white font-black text-lg leading-tight italic mb-0.5">
-            Цифровые товары
+            {t("sidebar.digitalGoods")}
           </h3>
           <p
             className="text-xs font-bold uppercase tracking-widest"
             style={{ color: "rgba(255,255,255,0.65)" }}
           >
-            Активируемые: {digitalCount}
+            {t("sidebar.activatable")}: {digitalCount}
           </p>
         </div>
       </button>
@@ -199,13 +213,13 @@ const Sidebar = ({
             <Package size={20} color="#fff" />
           </div>
           <h3 className="text-white font-black text-lg leading-tight italic mb-0.5">
-            Обычные товары
+            {t("sidebar.regularGoods")}
           </h3>
           <p
             className="text-xs font-bold uppercase tracking-widest"
             style={{ color: "rgba(255,255,255,0.65)" }}
           >
-            Коллекция: {regularCount}
+            {t("sidebar.collection")}: {regularCount}
           </p>
         </div>
       </button>
@@ -218,7 +232,7 @@ const Sidebar = ({
         onMouseEnter={(e) => (e.currentTarget.style.color = "#ef4444")}
         onMouseLeave={(e) => (e.currentTarget.style.color = "#94a3b8")}
       >
-        <LogOut size={16} /> Выйти из аккаунта
+        <LogOut size={16} /> {t("sidebar.logout")}
       </button>
     </div>
   );

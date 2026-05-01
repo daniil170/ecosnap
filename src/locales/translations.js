@@ -8,18 +8,22 @@ export const translations = {
 
     // Hero
     "hero.title": "Сделаем планету чище вместе",
-    "hero.subtitle": "Используй AI для сканирования мусора и получай награды за экологичный образ жизни",
+    "hero.subtitle":
+      "Используй AI для сканирования мусора и получай награды за экологичный образ жизни",
     "hero.cta": "Начать сканировать",
     "hero.signup": "Зарегистрироваться",
     "hero.welcome": "Рады видеть вас, уровень",
 
     // Features
     "features.ai": "AI-Сканирование",
-    "features.aiDesc": "Просто сфотографируй мусор через камеру, и наш AI скажет, как его правильно утилизировать",
+    "features.aiDesc":
+      "Просто сфотографируй мусор через камеру, и наш AI скажет, как его правильно утилизировать",
     "features.rewards": "Получай награды",
-    "features.rewardsDesc": "Каждый скан приносит эко-счет и валюту О3, которую можно потратить в магазине",
+    "features.rewardsDesc":
+      "Каждый скан приносит эко-счет и валюту О3, которую можно потратить в магазине",
     "features.community": "Сообщество экогероев",
-    "features.communityDesc": "Соревнуйся в лигах, собирай достижения и вдохновляй других на экологичный образ жизни",
+    "features.communityDesc":
+      "Соревнуйся в лигах, собирай достижения и вдохновляй других на экологичный образ жизни",
 
     // Auth Modal
     "auth.title": "Присоединяйся к EcoSnap",
@@ -54,13 +58,14 @@ export const translations = {
     "profile.levelReward": "Награда за уровень",
     "profile.scanRewards": "Мини-таблица наград за скан",
     "profile.nextLevel": "На уровне",
-    "profile.allRewards": "Ты открыл все запланированные награды уровней. Легенда!",
+    "profile.allRewards":
+      "Ты открыл все запланированные награды уровней. Легенда!",
     "profile.notSpecified": "Не указан",
     "profile.earth": "Земля",
     "profile.rewardTable": {
-      "level": "Уровень",
-      "ecoScore": "Эко-счёт за скан",
-      "ozone": "O3 за скан"
+      level: "Уровень",
+      ecoScore: "Эко-счёт за скан",
+      ozone: "O3 за скан",
     },
 
     // Sidebar
@@ -71,8 +76,17 @@ export const translations = {
     "sidebar.leagueDesc": "Твой путь по лигам",
     "sidebar.yourLeague": "Твоя лига",
     "sidebar.ecoScoreLeague": "Эко-счёт",
-    "sidebar.leagueInfo": "Эко-счёт = общий рейтинг активности: сканы, стрик и открытые награды.",
+    "sidebar.leagueInfo":
+      "Эко-счёт = общий рейтинг активности: сканы, стрик и открытые награды.",
     "sidebar.openLeagues": "Открыть лиги",
+    "sidebar.balance": "Твой баланс",
+    "sidebar.marketplace": "Маркетплейс",
+    "sidebar.exchange": "Обменяй энергию на призы",
+    "sidebar.digitalGoods": "Цифровые товары",
+    "sidebar.activatable": "Активируемые",
+    "sidebar.regularGoods": "Обычные товары",
+    "sidebar.collection": "Коллекция",
+    "sidebar.logout": "Выйти из аккаунта",
     "sidebar.digitalInventory": "Цифровой инвентарь",
     "sidebar.inventory": "Инвентарь",
 
@@ -110,18 +124,22 @@ export const translations = {
 
     // Hero
     "hero.title": "Let's make the planet cleaner together",
-    "hero.subtitle": "Use AI to scan waste and earn rewards for an eco-friendly lifestyle",
+    "hero.subtitle":
+      "Use AI to scan waste and earn rewards for an eco-friendly lifestyle",
     "hero.cta": "Start scanning",
     "hero.signup": "Sign up",
     "hero.welcome": "Welcome back, level",
 
     // Features
     "features.ai": "AI Scanning",
-    "features.aiDesc": "Just take a photo of waste with your camera, and our AI will tell you how to dispose of it correctly",
+    "features.aiDesc":
+      "Just take a photo of waste with your camera, and our AI will tell you how to dispose of it correctly",
     "features.rewards": "Earn rewards",
-    "features.rewardsDesc": "Every scan brings eco-score and O3 currency, which you can spend in the shop",
+    "features.rewardsDesc":
+      "Every scan brings eco-score and O3 currency, which you can spend in the shop",
     "features.community": "Community of eco-heroes",
-    "features.communityDesc": "Compete in leagues, collect achievements and inspire others to live an eco-friendly lifestyle",
+    "features.communityDesc":
+      "Compete in leagues, collect achievements and inspire others to live an eco-friendly lifestyle",
 
     // Auth Modal
     "auth.title": "Join EcoSnap",
@@ -160,9 +178,9 @@ export const translations = {
     "profile.notSpecified": "Not specified",
     "profile.earth": "Earth",
     "profile.rewardTable": {
-      "level": "Level",
-      "ecoScore": "Eco-Score per Scan",
-      "ozone": "O3 per Scan"
+      level: "Level",
+      ecoScore: "Eco-Score per Scan",
+      ozone: "O3 per Scan",
     },
 
     // Sidebar
@@ -173,8 +191,17 @@ export const translations = {
     "sidebar.leagueDesc": "Your path through leagues",
     "sidebar.yourLeague": "Your league",
     "sidebar.ecoScoreLeague": "Eco-Score",
-    "sidebar.leagueInfo": "Eco-Score = overall activity rating: scans, streak and unlocked rewards.",
+    "sidebar.leagueInfo":
+      "Eco-Score = overall activity rating: scans, streak and unlocked rewards.",
     "sidebar.openLeagues": "Open Leagues",
+    "sidebar.balance": "Your balance",
+    "sidebar.marketplace": "Marketplace",
+    "sidebar.exchange": "Exchange energy for prizes",
+    "sidebar.digitalGoods": "Digital Goods",
+    "sidebar.activatable": "Activatable",
+    "sidebar.regularGoods": "Regular Goods",
+    "sidebar.collection": "Collection",
+    "sidebar.logout": "Logout",
     "sidebar.digitalInventory": "Digital Inventory",
     "sidebar.inventory": "Inventory",
 
@@ -212,18 +239,22 @@ export const translations = {
 
     // Hero
     "hero.title": "Lasst uns gemeinsam den Planeten sauberer machen",
-    "hero.subtitle": "Verwende KI zum Scannen von Müll und verdiene Belohnungen für einen umweltfreundlichen Lebensstil",
+    "hero.subtitle":
+      "Verwende KI zum Scannen von Müll und verdiene Belohnungen für einen umweltfreundlichen Lebensstil",
     "hero.cta": "Mit dem Scannen beginnen",
     "hero.signup": "Registrieren",
     "hero.welcome": "Willkommen zurück, Stufe",
 
     // Features
     "features.ai": "KI-Scanning",
-    "features.aiDesc": "Mache einfach ein Foto von Müll mit deiner Kamera, und unsere KI sagt dir, wie du ihn richtig entsorgst",
+    "features.aiDesc":
+      "Mache einfach ein Foto von Müll mit deiner Kamera, und unsere KI sagt dir, wie du ihn richtig entsorgst",
     "features.rewards": "Verdiene Belohnungen",
-    "features.rewardsDesc": "Jeder Scan bringt Öko-Punkte und O3-Währung, die du im Shop ausgeben kannst",
+    "features.rewardsDesc":
+      "Jeder Scan bringt Öko-Punkte und O3-Währung, die du im Shop ausgeben kannst",
     "features.community": "Gemeinschaft der Öko-Helden",
-    "features.communityDesc": "Tritt in Ligen an, sammle Erfolge und inspiriere andere zu einem umweltfreundlichen Lebensstil",
+    "features.communityDesc":
+      "Tritt in Ligen an, sammle Erfolge und inspiriere andere zu einem umweltfreundlichen Lebensstil",
 
     // Auth Modal
     "auth.title": "Tritt EcoSnap bei",
@@ -258,13 +289,14 @@ export const translations = {
     "profile.levelReward": "Stufenbelohnung",
     "profile.scanRewards": "Scan-Belohnungstabelle",
     "profile.nextLevel": "Bei Stufe",
-    "profile.allRewards": "Du hast alle geplanten Stufenbelohnungen freigeschaltet. Legende!",
+    "profile.allRewards":
+      "Du hast alle geplanten Stufenbelohnungen freigeschaltet. Legende!",
     "profile.notSpecified": "Nicht angegeben",
     "profile.earth": "Erde",
     "profile.rewardTable": {
-      "level": "Stufe",
-      "ecoScore": "Öko-Punkte pro Scan",
-      "ozone": "O3 pro Scan"
+      level: "Stufe",
+      ecoScore: "Öko-Punkte pro Scan",
+      ozone: "O3 pro Scan",
     },
 
     // Sidebar
@@ -275,8 +307,17 @@ export const translations = {
     "sidebar.leagueDesc": "Dein Weg durch die Ligen",
     "sidebar.yourLeague": "Deine Liga",
     "sidebar.ecoScoreLeague": "Öko-Punkte",
-    "sidebar.leagueInfo": "Öko-Punkte = Gesamtaktivitätsbewertung: Scans, Streak und freigeschaltete Belohnungen.",
+    "sidebar.leagueInfo":
+      "Öko-Punkte = Gesamtaktivitätsbewertung: Scans, Streak und freigeschaltete Belohnungen.",
     "sidebar.openLeagues": "Ligen öffnen",
+    "sidebar.balance": "Dein Kontostand",
+    "sidebar.marketplace": "Marktplatz",
+    "sidebar.exchange": "Tausche Energie gegen Preise",
+    "sidebar.digitalGoods": "Digitale Güter",
+    "sidebar.activatable": "Aktivierbar",
+    "sidebar.regularGoods": "Normale Güter",
+    "sidebar.collection": "Sammlung",
+    "sidebar.logout": "Abmelden",
     "sidebar.digitalInventory": "Digitales Inventar",
     "sidebar.inventory": "Inventar",
 
@@ -304,19 +345,19 @@ export const translations = {
     "common.edit": "Bearbeiten",
     "common.and": "und",
     "common.perScan": "pro Scan",
-  }
+  },
 };
 
 export const detectLanguage = () => {
   const stored = localStorage.getItem("language");
   if (stored) return stored;
-  
+
   const browserLang = navigator.language.split("-")[0];
   const supportedLangs = ["ru", "en", "de"];
-  
+
   if (supportedLangs.includes(browserLang)) {
     return browserLang;
   }
-  
+
   return "en";
 };
