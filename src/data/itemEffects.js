@@ -5,58 +5,45 @@ export const applyItemEffect = (item, user, updateUser) => {
   const effects = {
     // 🟢 COMMON
     eco_sticker_pack: (user) => ({
-      ...user,
-      inventory: {
-        ...user.inventory,
-        stickers: ["eco_pack"],
-      },
+      stickerPacks: Array.from(new Set([...(user.stickerPacks || []), "eco_pack"])),
     }),
 
-    green_theme: (user) => ({
-      ...user,
+    green_theme: () => ({
       activeTheme: "green",
     }),
 
     recycle_badge: (user) => ({
-      ...user,
       badges: Array.from(new Set([...(user.badges || []), "recycle"])),
     }),
 
     // 🔵 RARE
-    animated_avatar: (user) => ({
-      ...user,
+    animated_avatar: () => ({
       avatarEffect: "animated",
     }),
 
-    eco_trail: (user) => ({
-      ...user,
+    eco_trail: () => ({
       trailEffect: "leaves",
     }),
 
-    nickname_color: (user) => ({
-      ...user,
+    nickname_color: () => ({
       nicknameColor: "rainbow",
     }),
 
     // 🟣 EPIC
-    golden_frame: (user) => ({
-      ...user,
+    golden_frame: () => ({
       profileFrame: "gold",
     }),
 
-    profile_background_animated: (user) => ({
-      ...user,
+    profile_background_animated: () => ({
       profileBackground: "animated_space",
     }),
 
-    eco_title: (user) => ({
-      ...user,
+    eco_title: () => ({
       title: "Эко-герой",
     }),
 
     // 🔴 MYTHIC
     founder_badge: (user) => ({
-      ...user,
       badges: Array.from(new Set([...(user.badges || []), "founder"])),
     }),
   };
@@ -75,7 +62,7 @@ export const applyItemEffect = (item, user, updateUser) => {
 // Сбрасывает эффект предмета — возвращает объект полей для updateDoc
 export const removeItemEffect = (itemId) => {
   const removals = {
-    eco_sticker_pack: { "inventory.stickers": arrayRemove("eco_pack") },
+    eco_sticker_pack: { stickerPacks: arrayRemove("eco_pack") },
     green_theme: { activeTheme: null },
     recycle_badge: { badges: arrayRemove("recycle") },
     animated_avatar: { avatarEffect: null },

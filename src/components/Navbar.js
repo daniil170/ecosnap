@@ -1,17 +1,22 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom"; // Добавили Link и useNavigate
-import { Menu, X, LogOut, User } from "lucide-react";
+import { Menu, X, LogOut, User, Globe } from "lucide-react";
 import { auth } from "../firebase";
 import { signOut } from "firebase/auth";
+import { useLanguage } from "../context/LanguageContext";
 
 const Navbar = ({ onAuthClick, user }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const navigate = useNavigate();
+  const { t, language, changeLanguage } = useLanguage();
 
   const handleLogout = async () => {
     await signOut(auth);
     navigate("/"); // После выхода кидаем на главную
   };
+
+  const languageLabels = { ru: "Русский", en: "English", de: "Deutsch" };
 
   return (
     <nav className="fixed top-0 w-full z-[80] border-b border-slate-100 bg-white/80 backdrop-blur-xl px-6 py-4">
@@ -28,8 +33,39 @@ const Navbar = ({ onAuthClick, user }) => {
 
         <div className="hidden md:flex items-center gap-8 text-sm font-medium text-slate-600">
           <Link to="/" className="hover:text-emerald-600 transition-colors">
-            Главная
+            {t("nav.profile")}
           </Link>
+
+          {/* Переключатель языков */}
+          <div className="relative">
+            <button
+              onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+              className="flex items-center gap-2 text-slate-600 hover:text-emerald-600 transition-colors"
+            >
+              <Globe size={18} />
+              <span>{languageLabels[language]}</span>
+            </button>
+            {isLangMenuOpen && (
+              <div className="absolute top-10 right-0 bg-white border border-slate-100 rounded-lg shadow-lg overflow-hidden">
+                {["ru", "en", "de"].map((lang) => (
+                  <button
+                    key={lang}
+                    onClick={() => {
+                      changeLanguage(lang);
+                      setIsLangMenuOpen(false);
+                    }}
+                    className={`block w-full text-left px-4 py-2 text-sm font-medium transition-colors ${
+                      language === lang
+                        ? "bg-emerald-50 text-emerald-600"
+                        : "text-slate-700 hover:bg-slate-50"
+                    }`}
+                  >
+                    {languageLabels[lang]}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
 
           {user ? (
             <div className="flex items-center gap-4">
@@ -55,7 +91,7 @@ const Navbar = ({ onAuthClick, user }) => {
               onClick={onAuthClick}
               className="bg-slate-900 text-white px-6 py-2.5 rounded-xl hover:bg-emerald-600 transition-all shadow-xl shadow-slate-200"
             >
-              Войти
+              {t("auth.login")}
             </button>
           )}
         </div>

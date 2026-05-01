@@ -7,8 +7,12 @@ import {
   Camera,
   BarChart3,
 } from "lucide-react";
+import { useLanguage } from "../context/LanguageContext";
 
-const Hero = ({ onAuthClick, onAboutClick, user }) => (
+const Hero = ({ onAuthClick, onAboutClick, user }) => {
+  const { t } = useLanguage();
+
+  return (
   <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden bg-white">
     <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full md:w-[1000px] h-[600px] bg-emerald-50/50 rounded-full blur-3xl -z-10" />
 
@@ -19,13 +23,13 @@ const Hero = ({ onAuthClick, onAboutClick, user }) => (
             <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
             <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
           </span>
-          {user ? "Система готова" : "AI Сортировка v2.0"}
+          {user ? t("hero.subtitle") : "AI Сортировка v2.0"}
         </div>
 
         <h1 className="text-4xl md:text-7xl font-extrabold text-slate-900 leading-tight">
-          {user ? "Привет, эко-герой!" : "Сортируй мусор"} <br />
+          {user ? "Привет, эко-герой!" : t("hero.title")} <br />
           <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-teal-600">
-            {user ? "Твой кабинет" : "с умом."}
+            {user ? "Твой кабинет" : t("hero.cta")}
           </span>
         </h1>
 
@@ -36,13 +40,13 @@ const Hero = ({ onAuthClick, onAboutClick, user }) => (
                 to="/scanner"
                 className="w-full sm:w-auto bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-200"
               >
-                <Camera size={18} /> Запустить сканер
+                <Camera size={18} /> {t("scanner.takePhoto")}
               </Link>
               <Link
                 to="/profile"
                 className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
               >
-                <BarChart3 size={18} /> Личный кабинет
+                <BarChart3 size={18} /> {t("profile.edit")}
               </Link>
             </>
           ) : (
@@ -51,13 +55,13 @@ const Hero = ({ onAuthClick, onAboutClick, user }) => (
                 onClick={onAuthClick}
                 className="w-full sm:w-auto bg-emerald-600 text-white px-8 py-4 rounded-2xl font-bold hover:scale-105 transition-all flex items-center justify-center gap-2 shadow-xl shadow-emerald-200"
               >
-                <Sparkles size={18} /> Попробовать бесплатно
+                <Sparkles size={18} /> {t("hero.signup")}
               </button>
               <button
                 onClick={onAboutClick}
                 className="w-full sm:w-auto px-8 py-4 rounded-2xl font-bold border border-slate-200 text-slate-700 hover:bg-slate-50 transition-all flex items-center justify-center gap-2"
               >
-                Узнать больше <ChevronRight size={18} />
+                {t("footer.about")} <ChevronRight size={18} />
               </button>
             </>
           )}
@@ -80,7 +84,7 @@ const Hero = ({ onAuthClick, onAboutClick, user }) => (
                 <div className="w-8 h-8 bg-yellow-400 rounded-full flex items-center justify-center text-white font-bold">
                   P
                 </div>
-                <div className="text-xs font-bold text-slate-800">+15 XP</div>
+                <div className="text-xs font-bold text-slate-800">+20 {t("profile.ecoScore")}</div>
               </div>
               <div className="h-1.5 w-20 bg-slate-200 rounded-full overflow-hidden">
                 <div className="h-full bg-emerald-500 w-2/3" />
@@ -91,6 +95,7 @@ const Hero = ({ onAuthClick, onAboutClick, user }) => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Hero;

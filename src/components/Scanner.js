@@ -1,8 +1,36 @@
 import React, { useState, useRef, useEffect, useCallback } from "react";
 import { Link } from "react-router-dom"; // Добавили для перехода на главную
 import { X, RefreshCw, Zap, Image as ImageIcon } from "lucide-react";
+import { processEcoScan } from "../services/gamification";
 
-const Scanner = () => {
+const SCAN_MOCKS = [
+  {
+    title: "Стеклянная бутылка",
+    type: "glass",
+    label: "GL 70",
+    instructions: "Снимите крышку и этикетку. Сдайте в пункт приема стекла.",
+  },
+  {
+    title: "Пластиковая бутылка",
+    type: "plastic",
+    label: "PET 1",
+    instructions: "Сожмите бутылку, закрутите крышку и выбросьте в контейнер для пластика.",
+  },
+  {
+    title: "Картонная упаковка",
+    type: "paper",
+    label: "PAP 21",
+    instructions: "Убедитесь, что упаковка сухая, затем отправьте в контейнер для бумаги.",
+  },
+  {
+    title: "Алюминиевая банка",
+    type: "metal",
+    label: "ALU 41",
+    instructions: "Сполосните банку и сдайте в пункт приема металла.",
+  },
+];
+
+const Scanner = ({ user }) => {
   // Убрали onClose из пропсов, так как теперь используем роутинг
   const videoRef = useRef(null);
   const [stream, setStream] = useState(null);
@@ -35,14 +63,34 @@ const Scanner = () => {
 
   const handleCapture = () => {
     setIsAnalyzing(true);
-    setTimeout(() => {
+    setTimeout(async () => {
+      const mock = SCAN_MOCKS[Math.floor(Math.random() * SCAN_MOCKS.length)];
+
+      let addEcoScore = 0;
+      let addOzone = 20;
+      let newAchievements = [];
+      let levelRewards = [];
+      if (user?.uid) {
+        try {
+          const gameResult = await processEcoScan(user.uid, mock.type);
+          addEcoScore = gameResult?.addEcoScore || 0;
+          addOzone = gameResult?.addOzone || 20;
+          newAchievements = gameResult?.newAchievements || [];
+          levelRewards = gameResult?.levelRewards || [];
+        } catch (error) {
+          console.error("Ошибка processEcoScan:", error);
+        }
+      }
+
       setIsAnalyzing(false);
       setResult({
-        title: "Стеклянная бутылка",
-        type: "GL 70",
-        instructions:
-          "Снимите крышку и этикетку. Сдайте в пункт приема стекла.",
-        points: "+20 XP",
+        title: mock.title,
+        type: mock.label,
+        instructions: mock.instructions,
+        points: `+${addEcoScore || 20} эко-счёта`,
+        ozone: `+${addOzone} O3`,
+        unlockedCount: newAchievements.length,
+        levelRewardsCount: levelRewards.length,
       });
     }, 2500);
   };
@@ -110,6 +158,9 @@ const Scanner = () => {
                 {result.points}
               </div>
             </div>
+            <div className="mb-4 inline-flex items-center rounded-xl bg-orange-100 text-orange-700 px-3 py-1 text-sm font-black">
+              {result.ozone}
+            </div>
             <p className="text-slate-600 mb-8 leading-relaxed">
               {result.instructions}
             </p>
@@ -119,6 +170,16 @@ const Scanner = () => {
             >
               Понятно
             </button>
+            {result.unlockedCount > 0 && (
+              <p className="mt-3 text-sm text-emerald-600 font-bold text-center">
+                Открыто новых наград: {result.unlockedCount}
+              </p>
+            )}
+            {result.levelRewardsCount > 0 && (
+              <p className="mt-2 text-sm text-indigo-600 font-bold text-center">
+                Получено наград за уровень: {result.levelRewardsCount}
+              </p>
+            )}
           </div>
         )}
       </div>

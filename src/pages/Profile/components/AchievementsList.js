@@ -8,9 +8,17 @@ const AchievementsList = ({
   showAllAch,
   setShowAllAch,
 }) => {
+  const unlockedIds = new Set(userData.achievements || []);
+  const orderedAchievements = [...ACHIEVEMENTS_LIST].sort((a, b) => {
+    const aUnlocked = unlockedIds.has(a.id);
+    const bUnlocked = unlockedIds.has(b.id);
+    if (aUnlocked === bUnlocked) return 0;
+    return aUnlocked ? -1 : 1;
+  });
+
   const visibleAchievements = showAllAch
-    ? ACHIEVEMENTS_LIST
-    : ACHIEVEMENTS_LIST.slice(0, 6);
+    ? orderedAchievements
+    : orderedAchievements.slice(0, 6);
 
   return (
     <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
@@ -36,7 +44,7 @@ const AchievementsList = ({
 
       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 transition-all duration-300">
         {visibleAchievements.map((ach) => {
-          const isLocked = !userData.achievements?.includes(ach.id);
+          const isLocked = !unlockedIds.has(ach.id);
           return (
             <button
               key={ach.id}

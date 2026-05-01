@@ -1,14 +1,31 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { Camera, Zap, LogOut, Package } from "lucide-react";
+import { Camera, Zap, LogOut, Package, Sparkles } from "lucide-react";
 import { getItemById } from "../../../data/shopItems";
+import { getScanRewardsForLevel } from "../../../services/gamification";
+import { getLeagueProgress } from "../../../services/leagueSystem";
+import { useLanguage } from "../../../context/LanguageContext";
 
-const Sidebar = ({ user, userData = {}, onOpenInventory }) => {
+const Sidebar = ({
+  user,
+  userData = {},
+  onOpenLeague,
+  onOpenDigitalInventory,
+  onOpenRegularInventory,
+}) => {
   const navigate = useNavigate();
+  const { t } = useLanguage();
 
   const myInventory = (userData.inventory || [])
     .map((id) => getItemById(id))
     .filter((item) => item !== undefined);
+  const digitalCount = myInventory.filter((item) => item.category === "digital").length;
+  const regularCount = myInventory.length - digitalCount;
+  const currentLevel = userData.level || 1;
+  const nextLevel = currentLevel + 1;
+  const currentRewards = getScanRewardsForLevel(currentLevel);
+  const nextRewards = getScanRewardsForLevel(nextLevel);
+  const league = getLeagueProgress(userData);
 
   return (
     <div className="space-y-4 p-4">
@@ -25,40 +42,55 @@ const Sidebar = ({ user, userData = {}, onOpenInventory }) => {
           <Camera size={20} color="#fff" />
         </div>
         <h2 className="text-white font-black text-lg leading-tight mb-1">
-          В БОЙ ЗА ЧИСТОТУ!
+          {t("sidebar.fight")}
         </h2>
         <p className="text-sm leading-snug" style={{ color: "#8fa3b8" }}>
-          Используй AI, сканируй мусор и получай{" "}
-          <span className="text-white font-bold">+25 XP</span> и{" "}
+          {t("sidebar.fightDesc")}{" "}
+          <span className="text-white font-bold">+{currentRewards.ecoScore} {t("profile.ecoScore")}</span> {t("common.and")}{" "}
           <span style={{ color: "#1db97e" }} className="font-bold">
-            5 ОЗ
+            +{currentRewards.ozone} O3
           </span>{" "}
-          за каждый скан.
+          {t("common.perScan")}.
+        </p>
+        <p className="text-xs mt-2" style={{ color: "#b3c2d1" }}>
+          {t("sidebar.nextLevel")} ({nextLevel}): +{nextRewards.ecoScore} {t("profile.ecoScore")} {t("common.and")} +{nextRewards.ozone} O3 {t("common.perScan")}.
         </p>
       </div>
 
       {/* Карточка — Лига Мастеров */}
       <div className="rounded-3xl p-5" style={{ background: "#1db97e" }}>
         <p className="font-black text-white text-base italic mb-0.5">
-          Лига Мастеров
+          {t("sidebar.league")}
         </p>
         <p
           className="text-xs font-bold uppercase tracking-widest mb-4"
           style={{ color: "#0e7a52" }}
         >
-          Топ игроков недели
+          {t("sidebar.leagueDesc")}
         </p>
         <div
           className="rounded-2xl flex items-center justify-between px-4 py-3 mb-4"
           style={{ background: "rgba(255,255,255,0.25)" }}
         >
           <span className="text-white font-bold text-sm uppercase tracking-widest">
-            Твоё место
+            {t("sidebar.yourLeague")}
           </span>
-          <span className="text-white font-black text-3xl">#14</span>
+          <span className="text-white font-black text-lg">{league.currentLeague.icon} {league.currentLeague.name}</span>
         </div>
+        <div
+          className="rounded-2xl flex items-center justify-between px-4 py-3 mb-4"
+          style={{ background: "rgba(255,255,255,0.18)" }}
+        >
+          <span className="text-white font-bold text-sm uppercase tracking-widest">
+            {t("sidebar.ecoScoreLeague")}
+          </span>
+          <span className="text-white font-black text-xl">{league.score.toLocaleString()}</span>
+        </div>
+        <p className="text-[11px] leading-snug mb-3" style={{ color: "rgba(255,255,255,0.9)" }}>
+          {t("sidebar.leagueInfo")}
+        </p>
         <button
-          onClick={() => navigate("/leaderboard")}
+          onClick={onOpenLeague}
           className="w-full rounded-2xl py-3 font-black text-sm uppercase tracking-widest transition-opacity hover:opacity-90"
           style={{
             background: "#fff",
@@ -66,7 +98,7 @@ const Sidebar = ({ user, userData = {}, onOpenInventory }) => {
             letterSpacing: "0.12em",
           }}
         >
-          Открыть таблицу
+          {t("sidebar.openLeagues")}
         </button>
       </div>
 
@@ -116,9 +148,9 @@ const Sidebar = ({ user, userData = {}, onOpenInventory }) => {
         </div>
       </div>
 
-      {/* Карточка — Инвентарь */}
+      {/* Карточка — Цифровой инвентарь */}
       <button
-        onClick={onOpenInventory}
+        onClick={onOpenDigitalInventory}
         className="w-full rounded-3xl p-5 relative overflow-hidden transition-all hover:-translate-y-1 active:scale-95 text-left"
         style={{ background: "#6366f1" }}
       >
@@ -136,13 +168,44 @@ const Sidebar = ({ user, userData = {}, onOpenInventory }) => {
             <Package size={20} color="#fff" />
           </div>
           <h3 className="text-white font-black text-lg leading-tight italic mb-0.5">
-            Инвентарь
+            Цифровые товары
           </h3>
           <p
             className="text-xs font-bold uppercase tracking-widest"
             style={{ color: "rgba(255,255,255,0.65)" }}
           >
-            Твои предметы: {myInventory.length}
+            Активируемые: {digitalCount}
+          </p>
+        </div>
+      </button>
+
+      {/* Карточка — Обычные товары */}
+      <button
+        onClick={onOpenRegularInventory}
+        className="w-full rounded-3xl p-5 relative overflow-hidden transition-all hover:-translate-y-1 active:scale-95 text-left"
+        style={{ background: "#0ea5e9" }}
+      >
+        <div
+          className="absolute -bottom-5 -left-4 rotate-12"
+          style={{ color: "rgba(255,255,255,0.15)" }}
+        >
+          <Sparkles size={100} />
+        </div>
+        <div className="relative z-10">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center mb-3"
+            style={{ background: "rgba(255,255,255,0.25)" }}
+          >
+            <Package size={20} color="#fff" />
+          </div>
+          <h3 className="text-white font-black text-lg leading-tight italic mb-0.5">
+            Обычные товары
+          </h3>
+          <p
+            className="text-xs font-bold uppercase tracking-widest"
+            style={{ color: "rgba(255,255,255,0.65)" }}
+          >
+            Коллекция: {regularCount}
           </p>
         </div>
       </button>

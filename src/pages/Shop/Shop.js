@@ -1,10 +1,15 @@
 import React, { useState } from "react";
-import { SHOP_ITEMS } from "../../data/shopItems";
+import { SHOP_ITEMS, getItemById } from "../../data/shopItems";
 import { applyItemEffect } from "../../data/itemEffects"; // Убедись, что путь верный
 import { db } from "../../firebase";
 import { doc, updateDoc, arrayUnion, increment } from "firebase/firestore";
 import { Zap, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
+import {
+  buildAutoEquipSelection,
+  getItemSlot,
+  inferActiveItemsFromProfile,
+} from "../../services/inventoryAutomation";
 
 // Настройки стилей для редкости
 const RARITY_STYLES = {
@@ -18,6 +23,7 @@ const RARITY_STYLES = {
 const Shop = ({ user, profile }) => {
   const [loading, setLoading] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
+  const safeProfile = profile || {};
 
   // Фильтрация товаров
   const filteredItems =
@@ -26,13 +32,34 @@ const Shop = ({ user, profile }) => {
       : SHOP_ITEMS.filter((item) => item.category === activeTab);
 
   const handlePurchase = async (item) => {
-    if (!user?.uid || (profile.ozone || 0) < item.price) return;
+    if (!user?.uid || (safeProfile.ozone || 0) < item.price) return;
     setLoading(item.id);
     try {
-      await updateDoc(doc(db, "users", user.uid), {
+      const userRef = doc(db, "users", user.uid);
+      await updateDoc(userRef, {
         ozone: increment(-item.price),
         inventory: arrayUnion(item.id),
       });
+
+      if (item.category === "digital") {
+        const virtualUserData = {
+          ...safeProfile,
+          inventory: [...(safeProfile.inventory || []), item.id],
+        };
+        const bestSelection = buildAutoEquipSelection(virtualUserData);
+        const currentSelection = inferActiveItemsFromProfile(safeProfile);
+        const slot = getItemSlot(item);
+
+        if (bestSelection[slot] === item.id && currentSelection[slot] !== item.id) {
+          const updatePayload = {
+            [`activeItems.${slot}`]: item.id,
+          };
+          applyItemEffect(item, safeProfile, (updatedUser) => {
+            Object.assign(updatePayload, updatedUser);
+          });
+          await updateDoc(userRef, updatePayload);
+        }
+      }
       alert("Покупка успешна!");
     } catch (e) {
       alert("Ошибка покупки");
@@ -46,17 +73,19 @@ const Shop = ({ user, profile }) => {
 
     try {
       const userRef = doc(db, "users", user.uid);
+      const updatePayload = {
+        [`activeItems.${getItemSlot(item)}`]: item.id,
+      };
 
       // Используем твою функцию эффектов
       // Мы передаем callback, который обновит Firebase данными из эффекта
-      applyItemEffect(item, profile, async (updatedUser) => {
-        // Мы сохраняем эффект + помечаем товар как активный
-        await updateDoc(userRef, {
-          ...updatedUser, // Все изменения, которые вернула функция эффектов
-          [`activeItems.${item.category}`]: item.id, // Помечаем как активный
-        });
-        alert(`Эффект "${item.name}" применен!`);
+      applyItemEffect(item, safeProfile, async (updatedUser) => {
+        Object.assign(updatePayload, updatedUser);
       });
+
+      // Мы сохраняем эффект + помечаем товар как активный
+      await updateDoc(userRef, updatePayload);
+      alert(`Эффект "${item.name}" применен!`);
     } catch (e) {
       console.error(e);
       alert("Ошибка применения");
@@ -79,7 +108,7 @@ const Shop = ({ user, profile }) => {
           </Link>
           <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
             <Zap size={18} className="text-orange-500 fill-orange-500" />
-            <span className="font-black text-lg">{profile.ozone || 0} O3</span>
+            <span className="font-black text-lg">{safeProfile.ozone || 0} O3</span>
           </div>
         </div>
 
@@ -99,9 +128,11 @@ const Shop = ({ user, profile }) => {
         {/* Список товаров */}
         <div className="grid md:grid-cols-2 gap-6">
           {filteredItems.map((item) => {
-            const isOwned = profile.inventory?.includes(item.id);
-            const isEquipped = profile.activeItems?.[item.category] === item.id;
-            const canAfford = (profile.ozone || 0) >= item.price;
+            const isOwned = safeProfile.inventory?.includes(item.id);
+            const latestItem = getItemById(item.id) || item;
+            const isEquipped =
+              safeProfile.activeItems?.[getItemSlot(latestItem)] === item.id;
+            const canAfford = (safeProfile.ozone || 0) >= item.price;
 
             return (
               <div

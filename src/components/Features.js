@@ -1,14 +1,18 @@
 import React from 'react';
 import { Camera, ShieldCheck, Zap, BarChart3 } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
-const features = [
-  { icon: <Camera />, title: "AI Сканер", desc: "Распознает мусор мгновенно через камеру." },
-  { icon: <ShieldCheck />, title: "Эко-чек", desc: "Проверка правил в вашем регионе." },
-  { icon: <Zap />, title: "Бонусы", desc: "Получай баллы за каждую упаковку." },
-  { icon: <BarChart3 />, title: "Прогресс", desc: "Статистика твоего вклада в экологию." },
-];
+const Features = () => {
+  const { t } = useLanguage();
 
-const Features = () => (
+  const features = [
+    { icon: <Camera />, title: t("features.ai"), desc: t("features.aiDesc") },
+    { icon: <ShieldCheck />, title: "Эко-чек", desc: "Проверка правил в вашем регионе." },
+    { icon: <Zap />, title: t("features.rewards"), desc: t("features.rewardsDesc") },
+    { icon: <BarChart3 />, title: "Прогресс", desc: "Статистика твоего вклада в экологию." },
+  ];
+
+  return (
   <section id="features" className="py-24 bg-white">
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -24,6 +28,7 @@ const Features = () => (
       </div>
     </div>
   </section>
-);
+  );
+};
 
 export default Features;

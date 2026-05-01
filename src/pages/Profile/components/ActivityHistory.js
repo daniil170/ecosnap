@@ -32,7 +32,9 @@ const ActivityHistory = ({ activityHistory }) => {
                 <p className="font-bold text-slate-800">{act.description}</p>
                 <p className="text-xs text-slate-400">{act.date}</p>
               </div>
-              <div className="font-black text-emerald-500">+{act.xp} XP</div>
+              <div className="font-black text-emerald-500">
+                +{act.ecoScore ?? act.xp ?? 0} ECO
+              </div>
             </div>
           ))}
         </div>

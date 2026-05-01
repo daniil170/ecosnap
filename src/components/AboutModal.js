@@ -94,7 +94,7 @@ const AboutModal = ({ isOpen, onClose }) => {
                       {[
                         'Мгновенное распознавание',
                         'Умные подсказки',
-                        'Геймификация (XP)',
+                        'Геймификация (эко-счёт)',
                         'Реальное влияние'
                       ].map((item, i) => (
                         <li key={i} className="flex items-center gap-2 text-slate-600">

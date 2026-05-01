@@ -54,7 +54,7 @@ const AuthModal = ({ isOpen, onClose }) => {
         country: additionalData.country || "",
         city: additionalData.city || "",
         scannedItems: 0,
-        xp: 0,
+        ecoScore: 0,
         treesSaved: 0,
         level: 1,
         photoGradient: "from-emerald-500 to-teal-600",
