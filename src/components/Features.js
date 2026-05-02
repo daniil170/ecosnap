@@ -7,9 +7,9 @@ const Features = () => {
 
   const features = [
     { icon: <Camera />, title: t("features.ai"), desc: t("features.aiDesc") },
-    { icon: <ShieldCheck />, title: "Эко-чек", desc: "Проверка правил в вашем регионе." },
+    { icon: <ShieldCheck />, title: t("features.rules"), desc: t("features.rulesEco") },
     { icon: <Zap />, title: t("features.rewards"), desc: t("features.rewardsDesc") },
-    { icon: <BarChart3 />, title: "Прогресс", desc: "Статистика твоего вклада в экологию." },
+    { icon: <BarChart3 />, title: t("features.progress"), desc: t("features.progressDesc") },
   ];
 
   return (

@@ -6,6 +6,8 @@ const RegularInventoryModal = ({ onClose, userData }) => {
   const regularItems = (userData?.inventory || [])
     .map((id) => getItemById(id))
     .filter((item) => item && item.category !== "digital");
+  console.log("USER INVENTORY IDS:", userData.inventory);
+  console.log("FOUND ITEMS:", regularItems);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
@@ -39,7 +41,9 @@ const RegularInventoryModal = ({ onClose, userData }) => {
                     {item.name}
                   </span>
                   <span className="mt-1 text-[10px] uppercase tracking-wider font-black text-indigo-600">
-                    {item.category === "charity" ? "Благотворительность" : "Обычный товар"}
+                    {item.category === "charity"
+                      ? "Благотворительность"
+                      : "Обычный товар"}
                   </span>
                   <span className="text-xs text-slate-500 mt-2 line-clamp-2 leading-relaxed">
                     {item.desc || "Нет описания"}

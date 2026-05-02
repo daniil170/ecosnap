@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { SHOP_ITEMS, getItemById } from "../../data/shopItems";
-import { applyItemEffect } from "../../data/itemEffects"; // Убедись, что путь верный
+import { applyItemEffect } from "../../data/itemEffects";
 import { db } from "../../firebase";
 import { doc, updateDoc, arrayUnion, increment } from "firebase/firestore";
 import { Zap, ArrowLeft } from "lucide-react";
@@ -10,8 +10,8 @@ import {
   getItemSlot,
   inferActiveItemsFromProfile,
 } from "../../services/inventoryAutomation";
+import { useLanguage } from "../../context/LanguageContext";
 
-// Настройки стилей для редкости
 const RARITY_STYLES = {
   common: "border-slate-200 bg-slate-50",
   rare: "border-blue-200 bg-blue-50/30",
@@ -21,11 +21,11 @@ const RARITY_STYLES = {
 };
 
 const Shop = ({ user, profile }) => {
+  const { t } = useLanguage();
   const [loading, setLoading] = useState(null);
   const [activeTab, setActiveTab] = useState("all");
   const safeProfile = profile || {};
 
-  // Фильтрация товаров
   const filteredItems =
     activeTab === "all"
       ? SHOP_ITEMS
@@ -33,9 +33,12 @@ const Shop = ({ user, profile }) => {
 
   const handlePurchase = async (item) => {
     if (!user?.uid || (safeProfile.ozone || 0) < item.price) return;
+
     setLoading(item.id);
+
     try {
       const userRef = doc(db, "users", user.uid);
+
       await updateDoc(userRef, {
         ozone: increment(-item.price),
         inventory: arrayUnion(item.id),
@@ -46,49 +49,58 @@ const Shop = ({ user, profile }) => {
           ...safeProfile,
           inventory: [...(safeProfile.inventory || []), item.id],
         };
+
         const bestSelection = buildAutoEquipSelection(virtualUserData);
         const currentSelection = inferActiveItemsFromProfile(safeProfile);
         const slot = getItemSlot(item);
 
-        if (bestSelection[slot] === item.id && currentSelection[slot] !== item.id) {
+        if (
+          bestSelection[slot] === item.id &&
+          currentSelection[slot] !== item.id
+        ) {
           const updatePayload = {
             [`activeItems.${slot}`]: item.id,
           };
+
           applyItemEffect(item, safeProfile, (updatedUser) => {
             Object.assign(updatePayload, updatedUser);
           });
+
           await updateDoc(userRef, updatePayload);
         }
       }
-      alert("Покупка успешна!");
+
+      alert(t("shop.successBuy"));
     } catch (e) {
-      alert("Ошибка покупки");
+      console.error(e);
+      alert(t("shop.errorBuy"));
     }
+
     setLoading(null);
   };
 
   const handleEquip = async (item) => {
     if (!user?.uid) return;
+
     setLoading(item.id);
 
     try {
       const userRef = doc(db, "users", user.uid);
+
       const updatePayload = {
         [`activeItems.${getItemSlot(item)}`]: item.id,
       };
 
-      // Используем твою функцию эффектов
-      // Мы передаем callback, который обновит Firebase данными из эффекта
-      applyItemEffect(item, safeProfile, async (updatedUser) => {
+      applyItemEffect(item, safeProfile, (updatedUser) => {
         Object.assign(updatePayload, updatedUser);
       });
 
-      // Мы сохраняем эффект + помечаем товар как активный
       await updateDoc(userRef, updatePayload);
-      alert(`Эффект "${item.name}" применен!`);
+
+      alert(t("shop.successEquip"));
     } catch (e) {
       console.error(e);
-      alert("Ошибка применения");
+      alert(t("shop.errorEquip"));
     } finally {
       setLoading(null);
     }
@@ -97,35 +109,49 @@ const Shop = ({ user, profile }) => {
   return (
     <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
       <div className="max-w-4xl mx-auto">
-        {/* Header и Баланс */}
+        {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link
             to="/profile"
             className="flex items-center gap-2 text-slate-500 hover:text-slate-900"
           >
-            <ArrowLeft size={20} />{" "}
-            <span className="font-bold uppercase text-xs">Назад</span>
+            <ArrowLeft size={20} />
+            <span className="font-bold uppercase text-xs">
+              {t("shop.back")}
+            </span>
           </Link>
+
           <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
             <Zap size={18} className="text-orange-500 fill-orange-500" />
-            <span className="font-black text-lg">{safeProfile.ozone || 0} O3</span>
+            <span className="font-black text-lg">
+              {safeProfile.ozone || 0} {t("profile.ozoneShort")}
+            </span>
           </div>
         </div>
 
-        {/* Табы */}
+        {/* Tabs */}
         <div className="flex gap-2 mb-8 overflow-x-auto pb-2">
-          {["all", "digital", "real", "charity"].map((tab) => (
+          {[
+            { id: "all", label: t("shop.tabAll") },
+            { id: "digital", label: t("shop.tabDigital") },
+            { id: "real", label: t("shop.tabReal") },
+            { id: "charity", label: t("shop.tabCharity") },
+          ].map((tab) => (
             <button
-              key={tab}
-              onClick={() => setActiveTab(tab)}
-              className={`px-6 py-2 rounded-full font-bold uppercase text-xs transition-all ${activeTab === tab ? "bg-slate-900 text-white" : "bg-white text-slate-400"}`}
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-2 rounded-full font-bold uppercase text-xs transition-all ${
+                activeTab === tab.id
+                  ? "bg-slate-900 text-white"
+                  : "bg-white text-slate-400"
+              }`}
             >
-              {tab}
+              {tab.label}
             </button>
           ))}
         </div>
 
-        {/* Список товаров */}
+        {/* Items */}
         <div className="grid md:grid-cols-2 gap-6">
           {filteredItems.map((item) => {
             const isOwned = safeProfile.inventory?.includes(item.id);
@@ -137,7 +163,9 @@ const Shop = ({ user, profile }) => {
             return (
               <div
                 key={item.id}
-                className={`p-6 rounded-[2.5rem] border-2 shadow-sm transition-all ${RARITY_STYLES[item.rarity] || "bg-white"}`}
+                className={`p-6 rounded-[2.5rem] border-2 shadow-sm transition-all ${
+                  RARITY_STYLES[item.rarity] || "bg-white"
+                }`}
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="text-4xl">{item.icon}</div>
@@ -145,28 +173,40 @@ const Shop = ({ user, profile }) => {
                     {item.rarity}
                   </span>
                 </div>
-                <h3 className="font-bold text-lg">{item.name}</h3>
-                <p className="text-slate-500 text-sm mb-6">{item.desc}</p>
+
+                <h3 className="font-bold text-lg">{t(item.nameKey)}</h3>
+
+                <p className="text-slate-500 text-sm mb-6">{t(item.descKey)}</p>
 
                 {isOwned ? (
                   <button
                     disabled={loading === item.id}
                     onClick={() => handleEquip(item)}
-                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${isEquipped ? "bg-emerald-500 text-white" : "bg-white border border-emerald-500 text-emerald-500"}`}
+                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${
+                      isEquipped
+                        ? "bg-emerald-500 text-white"
+                        : "bg-white border border-emerald-500 text-emerald-500"
+                    }`}
                   >
                     {loading === item.id
-                      ? "Применяем..."
+                      ? t("shop.equipLoading")
                       : isEquipped
-                        ? "Активно"
-                        : "Применить"}
+                        ? t("shop.active")
+                        : t("shop.equip")}
                   </button>
                 ) : (
                   <button
                     disabled={!canAfford || loading === item.id}
                     onClick={() => handlePurchase(item)}
-                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${canAfford ? "bg-slate-900 text-white" : "bg-slate-200 text-slate-400 cursor-not-allowed"}`}
+                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${
+                      canAfford
+                        ? "bg-slate-900 text-white"
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed"
+                    }`}
                   >
-                    {loading === item.id ? "Покупка..." : `${item.price} O3`}
+                    {loading === item.id
+                      ? t("shop.buyLoading")
+                      : `${item.price} O3`}
                   </button>
                 )}
               </div>

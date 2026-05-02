@@ -19,8 +19,10 @@ import {
   createUserWithEmailAndPassword,
   sendPasswordResetEmail,
 } from "firebase/auth";
+import { useLanguage } from "../context/LanguageContext";
 
 const AuthModal = ({ isOpen, onClose }) => {
+  const { t } = useLanguage();
   const [isLogin, setIsLogin] = useState(true);
   const [isReset, setIsReset] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -125,15 +127,17 @@ const AuthModal = ({ isOpen, onClose }) => {
           <div className="text-center mb-8">
             <h2 className="text-2xl font-bold text-slate-900 mb-2">
               {isReset
-                ? "Сброс пароля"
+                ? t("auth.resetTitle")
                 : isLogin
-                  ? "С возвращением!"
-                  : "Регистрация"}
+                  ? t("auth.loginTitle")
+                  : t("auth.signupTitle")}
             </h2>
             <p className="text-slate-500 text-sm">
               {isReset
-                ? "Введите почту для восстановления"
-                : "Присоединяйтесь к EcoSnap"}
+                ? t("auth.resetSubtitle")
+                : isLogin
+                  ? t("auth.loginSubtitle")
+                  : t("auth.signupSubtitle")}
             </p>
           </div>
 
@@ -148,7 +152,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   />
                   <input
                     type="text"
-                    placeholder="Никнейм (ID)"
+                    placeholder={t("auth.nickname")}
                     className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
@@ -165,7 +169,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     />
                     <input
                       type="text"
-                      placeholder="Имя"
+                      placeholder={t("auth.firstName")}
                       className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                       value={firstName}
                       onChange={(e) => setFirstName(e.target.value)}
@@ -179,7 +183,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     />
                     <input
                       type="text"
-                      placeholder="Фамилия"
+                      placeholder={t("auth.lastName")}
                       className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                       value={lastName}
                       onChange={(e) => setLastName(e.target.value)}
@@ -195,6 +199,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   />
                   <input
                     type="date"
+                    placeholder={t("auth.birthDate")}
                     className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-500 transition-all"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
@@ -210,7 +215,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     />
                     <input
                       type="text"
-                      placeholder="Страна"
+                      placeholder={t("auth.country")}
                       className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
@@ -224,7 +229,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     />
                     <input
                       type="text"
-                      placeholder="Город"
+                      placeholder={t("auth.city")}
                       className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
@@ -242,7 +247,7 @@ const AuthModal = ({ isOpen, onClose }) => {
               />
               <input
                 type="email"
-                placeholder="Email"
+                placeholder={t("auth.email")}
                 className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -258,7 +263,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 />
                 <input
                   type={showPassword ? "text" : "password"}
-                  placeholder="Пароль"
+                  placeholder={t("auth.password")}
                   className="w-full pl-12 pr-12 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
@@ -275,7 +280,7 @@ const AuthModal = ({ isOpen, onClose }) => {
             )}
 
             <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg mt-2">
-              {isReset ? "Сбросить" : isLogin ? "Войти" : "Создать аккаунт"}
+              {isReset ? t("auth.reset") : isLogin ? t("auth.login") : t("auth.signup")}
             </button>
           </form>
 
@@ -287,7 +292,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 </div>
                 <div className="relative flex justify-center text-xs uppercase">
                   <span className="bg-white px-4 text-slate-400 font-medium">
-                    Или через
+                    {t("auth.orMethod")}
                   </span>
                 </div>
               </div>
@@ -301,7 +306,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   alt="Google"
                   className="w-5 h-5"
                 />
-                Google
+                {t("auth.google")}
               </button>
             </>
           )}
@@ -312,11 +317,11 @@ const AuthModal = ({ isOpen, onClose }) => {
                 onClick={() => setIsReset(false)}
                 className="font-bold text-slate-900"
               >
-                Вернуться ко входу
+                {t("auth.backToLogin")}
               </button>
             ) : (
               <>
-                {isLogin ? "Нет аккаунта?" : "Уже есть аккаунт?"}
+                {isLogin ? t("auth.noAccount") : t("auth.alreadyHave")}
                 <button
                   onClick={() => {
                     setIsLogin(!isLogin);
@@ -324,7 +329,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   }}
                   className="ml-2 font-bold text-slate-900 hover:text-emerald-600 transition-colors"
                 >
-                  {isLogin ? "Создать" : "Войти"}
+                  {isLogin ? t("auth.signup") : t("auth.login")}
                 </button>
               </>
             )}

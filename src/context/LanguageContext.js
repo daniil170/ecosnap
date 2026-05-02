@@ -11,17 +11,24 @@ export const LanguageProvider = ({ children }) => {
     document.documentElement.lang = language;
   }, [language]);
 
-  // ИСПРАВЛЕННАЯ ФУНКЦИЯ t
   const t = (key) => {
-    // Получаем текущий словарь для выбранного языка
-    const currentDict = translations[language];
+    const currentDict = translations[language] || translations.en;
 
-    // Проверяем, есть ли такой ключ напрямую в объекте
-    if (currentDict && currentDict[key]) {
+    // 1. Прямой поиск (для большинства ваших ключей)
+    if (currentDict[key]) {
       return currentDict[key];
     }
 
-    // Если ключ не найден, возвращаем сам ключ, чтобы вы видели, чего не хватает
+    // 2. Обработка специального вложенного объекта (profile.rewardTable)
+    // Если ключ содержит точку и прямой поиск не дал результата
+    if (key.includes(".")) {
+      const [parent, child] = key.split(".");
+      if (currentDict[parent] && currentDict[parent][child]) {
+        return currentDict[parent][child];
+      }
+    }
+
+    // Если ничего не найдено, возвращаем сам ключ
     return key;
   };
 

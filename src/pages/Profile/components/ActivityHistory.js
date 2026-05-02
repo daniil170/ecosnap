@@ -1,7 +1,9 @@
 import React from "react";
 import { History, Camera, Zap, Award, Recycle } from "lucide-react";
+import { useLanguage } from "../../../context/LanguageContext";
 
 const ActivityHistory = ({ activityHistory }) => {
+  const { t } = useLanguage();
   // Функция для выбора иконки в зависимости от типа активности
   const getActivityIcon = (type) => {
     switch (type) {
@@ -15,7 +17,7 @@ const ActivityHistory = ({ activityHistory }) => {
   return (
     <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
       <h3 className="text-xl font-extrabold flex items-center gap-2 uppercase tracking-tight text-slate-800 mb-6">
-        <History size={24} className="text-slate-400" /> Последняя активность
+        <History size={24} className="text-slate-400" /> {t("activityHistory.title")}
       </h3>
 
       {activityHistory && activityHistory.length > 0 ? (
@@ -40,7 +42,7 @@ const ActivityHistory = ({ activityHistory }) => {
         </div>
       ) : (
         <div className="text-center py-8 text-slate-400">
-          <p>Пока нет недавних действий</p>
+          <p>{t("activityHistory.empty")}</p>
         </div>
       )}
     </div>

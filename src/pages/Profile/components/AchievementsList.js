@@ -1,6 +1,7 @@
 import React from "react";
 import { Trophy, ChevronUp, ChevronDown } from "lucide-react";
 import { ACHIEVEMENTS_LIST } from "../../../data/achievements";
+import { useLanguage } from "../../../context/LanguageContext";
 
 const AchievementsList = ({
   userData,
@@ -8,6 +9,7 @@ const AchievementsList = ({
   showAllAch,
   setShowAllAch,
 }) => {
+  const { t } = useLanguage();
   const unlockedIds = new Set(userData.achievements || []);
   const orderedAchievements = [...ACHIEVEMENTS_LIST].sort((a, b) => {
     const aUnlocked = unlockedIds.has(a.id);
@@ -24,7 +26,7 @@ const AchievementsList = ({
     <div className="bg-white rounded-[2.5rem] p-8 border border-slate-100 shadow-sm">
       <div className="flex items-center justify-between mb-8">
         <h3 className="text-xl font-extrabold flex items-center gap-2 uppercase tracking-tight text-orange-400">
-          <Trophy size={24} /> Коллекция наград
+          <Trophy size={24} /> {t("achievements.collection")}
         </h3>
         <button
           onClick={() => setShowAllAch(!showAllAch)}
@@ -32,11 +34,11 @@ const AchievementsList = ({
         >
           {showAllAch ? (
             <>
-              <ChevronUp size={16} /> Свернуть
+              <ChevronUp size={16} /> {t("achievements.hide")}
             </>
           ) : (
             <>
-              <ChevronDown size={16} /> Показать все ({ACHIEVEMENTS_LIST.length})
+              <ChevronDown size={16} /> {t("achievements.showAll")} ({ACHIEVEMENTS_LIST.length})
             </>
           )}
         </button>
