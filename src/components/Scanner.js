@@ -1,204 +1,176 @@
-import React, { useState, useRef, useEffect, useCallback } from "react";
-import { Link } from "react-router-dom"; // Добавили для перехода на главную
-import { X, RefreshCw, Zap, Image as ImageIcon } from "lucide-react";
+import React, { useState, useRef, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { X, RefreshCw, Zap } from "lucide-react";
 import { processEcoScan } from "../services/gamification";
 
-const SCAN_MOCKS = [
-  {
-    title: "Стеклянная бутылка",
-    type: "glass",
-    label: "GL 70",
-    instructions: "Снимите крышку и этикетку. Сдайте в пункт приема стекла.",
-  },
-  {
-    title: "Пластиковая бутылка",
-    type: "plastic",
-    label: "PET 1",
-    instructions: "Сожмите бутылку, закрутите крышку и выбросьте в контейнер для пластика.",
-  },
-  {
-    title: "Картонная упаковка",
-    type: "paper",
-    label: "PAP 21",
-    instructions: "Убедитесь, что упаковка сухая, затем отправьте в контейнер для бумаги.",
-  },
-  {
-    title: "Алюминиевая банка",
-    type: "metal",
-    label: "ALU 41",
-    instructions: "Сполосните банку и сдайте в пункт приема металла.",
-  },
-];
-
 const Scanner = ({ user }) => {
-  // Убрали onClose из пропсов, так как теперь используем роутинг
   const videoRef = useRef(null);
-  const [stream, setStream] = useState(null);
+  const canvasRef = useRef(null);
+  const streamRef = useRef(null); // Ключевой элемент для управления камерой
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
 
-  const startCamera = useCallback(async () => {
-    try {
-      const newStream = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "environment" },
-      });
-      if (videoRef.current) {
-        videoRef.current.srcObject = newStream;
-      }
-      setStream(newStream);
-    } catch (err) {
-      console.error("Camera error:", err);
-      alert("Не удалось получить доступ к камере.");
-    }
-  }, []);
-
+  // 1. Стабильный запуск и остановка камеры
+  // Исправленный useEffect с учетом безопасности ref
   useEffect(() => {
+    async function startCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "environment" },
+        });
+        streamRef.current = stream;
+        if (videoRef.current) {
+          videoRef.current.srcObject = stream;
+        }
+      } catch (err) {
+        console.error("Camera access denied:", err);
+      }
+    }
+
     startCamera();
+
+    // Функция очистки
     return () => {
-      if (stream) {
-        stream.getTracks().forEach((track) => track.stop());
+      // 1. Создаем локальные копии рефов прямо перед использованием
+      const videoNode = videoRef.current;
+      const activeStream = streamRef.current;
+
+      // 2. Работаем с локальными переменными, а не напрямую с рефами
+      if (videoNode) {
+        videoNode.srcObject = null;
+      }
+      
+      if (activeStream) {
+        activeStream.getTracks().forEach((track) => track.stop());
+        streamRef.current = null; // Очищаем реф после остановки
       }
     };
-  }, [startCamera, stream]);
+  }, []);
 
-  const handleCapture = () => {
+  const handleCapture = async () => {
     setIsAnalyzing(true);
-    setTimeout(async () => {
-      const mock = SCAN_MOCKS[Math.floor(Math.random() * SCAN_MOCKS.length)];
+    const video = videoRef.current;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
 
-      let addEcoScore = 0;
-      let addOzone = 20;
-      let newAchievements = [];
-      let levelRewards = [];
-      if (user?.uid) {
-        try {
-          const gameResult = await processEcoScan(user.uid, mock.type);
-          addEcoScore = gameResult?.addEcoScore || 0;
-          addOzone = gameResult?.addOzone || 20;
-          newAchievements = gameResult?.newAchievements || [];
-          levelRewards = gameResult?.levelRewards || [];
-        } catch (error) {
-          console.error("Ошибка processEcoScan:", error);
-        }
+    canvas.width = video.videoWidth;
+    canvas.height = video.videoHeight;
+    canvas.getContext("2d").drawImage(video, 0, 0);
+
+    canvas.toBlob(async (blob) => {
+      if (!blob) {
+        setIsAnalyzing(false);
+        return;
       }
 
-      setIsAnalyzing(false);
-      setResult({
-        title: mock.title,
-        type: mock.label,
-        instructions: mock.instructions,
-        points: `+${addEcoScore || 20} эко-счёта`,
-        ozone: `+${addOzone} O3`,
-        unlockedCount: newAchievements.length,
-        levelRewardsCount: levelRewards.length,
-      });
-    }, 2500);
+      const formData = new FormData();
+      formData.append("image", blob, "scan.jpg");
+
+      try {
+        const response = await fetch("http://localhost:5000/api/analyze", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!response.ok) throw new Error("API Error");
+        const aiData = await response.json();
+
+        // Простой маппинг типов для геймификации
+        const type = aiData.type.toLowerCase();
+        const gameType = type.includes("plastic")
+          ? "plastic"
+          : type.includes("glass")
+            ? "glass"
+            : type.includes("metal")
+              ? "metal"
+              : "paper";
+
+        let gameResult = { addEcoScore: aiData.ecoPoints, addOzone: 20 };
+        if (user?.uid) {
+          try {
+            gameResult = await processEcoScan(user.uid, gameType);
+          } catch (e) {
+            console.error(e);
+          }
+        }
+
+        setIsAnalyzing(false);
+        setResult({
+          title: aiData.type.toUpperCase(),
+          instructions: aiData.advice,
+          points: `+${gameResult?.addEcoScore || aiData.ecoPoints} эко-счёта`,
+        });
+      } catch (error) {
+        alert("Ошибка распознавания");
+        setIsAnalyzing(false);
+      }
+    }, "image/jpeg");
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black flex flex-col animate-in fade-in duration-300">
+    <div className="fixed inset-0 z-[100] bg-black flex flex-col w-screen h-screen overflow-hidden">
+      <canvas ref={canvasRef} className="hidden" />
+
       {/* Header */}
       <div className="absolute top-0 w-full p-6 flex justify-between items-center z-20">
-        {/* ЗАМЕНА КНОПКИ: теперь это ссылка на главную */}
         <Link
           to="/"
-          className="p-3 bg-white/10 backdrop-blur-md rounded-full text-white active:scale-90 transition"
+          className="p-3 bg-white/20 backdrop-blur-md rounded-full text-white active:scale-90 transition"
         >
           <X size={24} />
         </Link>
-
         <div className="px-4 py-1.5 bg-emerald-500/20 backdrop-blur-md rounded-full text-emerald-400 text-xs font-bold border border-emerald-500/30">
-          EcoSnap AI Vision
+          EcoSnap Vision
         </div>
-        <button className="p-3 bg-white/10 backdrop-blur-md rounded-full text-white">
-          <Zap size={24} />
-        </button>
+        <div className="w-12"></div>
       </div>
 
-      {/* Viewport */}
-      <div className="relative flex-1 flex items-center justify-center overflow-hidden bg-slate-900">
+      {/* Основная область камеры */}
+      <div className="relative flex-1 w-full bg-slate-900 overflow-hidden">
         <video
           ref={videoRef}
           autoPlay
           playsInline
-          className="h-full w-full object-cover"
+          className="absolute inset-0 w-full h-full object-cover"
         />
 
+        {/* Рамка фокуса */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-          <div className="w-72 h-72 border-2 border-emerald-500/30 rounded-[3rem] relative overflow-hidden">
-            <div className="absolute top-0 left-0 w-full h-1 bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.8)] animate-scan" />
-          </div>
+          <div className="w-64 h-64 border-2 border-emerald-500/50 rounded-3xl" />
         </div>
 
         {isAnalyzing && (
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-sm flex flex-col items-center justify-center text-white z-30">
+          <div className="absolute inset-0 bg-black/70 flex flex-col items-center justify-center text-white z-30">
             <RefreshCw
               size={50}
               className="animate-spin text-emerald-500 mb-4"
             />
-            <p className="text-xl font-bold tracking-wide">
-              Анализ нейросетью...
-            </p>
-          </div>
-        )}
-
-        {result && (
-          <div className="absolute bottom-0 w-full bg-white rounded-t-[3rem] p-8 animate-in slide-in-from-bottom duration-500 z-40 shadow-[0_-20px_40px_rgba(0,0,0,0.2)]">
-            <div className="w-12 h-1.5 bg-slate-200 rounded-full mx-auto mb-6" />
-            <div className="flex justify-between items-start mb-4">
-              <div>
-                <h3 className="text-2xl font-bold text-slate-900">
-                  {result.title}
-                </h3>
-                <span className="inline-block px-3 py-1 bg-emerald-100 text-emerald-700 rounded-lg text-sm font-bold mt-2">
-                  {result.type}
-                </span>
-              </div>
-              <div className="bg-yellow-400 text-white px-4 py-2 rounded-2xl font-bold shadow-lg">
-                {result.points}
-              </div>
-            </div>
-            <div className="mb-4 inline-flex items-center rounded-xl bg-orange-100 text-orange-700 px-3 py-1 text-sm font-black">
-              {result.ozone}
-            </div>
-            <p className="text-slate-600 mb-8 leading-relaxed">
-              {result.instructions}
-            </p>
-            <button
-              onClick={() => setResult(null)}
-              className="w-full bg-slate-900 text-white py-5 rounded-2xl font-bold text-lg active:scale-95 transition shadow-xl"
-            >
-              Понятно
-            </button>
-            {result.unlockedCount > 0 && (
-              <p className="mt-3 text-sm text-emerald-600 font-bold text-center">
-                Открыто новых наград: {result.unlockedCount}
-              </p>
-            )}
-            {result.levelRewardsCount > 0 && (
-              <p className="mt-2 text-sm text-indigo-600 font-bold text-center">
-                Получено наград за уровень: {result.levelRewardsCount}
-              </p>
-            )}
+            <p>Анализ...</p>
           </div>
         )}
       </div>
 
-      {/* Controls */}
+      {/* Результаты (если есть) */}
+      {result && (
+        <div className="absolute bottom-0 left-0 w-full p-8 bg-white rounded-t-[3rem] z-40 animate-in slide-in-from-bottom">
+          <h3 className="text-xl font-bold">{result.title}</h3>
+          <p className="text-slate-600 my-4">{result.instructions}</p>
+          <button
+            onClick={() => setResult(null)}
+            className="w-full bg-emerald-500 text-white py-4 rounded-xl font-bold"
+          >
+            Закрыть
+          </button>
+        </div>
+      )}
+
+      {/* Кнопка спуска */}
       {!result && !isAnalyzing && (
-        <div className="bg-black p-10 flex justify-around items-center">
-          <button className="text-white/50 hover:text-white transition">
-            <ImageIcon size={28} />
-          </button>
-          <button onClick={handleCapture} className="group relative">
-            <div className="absolute inset-0 bg-emerald-500 rounded-full blur-md opacity-20 group-hover:opacity-40 transition"></div>
-            <div className="w-20 h-20 bg-white rounded-full flex items-center justify-center relative border-4 border-white/20 active:scale-90 transition shadow-2xl">
-              <div className="w-16 h-16 bg-white border-4 border-slate-900 rounded-full" />
-            </div>
-          </button>
-          <button className="text-white/50 hover:text-white transition">
-            <RefreshCw size={28} />
-          </button>
+        <div className="bg-black p-8 flex justify-center items-center">
+          <button
+            onClick={handleCapture}
+            className="w-20 h-20 bg-white rounded-full border-4 border-emerald-500 flex items-center justify-center active:scale-90 transition"
+          />
         </div>
       )}
     </div>
