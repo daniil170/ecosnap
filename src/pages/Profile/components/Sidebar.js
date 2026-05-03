@@ -53,13 +53,13 @@ const Sidebar = ({
           </span>{" "}
           {t("common.and")}{" "}
           <span style={{ color: "#1db97e" }} className="font-bold">
-            +{currentRewards.ozone} O3
+            +{currentRewards.ozone} OZ
           </span>{" "}
           {t("common.perScan")}.
         </p>
         <p className="text-xs mt-2" style={{ color: "#b3c2d1" }}>
           {t("sidebar.nextLevel")} ({nextLevel}): +{nextRewards.ecoScore}{" "}
-          {t("profile.ecoScore")} {t("common.and")} +{nextRewards.ozone} O3{" "}
+          {t("profile.ecoScore")} {t("common.and")} +{nextRewards.ozone} OZ{" "}
           {t("common.perScan")}.
         </p>
       </div>

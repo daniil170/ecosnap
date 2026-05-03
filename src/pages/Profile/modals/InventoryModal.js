@@ -159,7 +159,7 @@ const InventoryModal = ({ onClose, userData, userId }) => {
                           isActive ? "text-emerald-800" : "text-slate-800"
                         }`}
                       >
-                        {item.name}
+                        {t(item.nameKey)}
                       </div>
 
                       {isActive && (
@@ -169,7 +169,7 @@ const InventoryModal = ({ onClose, userData, userId }) => {
                       )}
 
                       <div className="text-xs text-slate-500 mt-2 line-clamp-2">
-                        {item.desc || t("inventory.noDesc")}
+                        {item.descKey ? t(item.descKey) : t("inventory.noDesc")}
                       </div>
                     </div>
                   </button>

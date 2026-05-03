@@ -9,10 +9,18 @@ import {
   Calendar,
   MapPin,
   Globe,
-  Contact, // Иконка для Имени/Фамилии
+  Contact,
 } from "lucide-react";
 import { auth, googleProvider, db } from "../firebase";
-import { doc, setDoc, getDoc } from "firebase/firestore";
+import {
+  doc,
+  setDoc,
+  getDoc,
+  query,
+  collection,
+  where,
+  getDocs,
+} from "firebase/firestore";
 import {
   signInWithPopup,
   signInWithEmailAndPassword,
@@ -31,15 +39,14 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
-  const [firstName, setFirstName] = useState(""); // Новое поле
-  const [lastName, setLastName] = useState(""); // Новое поле
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
 
   if (!isOpen) return null;
 
-  // Инициализация профиля в Firestore
   const initializeUserData = async (user, additionalData = {}) => {
     const userRef = doc(db, "users", user.uid);
     const docSnap = await getDoc(userRef);
@@ -71,7 +78,6 @@ const AuthModal = ({ isOpen, onClose }) => {
       await initializeUserData(result.user);
       onClose();
     } catch (err) {
-      console.error("Ошибка Google Login:", err);
       alert(err.message);
     }
   };
@@ -81,13 +87,27 @@ const AuthModal = ({ isOpen, onClose }) => {
     try {
       if (isReset) {
         await sendPasswordResetEmail(auth, email);
-        alert("Ссылка для сброса отправлена!");
+        alert(t("auth.resetSuccess") || "Ссылка отправлена на почту");
         setIsReset(false);
       } else if (isLogin) {
-        await signInWithEmailAndPassword(auth, email, password);
+        let loginEmail = email;
+
+        // ЛОГИКА: Если нет @, ищем по никнейму
+        if (!email.includes("@")) {
+          const q = query(
+            collection(db, "users"),
+            where("displayName", "==", email),
+          );
+          const querySnapshot = await getDocs(q);
+          if (querySnapshot.empty) {
+            throw new Error("Пользователь не найден");
+          }
+          loginEmail = querySnapshot.docs[0].data().email;
+        }
+
+        await signInWithEmailAndPassword(auth, loginEmail, password);
         onClose();
       } else {
-        // Регистрация
         const result = await createUserWithEmailAndPassword(
           auth,
           email,
@@ -132,19 +152,11 @@ const AuthModal = ({ isOpen, onClose }) => {
                   ? t("auth.loginTitle")
                   : t("auth.signupTitle")}
             </h2>
-            <p className="text-slate-500 text-sm">
-              {isReset
-                ? t("auth.resetSubtitle")
-                : isLogin
-                  ? t("auth.loginSubtitle")
-                  : t("auth.signupSubtitle")}
-            </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && !isReset && (
               <>
-                {/* Никнейм */}
                 <div className="relative">
                   <User
                     className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
@@ -153,43 +165,30 @@ const AuthModal = ({ isOpen, onClose }) => {
                   <input
                     type="text"
                     placeholder={t("auth.nickname")}
-                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
                   />
                 </div>
 
-                {/* Имя и Фамилия */}
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="relative">
-                    <Contact
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                      size={18}
-                    />
-                    <input
-                      type="text"
-                      placeholder={t("auth.firstName")}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-                      value={firstName}
-                      onChange={(e) => setFirstName(e.target.value)}
-                      required
-                    />
-                  </div>
-                  <div className="relative">
-                    <Contact
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
-                      size={18}
-                    />
-                    <input
-                      type="text"
-                      placeholder={t("auth.lastName")}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
-                      value={lastName}
-                      onChange={(e) => setLastName(e.target.value)}
-                      required
-                    />
-                  </div>
+                  <input
+                    type="text"
+                    placeholder={t("auth.firstName")}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    value={firstName}
+                    onChange={(e) => setFirstName(e.target.value)}
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder={t("auth.lastName")}
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    value={lastName}
+                    onChange={(e) => setLastName(e.target.value)}
+                    required
+                  />
                 </div>
 
                 <div className="relative">
@@ -199,8 +198,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   />
                   <input
                     type="date"
-                    placeholder={t("auth.birthDate")}
-                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-500 transition-all"
+                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-500"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                     required
@@ -216,7 +214,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     <input
                       type="text"
                       placeholder={t("auth.country")}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                       value={country}
                       onChange={(e) => setCountry(e.target.value)}
                       required
@@ -230,7 +228,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     <input
                       type="text"
                       placeholder={t("auth.city")}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                       required
@@ -246,9 +244,9 @@ const AuthModal = ({ isOpen, onClose }) => {
                 size={18}
               />
               <input
-                type="email"
-                placeholder={t("auth.email")}
-                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                type="text"
+                placeholder={t("auth.loginPlaceholder") || "Email или Ник"}
+                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -264,7 +262,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder={t("auth.password")}
-                  className="w-full pl-12 pr-12 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none transition-all"
+                  className="w-full pl-12 pr-12 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -272,34 +270,40 @@ const AuthModal = ({ isOpen, onClose }) => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
               </div>
             )}
 
-            <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-emerald-600 hover:scale-[1.02] active:scale-[0.98] transition-all shadow-lg mt-2">
-              {isReset ? t("auth.reset") : isLogin ? t("auth.login") : t("auth.signup")}
+            {isLogin && !isReset && (
+              <button
+                type="button"
+                onClick={() => setIsReset(true)}
+                className="text-xs text-emerald-600 font-bold block w-full text-right hover:underline"
+              >
+                {t("auth.forgotPassword")}
+              </button>
+            )}
+
+            <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-lg mt-2">
+              {isReset
+                ? t("auth.reset")
+                : isLogin
+                  ? t("auth.login")
+                  : t("auth.signup")}
             </button>
           </form>
 
           {!isReset && (
             <>
-              <div className="relative my-6">
-                <div className="absolute inset-0 flex items-center">
-                  <div className="w-full border-t border-slate-100"></div>
-                </div>
-                <div className="relative flex justify-center text-xs uppercase">
-                  <span className="bg-white px-4 text-slate-400 font-medium">
-                    {t("auth.orMethod")}
-                  </span>
-                </div>
+              <div className="relative my-6 text-center text-xs text-slate-400 uppercase">
+                {t("auth.orMethod")}
               </div>
               <button
-                type="button"
                 onClick={handleGoogleLogin}
-                className="flex items-center justify-center gap-3 w-full py-4 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all font-semibold text-slate-700 shadow-sm"
+                className="flex items-center justify-center gap-3 w-full py-4 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all"
               >
                 <img
                   src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -327,7 +331,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     setIsLogin(!isLogin);
                     setIsReset(false);
                   }}
-                  className="ml-2 font-bold text-slate-900 hover:text-emerald-600 transition-colors"
+                  className="ml-2 font-bold text-slate-900 hover:text-emerald-600"
                 >
                   {isLogin ? t("auth.signup") : t("auth.login")}
                 </button>

@@ -72,7 +72,7 @@ const ProfileHeader = ({ userData, user, onEdit }) => {
 
         <div className="flex gap-2 mt-2 flex-wrap justify-center md:justify-start">
           {userData.badges?.includes("recycle") && (
-            <span className="text-xs bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full font-bold">♻️ Эко</span>
+            <span className="text-xs bg-emerald-100 text-emerald-600 px-3 py-1 rounded-full font-bold"> {t("profile.badgeRecycle")}</span>
           )}
           {userData.badges?.includes("founder") && (
             <span className="text-xs bg-yellow-100 text-yellow-600 px-3 py-1 rounded-full font-bold">👑 Founder</span>
@@ -86,7 +86,7 @@ const ProfileHeader = ({ userData, user, onEdit }) => {
         {hasStickerPack && (
           <div className="mt-3 flex items-center gap-2 justify-center md:justify-start">
             <span className="text-[10px] font-black uppercase tracking-wider text-emerald-700">
-              Стикеры:
+              {t("profile.stickerPack")}
             </span>
             <span className="inline-flex items-center gap-1 rounded-full bg-emerald-100 text-emerald-700 px-2.5 py-1 text-xs font-bold">
               <Sparkles size={12} /> Eco Pack

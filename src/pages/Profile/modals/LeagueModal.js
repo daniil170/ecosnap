@@ -1,22 +1,19 @@
 import React from "react";
 import { X, Trophy, ArrowUpRight } from "lucide-react";
 import { ECO_LEAGUES, getLeagueProgress } from "../../../services/leagueSystem";
+import { useLanguage } from "../../../context/LanguageContext";
 
 const LeagueModal = ({ userData, onClose }) => {
-  const {
-    score,
-    currentLeague,
-    nextLeague,
-    progressPct,
-    pointsToNext,
-  } = getLeagueProgress(userData);
+  const { t } = useLanguage();
+  const { score, currentLeague, nextLeague, progressPct, pointsToNext } =
+    getLeagueProgress(userData);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
       <div className="bg-white rounded-[2.5rem] p-8 w-full max-w-3xl shadow-2xl">
         <div className="flex justify-between items-center mb-6">
           <h2 className="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
-            <Trophy className="text-emerald-500" /> Лиги EcoSnap
+            <Trophy className="text-emerald-500" /> {t("leagues.title")}
           </h2>
           <button
             onClick={onClose}
@@ -30,16 +27,18 @@ const LeagueModal = ({ userData, onClose }) => {
           className={`rounded-3xl p-5 bg-gradient-to-r ${currentLeague.color} text-white mb-5`}
         >
           <p className="text-xs uppercase tracking-widest font-black opacity-80">
-            Текущая лига
+            {t("leagues.currentLeague")}
           </p>
           <div className="flex items-center gap-3 mt-2">
             <span className="text-3xl">{currentLeague.icon}</span>
             <div>
-              <p className="text-xl font-black">{currentLeague.name}</p>
-              <p className="text-sm opacity-90">{currentLeague.desc}</p>
+              <p className="text-xl font-black">{t(currentLeague.nameKey)}</p>
+              <p className="text-sm opacity-90">{t(currentLeague.descKey)}</p>
             </div>
           </div>
-          <p className="mt-4 text-sm font-bold">Эко-счёт: {score.toLocaleString()}</p>
+          <p className="mt-4 text-sm font-bold">
+            {t("profile.ecoScore")}: {score.toLocaleString()}
+          </p>
           {nextLeague ? (
             <>
               <div className="mt-3 h-2.5 bg-white/30 rounded-full overflow-hidden">
@@ -49,12 +48,13 @@ const LeagueModal = ({ userData, onClose }) => {
                 />
               </div>
               <p className="mt-2 text-xs font-bold opacity-90">
-                До {nextLeague.name}: {pointsToNext.toLocaleString()} очков
+                {t("leagues.toNextLeague")} {t(nextLeague.nameKey)}:{" "}
+                {pointsToNext.toLocaleString()} {t("leagues.points")}
               </p>
             </>
           ) : (
             <p className="mt-2 text-xs font-bold opacity-90">
-              Максимальная лига достигнута. Ты легенда экосистемы!
+              {t("leagues.maxReached")}
             </p>
           )}
         </div>
@@ -79,14 +79,21 @@ const LeagueModal = ({ userData, onClose }) => {
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{league.icon}</span>
                     <div>
-                      <p className="font-bold text-slate-800">{league.name}</p>
-                      <p className="text-xs text-slate-500">{league.desc}</p>
+                      <p className="font-bold text-slate-800">
+                        {t(league.nameKey)}
+                      </p>
+                      <p className="text-xs text-slate-500">
+                        {t(league.descKey)}
+                      </p>
                     </div>
                   </div>
-                  {isCurrent && <ArrowUpRight size={16} className="text-emerald-500" />}
+                  {isCurrent && (
+                    <ArrowUpRight size={16} className="text-emerald-500" />
+                  )}
                 </div>
                 <p className="mt-3 text-xs font-black uppercase tracking-wider text-slate-500">
-                  Порог: {league.minScore.toLocaleString()} очков
+                  {t("leagues.threshold")}: {league.minScore.toLocaleString()}{" "}
+                  {t("leagues.points")}
                 </p>
               </div>
             );

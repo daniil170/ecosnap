@@ -11,25 +11,26 @@ export const LanguageProvider = ({ children }) => {
     document.documentElement.lang = language;
   }, [language]);
 
+  /**
+   * Универсальная функция для получения перевода.
+   * Поддерживает любую глубину вложенности через точку (например: "a.b.c")
+   */
   const t = (key) => {
     const currentDict = translations[language] || translations.en;
 
-    // 1. Прямой поиск (для большинства ваших ключей)
-    if (currentDict[key]) {
+    // 1. Сначала пробуем найти ключ как есть (для плоских ключей типа "nav.profile")
+    if (currentDict[key] !== undefined) {
       return currentDict[key];
     }
 
-    // 2. Обработка специального вложенного объекта (profile.rewardTable)
-    // Если ключ содержит точку и прямой поиск не дал результата
-    if (key.includes(".")) {
-      const [parent, child] = key.split(".");
-      if (currentDict[parent] && currentDict[parent][child]) {
-        return currentDict[parent][child];
-      }
-    }
+    // 2. Если не нашли, пробуем разбить по точке (для вложенных ключей типа "achievements.streak_10.name")
+    const keys = key.split(".");
+    const value = keys.reduce((acc, k) => {
+      return acc && acc[k] !== undefined ? acc[k] : undefined;
+    }, currentDict);
 
-    // Если ничего не найдено, возвращаем сам ключ
-    return key;
+    // Если значение найдено — возвращаем его, если нет — сам ключ
+    return value !== undefined ? value : key;
   };
 
   const changeLanguage = (lang) => {

@@ -1,6 +1,6 @@
-import React from 'react';
-import { useLanguage } from '../../../context/LanguageContext';
-import { getItemById } from '../../../data/shopItems';
+import React from "react";
+import { useLanguage } from "../../../context/LanguageContext";
+import { getItemById } from "../../../data/shopItems";
 
 const RegularInventoryModal = ({ userData, onClose }) => {
   const { t } = useLanguage();
@@ -8,18 +8,18 @@ const RegularInventoryModal = ({ userData, onClose }) => {
   // Получаем и фильтруем товары
   const items = (userData.inventory || [])
     .map((id) => getItemById(id))
-    .filter((item) => item && item.category !== 'digital');
+    .filter((item) => item && item.category !== "digital");
 
   return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
       <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl relative">
-        <button 
-          onClick={onClose} 
+        <button
+          onClick={onClose}
           className="absolute top-4 right-4 text-slate-400 hover:text-slate-600"
         >
           ✕
         </button>
-        
+
         <h2 className="text-xl font-bold mb-4 text-center">
           {t("inventory.regular_title") || "Обычные товары"}
         </h2>
@@ -31,17 +31,21 @@ const RegularInventoryModal = ({ userData, onClose }) => {
         ) : (
           <div className="space-y-4 max-h-96 overflow-y-auto">
             {items.map((item, index) => (
-              <div key={index} className="flex items-center p-3 bg-slate-50 rounded-lg border border-slate-100">
+              <div
+                key={index}
+                className="flex items-center p-3 bg-slate-50 rounded-lg border border-slate-100"
+              >
                 <div className="w-12 h-12 flex items-center justify-center text-2xl bg-white rounded-full border mr-4">
                   {item.icon || "📦"}
                 </div>
                 <div>
-                  {/* Добавлена проверка || "fallback_key" чтобы избежать undefined в t() */}
                   <h4 className="font-bold text-sm text-slate-800">
-                    {t(item.name || "inventory.unknownItem")}
+                    {/* Используем nameKey вместо name */}
+                    {t(item.nameKey || "inventory.unknownItem")}
                   </h4>
                   <p className="text-xs text-slate-500">
-                    {item.desc ? t(item.desc) : t("inventory.noDesc")}
+                    {/* Используем descKey вместо desc */}
+                    {item.descKey ? t(item.descKey) : t("inventory.noDesc")}
                   </p>
                 </div>
               </div>

@@ -11,6 +11,7 @@ import { useLanguage } from "../context/LanguageContext";
 
 const Hero = ({ onAuthClick, onAboutClick, user }) => {
   const { t } = useLanguage();
+  const isLoggedIn = !!user; // Определяем статус авторизации
 
   return (
     <section className="relative pt-24 pb-16 md:pt-32 md:pb-20 overflow-hidden bg-white">
@@ -18,12 +19,23 @@ const Hero = ({ onAuthClick, onAboutClick, user }) => {
 
       <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-12 md:gap-16 items-center">
         <div className="space-y-6 md:space-y-8 text-center lg:text-left">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-50 border border-emerald-100 text-emerald-700 text-[10px] md:text-xs font-bold uppercase mx-auto lg:mx-0">
+          {/* Статус системы */}
+          <div
+            className={`inline-flex items-center gap-2 px-3 py-1 rounded-full border text-[10px] md:text-xs font-bold uppercase mx-auto lg:mx-0 ${
+              isLoggedIn
+                ? "bg-emerald-50 border-emerald-100 text-emerald-700"
+                : "bg-red-50 border-red-100 text-red-600"
+            }`}
+          >
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+              {isLoggedIn && (
+                <span className="animate-ping absolute h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+              )}
+              <span
+                className={`relative inline-flex rounded-full h-2 w-2 ${isLoggedIn ? "bg-emerald-500" : "bg-red-500"}`}
+              ></span>
             </span>
-            {user ? t("hero.loggedInTagline") : t("hero.tagline")}
+            {isLoggedIn ? t("hero.loggedInTagline") : t("hero.tagline")}
           </div>
 
           <h1 className="text-4xl md:text-7xl font-extrabold text-slate-900 leading-tight">

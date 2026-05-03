@@ -38,7 +38,8 @@ const AchievementsList = ({
             </>
           ) : (
             <>
-              <ChevronDown size={16} /> {t("achievements.showAll")} ({ACHIEVEMENTS_LIST.length})
+              <ChevronDown size={16} /> {t("achievements.showAll")} (
+              {ACHIEVEMENTS_LIST.length})
             </>
           )}
         </button>
@@ -59,7 +60,7 @@ const AchievementsList = ({
             >
               <span className="text-5xl">{ach.icon}</span>
               <span className="text-[10px] font-black uppercase text-center text-slate-700 leading-tight">
-                {ach.title}
+                {t(ach.nameKey)}
               </span>
             </button>
           );
