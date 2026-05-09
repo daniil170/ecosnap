@@ -28,6 +28,7 @@ import {
   sendPasswordResetEmail,
 } from "firebase/auth";
 import { useLanguage } from "../context/LanguageContext";
+import { countries, cities } from "../data/regions";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
@@ -211,28 +212,42 @@ const AuthModal = ({ isOpen, onClose }) => {
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                       size={18}
                     />
-                    <input
-                      type="text"
-                      placeholder={t("auth.country")}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    <select
                       value={country}
-                      onChange={(e) => setCountry(e.target.value)}
+                      onChange={(e) => {
+                        setCountry(e.target.value);
+                        setCity(""); // Сбросить город при смене страны
+                      }}
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                       required
-                    />
+                    >
+                      <option value="">{t("auth.country")}</option>
+                      {countries.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                   <div className="relative">
                     <MapPin
                       className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
                       size={18}
                     />
-                    <input
-                      type="text"
-                      placeholder={t("auth.city")}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    <select
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                       required
-                    />
+                      disabled={!country}
+                    >
+                      <option value="">{t("auth.city")}</option>
+                      {country && cities[country]?.map((c) => (
+                        <option key={c.value} value={c.value}>
+                          {c.label}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
               </>

@@ -47,6 +47,13 @@ const isProfileComplete = (userData) => {
   return required.every((field) => String(userData?.[field] || "").trim().length > 0);
 };
 
+const calculateEcoScoreSim = (userData, addXp = 0, addStreak = 0, addAchievements = 0) => {
+  const xp = (userData.xp || 0) + addXp;
+  const streak = (userData.streak || 0) + addStreak;
+  const achievements = (userData.achievements?.length || 0) + addAchievements;
+  return xp + streak * 12 + achievements * 35;
+};
+
 export const getScanRewardsForLevel = (level = 1) => {
   const tier = Math.max(0, Math.floor((Math.max(1, level) - 1) / 4));
   return {
@@ -181,7 +188,8 @@ export const processEcoScan = async (userId, scanType) => {
   const totalXp = currentXp + addEcoScore;
   const newOzone = (userData.ozone || 0) + addOzone;
   const newScannedItems = (userData.scannedItems || 0) + 1;
-  const newLevel = Math.floor(totalXp / 100) + 1;
+  const newEcoScore = calculateEcoScoreSim(userData, addEcoScore, newStreak - (userData.streak || 0), 0);
+  const newLevel = Math.floor(newEcoScore / 100) + 1;
   const { unlockedRewards, bonusOzone, rewardItems, claimedNow } =
     resolveLevelRewards(userData, newLevel);
   const nextScanCounters = {

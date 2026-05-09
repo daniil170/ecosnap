@@ -1,7 +1,8 @@
 import React, { useState } from "react";
-import { X, Loader2, Calendar } from "lucide-react";
+import { X, Loader2, Calendar, MapPin, Globe } from "lucide-react";
 import { gradientMap } from "../../../data/gradients";
 import { useLanguage } from "../../../context/LanguageContext";
+import { countries, cities } from "../../../data/regions";
 
 const avatarGradients = Object.keys(gradientMap);
 
@@ -39,8 +40,8 @@ const EditProfileModal = ({ onClose, userData, onSave }) => {
         setEditFields((prev) => ({ ...prev, photoURL: data.url }));
       }
     } catch (error) {
-      console.error("Ошибка загрузки:", error);
-      alert("Ошибка загрузки");
+      console.error(t("profile.uploadError"), error);
+      alert(t("profile.uploadError"));
     } finally {
       setUploading(false);
     }
@@ -92,7 +93,7 @@ const EditProfileModal = ({ onClose, userData, onSave }) => {
           </div>
 
           <label className="cursor-pointer bg-white px-5 py-2.5 rounded-xl border border-slate-200 text-[10px] font-black uppercase inline-block mb-4 hover:border-emerald-500 transition-colors">
-            Загрузить фото
+            {t("profile.uploadPhoto")}
             <input
               type="file"
               className="hidden"
@@ -166,24 +167,45 @@ const EditProfileModal = ({ onClose, userData, onSave }) => {
         </div>
 
         <div className="grid grid-cols-2 gap-4 mb-8">
-          <input
-            type="text"
-            placeholder={t("auth.city")}
-            value={editFields.city}
-            onChange={(e) =>
-              setEditFields({ ...editFields, city: e.target.value })
-            }
-            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:border-emerald-500"
-          />
-          <input
-            type="text"
-            placeholder={t("auth.country")}
-            value={editFields.country}
-            onChange={(e) =>
-              setEditFields({ ...editFields, country: e.target.value })
-            }
-            className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:border-emerald-500"
-          />
+          <div>
+            <label className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 tracking-widest">
+              <MapPin size={12} /> {t("auth.city")}
+            </label>
+            <select
+              value={editFields.city}
+              onChange={(e) =>
+                setEditFields({ ...editFields, city: e.target.value })
+              }
+              className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:border-emerald-500"
+              disabled={!editFields.country}
+            >
+              <option value="">{t("auth.city")}</option>
+              {editFields.country && cities[editFields.country]?.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="flex items-center gap-1 text-[10px] font-black text-slate-400 uppercase mb-2 ml-2 tracking-widest">
+              <Globe size={12} /> {t("auth.country")}
+            </label>
+            <select
+              value={editFields.country}
+              onChange={(e) => {
+                setEditFields({ ...editFields, country: e.target.value, city: "" });
+              }}
+              className="w-full px-5 py-4 rounded-2xl bg-slate-50 border border-slate-100 font-bold text-sm outline-none focus:border-emerald-500"
+            >
+              <option value="">{t("auth.country")}</option>
+              {countries.map((c) => (
+                <option key={c.value} value={c.value}>
+                  {c.label}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Кнопки */}

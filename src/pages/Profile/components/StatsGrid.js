@@ -70,7 +70,7 @@ const StatsGrid = ({ userData }) => {
         {nextReward ? (
           <p className="mt-2 text-sm font-bold text-slate-700">
             {t("profile.nextLevel")} {nextReward.level}: +{nextReward.ozone} O3
-            {nextRewardItem ? ` + ${t("common.edit")} "${nextRewardItem.name}"` : ""}
+            {nextRewardItem ? ` + ${t("common.edit")} "${t(nextRewardItem.nameKey)}"` : ""}
           </p>
         ) : (
           <p className="mt-2 text-sm font-bold text-slate-700">
