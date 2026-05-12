@@ -21,6 +21,7 @@ import AboutModal from "./components/AboutModal";
 import Profile from "./pages/Profile/Profile";
 import Shop from "./pages/Shop/Shop";
 import LoadingScreen from "./components/LoadingScreen";
+import FeedbackSystem from "./components/FeedbackSystem"; // Импорт новой системы фидбека
 
 function AppContent() {
   const [user, setUser] = useState(null);
@@ -60,6 +61,7 @@ function AppContent() {
           const userData = userSnap.data();
           const updateData = {};
 
+          // Синхронизация XP и старых полей
           if (userData.xp === undefined && userData.ecoScore !== undefined) {
             updateData.xp = userData.ecoScore;
           } else if (userData.xp === undefined) {
@@ -76,7 +78,7 @@ function AppContent() {
           }
         }
 
-        // Подписываемся на изменения профиля
+        // Подписка на изменения профиля в реальном времени
         unsubProfile = onSnapshot(userRef, (doc) => {
           if (doc.exists()) {
             setUserProfile(doc.data());
@@ -86,7 +88,7 @@ function AppContent() {
         setUserProfile(null);
       }
 
-      // Гарантированная задержка для красивой анимации прелоадера
+      // Искусственная задержка для прелоадера
       setTimeout(() => {
         setLoading(false);
       }, 1500);
@@ -108,7 +110,7 @@ function AppContent() {
   const closeAbout = () => setIsAboutOpen(false);
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900">
+    <div className="min-h-screen bg-white font-sans text-slate-900 relative">
       <Navbar onAuthClick={openAuth} user={user} profile={userProfile} />
 
       <Routes>
@@ -189,6 +191,9 @@ function AppContent() {
 
       <AuthModal isOpen={isAuthOpen} onClose={closeAuth} />
       <AboutModal isOpen={isAboutOpen} onClose={closeAbout} />
+
+      {/* Глобальная кнопка фидбека */}
+      <FeedbackSystem user={user} />
     </div>
   );
 }

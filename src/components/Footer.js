@@ -13,8 +13,7 @@ const Footer = () => (
       </p>
       
       <div className="flex gap-6 text-sm text-slate-400">
-        <a href="#" className="hover:text-emerald-600 transition-colors">GitHub</a>
-        <a href="#" className="hover:text-emerald-600 transition-colors">Contact</a>
+        <a href="https://github.com/repos" className="hover:text-emerald-600 transition-colors">GitHub</a>
       </div>
     </div>
   </footer>
