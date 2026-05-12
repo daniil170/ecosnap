@@ -53,14 +53,20 @@ export const translations = {
     "scanner.plastic": "Пластик (PET 01)",
     "scanner.serverError": "Ошибка сервера при анализе.",
     "scanner.unrecognizedTitle": "ПРЕДМЕТ НЕ РАСПОЗНАН",
-    "scanner.unrecognizedInstructions": "Это не похоже на сортируемый мусор. Попробуйте отсканировать пластик, стекло, металл или бумагу.",
+    "scanner.unrecognizedInstructions":
+      "Это не похоже на сортируемый мусор. Попробуйте отсканировать пластик, стекло, металл или бумагу.",
     "scanner.defaultBin": "соответствующий контейнер",
     "scanner.item": "предмет",
-    "scanner.harm.plastic": "Пластик разлагается сотни лет, загрязняя океаны и убивая морских животных.",
-    "scanner.harm.glass": "Стекло безопасно, но его производство требует много энергии и ресурсов.",
-    "scanner.harm.metal": "Металлы могут загрязнять почву и воду при неправильной утилизации, вызывая отравление.",
-    "scanner.harm.paper": "Бумага из деревьев способствует вырубке лесов и потере биоразнообразия.",
-    "scanner.harm.default": "Этот предмет может наносить вред окружающей среде при неправильной утилизации.",
+    "scanner.harm.plastic":
+      "Пластик разлагается сотни лет, загрязняя океаны и убивая морских животных.",
+    "scanner.harm.glass":
+      "Стекло безопасно, но его производство требует много энергии и ресурсов.",
+    "scanner.harm.metal":
+      "Металлы могут загрязнять почву и воду при неправильной утилизации, вызывая отравление.",
+    "scanner.harm.paper":
+      "Бумага из деревьев способствует вырубке лесов и потере биоразнообразия.",
+    "scanner.harm.default":
+      "Этот предмет может наносить вред окружающей среде при неправильной утилизации.",
     "scanner.scannedPrefix": "Сканирован",
     "scanner.takeTo": "Отнести в",
     "scanner.regionAdvice": "Следуйте правилам сортировки вашего региона.",
@@ -84,6 +90,11 @@ export const translations = {
     "auth.signupTitle": "Зарегистрироваться",
     "auth.signupSubtitle": "Начни сканировать",
     "auth.forgotPassword": "Забыли пароль?",
+    "auth.privacyPolicy": "Я ознакомлен и согласен с",
+    "auth.privacyLink": "политикой конфиденциальности",
+    "auth.privacyError":
+      "Необходимо согласиться с политикой конфиденциальности для регистрации",
+    "auth.privacyClose": "Понятно",
     "common.save": "Сохранить",
     "common.edit": "редактировать",
     "profile.uploadPhoto": "Загрузить фото",
@@ -456,14 +467,20 @@ export const translations = {
     "scanner.plastic": "Plastic (PET 01)",
     "scanner.serverError": "Server error during analysis.",
     "scanner.unrecognizedTitle": "ITEM NOT RECOGNIZED",
-    "scanner.unrecognizedInstructions": "This does not look like recyclable waste. Try scanning plastic, glass, metal, or paper.",
+    "scanner.unrecognizedInstructions":
+      "This does not look like recyclable waste. Try scanning plastic, glass, metal, or paper.",
     "scanner.defaultBin": "the appropriate bin",
     "scanner.item": "item",
-    "scanner.harm.plastic": "Plastic takes centuries to decompose, polluting oceans and harming wildlife.",
-    "scanner.harm.glass": "Glass is safe, but its production consumes a lot of energy and resources.",
-    "scanner.harm.metal": "Metals can contaminate soil and water if disposed of incorrectly.",
-    "scanner.harm.paper": "Paper contributes to deforestation and biodiversity loss.",
-    "scanner.harm.default": "This item may harm the environment if disposed of improperly.",
+    "scanner.harm.plastic":
+      "Plastic takes centuries to decompose, polluting oceans and harming wildlife.",
+    "scanner.harm.glass":
+      "Glass is safe, but its production consumes a lot of energy and resources.",
+    "scanner.harm.metal":
+      "Metals can contaminate soil and water if disposed of incorrectly.",
+    "scanner.harm.paper":
+      "Paper contributes to deforestation and biodiversity loss.",
+    "scanner.harm.default":
+      "This item may harm the environment if disposed of improperly.",
     "scanner.scannedPrefix": "Scanned",
     "scanner.takeTo": "Take it to",
     "scanner.regionAdvice": "Follow your region's recycling rules.",
@@ -506,6 +523,10 @@ export const translations = {
     "auth.signupSubtitle": "Start now",
     "auth.loginTitle": "Log In",
     "auth.loginSubtitle": "Start now",
+    "auth.privacyPolicy": "I have read and agree to the",
+    "auth.privacyLink": "privacy policy",
+    "auth.privacyError": "You must agree to the privacy policy to register",
+    "auth.privacyClose": "Got it",
     "auth.forgotPassword": "Reset Password",
     "common.save": "Save",
     "common.cancel": "Cancel",
@@ -844,6 +865,11 @@ export const translations = {
     "auth.login": "Anmelden",
     "auth.signupTitle": "Registrieren",
     "auth.signupSubtitle": "Starte jetzt",
+    "auth.privacyPolicy": "Ich habe die",
+    "auth.privacyLink": "Datenschutzrichtlinie",
+    "auth.privacyError":
+      "Sie müssen der Datenschutzrichtlinie zustimmen, um sich zu registrieren",
+    "auth.privacyClose": "Verstanden",
     "auth.alreadyHave": "Schon ein Konto?",
     "auth.noAccount": "Noch kein Konto?",
 
@@ -874,20 +900,27 @@ export const translations = {
     "scanner.plastic": "Plastik (PET 01)",
     "scanner.serverError": "Serverfehler während der Analyse.",
     "scanner.unrecognizedTitle": "ARTIKEL NICHT ERKANNT",
-    "scanner.unrecognizedInstructions": "Das sieht nicht wie recycelbarer Abfall aus. Versuche, Plastik, Glas, Metall oder Papier zu scannen.",
+    "scanner.unrecognizedInstructions":
+      "Das sieht nicht wie recycelbarer Abfall aus. Versuche, Plastik, Glas, Metall oder Papier zu scannen.",
     "scanner.defaultBin": "den entsprechenden Container",
     "scanner.item": "Artikel",
-    "scanner.harm.plastic": "Kunststoff braucht Jahrhunderte, um sich zu zersetzen, verschmutzt die Ozeane und schadet der Tierwelt.",
-    "scanner.harm.glass": "Glas ist sicher, aber seine Herstellung verbraucht viel Energie und Ressourcen.",
-    "scanner.harm.metal": "Metalle können Boden und Wasser verunreinigen, wenn sie falsch entsorgt werden.",
-    "scanner.harm.paper": "Papier trägt zur Abholzung und zum Verlust der Artenvielfalt bei.",
-    "scanner.harm.default": "Dieser Artikel kann der Umwelt schaden, wenn er unsachgemäß entsorgt wird.",
+    "scanner.harm.plastic":
+      "Kunststoff braucht Jahrhunderte, um sich zu zersetzen, verschmutzt die Ozeane und schadet der Tierwelt.",
+    "scanner.harm.glass":
+      "Glas ist sicher, aber seine Herstellung verbraucht viel Energie und Ressourcen.",
+    "scanner.harm.metal":
+      "Metalle können Boden und Wasser verunreinigen, wenn sie falsch entsorgt werden.",
+    "scanner.harm.paper":
+      "Papier trägt zur Abholzung und zum Verlust der Artenvielfalt bei.",
+    "scanner.harm.default":
+      "Dieser Artikel kann der Umwelt schaden, wenn er unsachgemäß entsorgt wird.",
     "scanner.scannedPrefix": "Gescannt",
     "scanner.takeTo": "Bringe es zu",
     "scanner.regionAdvice": "Befolge die Recyclingregeln deiner Region.",
     "scanner.harmPrefix": "Umweltschaden:",
     "scanner.analysis": "Analysiere Artikel...",
-    "scanner.analysisError": "Server für die Analyse konnte nicht kontaktiert werden.",
+    "scanner.analysisError":
+      "Server für die Analyse konnte nicht kontaktiert werden.",
     "scanner.ecoScoreLabel": "Öko-Punkte",
     "scanner.ozoneLabel": "Ozon (O3)",
     "scanner.finishButton": "Fertig und zum Profil",

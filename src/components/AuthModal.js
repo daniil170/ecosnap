@@ -9,7 +9,6 @@ import {
   Calendar,
   MapPin,
   Globe,
-  Contact,
 } from "lucide-react";
 import { auth, googleProvider, db } from "../firebase";
 import {
@@ -29,6 +28,7 @@ import {
 } from "firebase/auth";
 import { useLanguage } from "../context/LanguageContext";
 import { countries, cities } from "../data/regions";
+import PrivacyModal from "./PrivacyModal"; // Импортируем новую модалку
 
 const AuthModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
@@ -45,6 +45,10 @@ const AuthModal = ({ isOpen, onClose }) => {
   const [birthDate, setBirthDate] = useState("");
   const [country, setCountry] = useState("");
   const [city, setCity] = useState("");
+
+  // Состояния для политики конфиденциальности
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+  const [agreedToPrivacy, setAgreedToPrivacy] = useState(false);
 
   if (!isOpen) return null;
 
@@ -85,6 +89,16 @@ const AuthModal = ({ isOpen, onClose }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // ПРОВЕРКА ПОЛИТИКИ ПРИ РЕГИСТРАЦИИ
+    if (!isLogin && !isReset && !agreedToPrivacy) {
+      alert(
+        t("auth.privacyError") ||
+          "Необходимо согласиться с политикой конфиденциальности",
+      );
+      return;
+    }
+
     try {
       if (isReset) {
         await sendPasswordResetEmail(auth, email);
@@ -93,7 +107,6 @@ const AuthModal = ({ isOpen, onClose }) => {
       } else if (isLogin) {
         let loginEmail = email;
 
-        // ЛОГИКА: Если нет @, ищем по никнейму
         if (!email.includes("@")) {
           const q = query(
             collection(db, "users"),
@@ -216,7 +229,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                       value={country}
                       onChange={(e) => {
                         setCountry(e.target.value);
-                        setCity(""); // Сбросить город при смене страны
+                        setCity("");
                       }}
                       className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
                       required
@@ -242,11 +255,12 @@ const AuthModal = ({ isOpen, onClose }) => {
                       disabled={!country}
                     >
                       <option value="">{t("auth.city")}</option>
-                      {country && cities[country]?.map((c) => (
-                        <option key={c.value} value={c.value}>
-                          {c.label}
-                        </option>
-                      ))}
+                      {country &&
+                        cities[country]?.map((c) => (
+                          <option key={c.value} value={c.value}>
+                            {c.label}
+                          </option>
+                        ))}
                     </select>
                   </div>
                 </div>
@@ -289,6 +303,31 @@ const AuthModal = ({ isOpen, onClose }) => {
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
+              </div>
+            )}
+
+            {!isLogin && !isReset && (
+              <div className="flex items-start gap-3 px-1 py-2">
+                <input
+                  type="checkbox"
+                  id="privacy"
+                  checked={agreedToPrivacy}
+                  onChange={(e) => setAgreedToPrivacy(e.target.checked)}
+                  className="mt-1 w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
+                />
+                <label
+                  htmlFor="privacy"
+                  className="text-xs text-slate-500 leading-tight cursor-pointer select-none"
+                >
+                  {t("auth.privacyPolicy") || "Я ознакомлен и согласен с"}{" "}
+                  <button
+                    type="button"
+                    onClick={() => setIsPrivacyOpen(true)}
+                    className="text-emerald-600 font-bold hover:underline"
+                  >
+                    {t("auth.privacyLink") || "политикой конфиденциальности"}
+                  </button>
+                </label>
               </div>
             )}
 
@@ -355,6 +394,12 @@ const AuthModal = ({ isOpen, onClose }) => {
           </p>
         </div>
       </div>
+
+      {/* Модалка с политикой */}
+      <PrivacyModal
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
+      />
     </div>
   );
 };

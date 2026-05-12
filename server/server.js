@@ -3,7 +3,6 @@ const cloudinary = require("cloudinary").v2;
 const { CloudinaryStorage } = require("multer-storage-cloudinary");
 const multer = require("multer");
 const cors = require("cors");
-// Удален неиспользуемый axios
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 require("dotenv").config();
 
@@ -16,7 +15,7 @@ const apiKey = process.env.GEMINI_API_KEY?.trim();
 const genAI = new GoogleGenerativeAI(apiKey);
 
 const model = genAI.getGenerativeModel({
-  model: "gemini-1.5-flash", // Рекомендуется использовать 1.5-flash для скорости и точности
+  model: "gemini-1.5-flash", 
   generationConfig: {
     responseMimeType: "application/json",
   },
@@ -40,7 +39,6 @@ const storage = new CloudinaryStorage({
 const uploadAvatar = multer({ storage });
 const uploadImage = multer({ storage: multer.memoryStorage() });
 
-// Функция маппинга материала в категорию бака
 const getBinDetails = (material) => {
   const bins = {
     paper: { color: "Синий", label: "Бумага", icon: "blue" },
@@ -70,7 +68,6 @@ app.post("/api/analyze", uploadImage.single("image"), async (req, res) => {
       },
     };
 
-    // Уточненный промпт, чтобы избежать ошибок с "gift bow"
     const prompt = `Act as an environmental expert. Identify the object in the image. 
     Focus on waste sorting. If it looks like crumpled paper, it is "paper", not a "decoration".
     Return ONLY a JSON object:
@@ -85,7 +82,6 @@ app.post("/api/analyze", uploadImage.single("image"), async (req, res) => {
     const result = await model.generateContent([prompt, imagePart]);
     const aiResponse = JSON.parse(result.response.text());
 
-    // Определяем детали бака на основе материала
     const bin = getBinDetails(aiResponse.material);
 
     console.log(`-> Detected: ${aiResponse.object} (${aiResponse.material})`);

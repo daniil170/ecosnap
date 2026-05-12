@@ -20,6 +20,7 @@ import AuthModal from "./components/AuthModal";
 import AboutModal from "./components/AboutModal";
 import Profile from "./pages/Profile/Profile";
 import Shop from "./pages/Shop/Shop";
+import LoadingScreen from "./components/LoadingScreen";
 
 function AppContent() {
   const [user, setUser] = useState(null);
@@ -30,7 +31,9 @@ function AppContent() {
   const { t } = useLanguage();
 
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
+    let unsubProfile = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
 
       if (currentUser) {
@@ -56,72 +59,63 @@ function AppContent() {
         } else {
           const userData = userSnap.data();
           const updateData = {};
-          
+
           if (userData.xp === undefined && userData.ecoScore !== undefined) {
             updateData.xp = userData.ecoScore;
           } else if (userData.xp === undefined) {
             updateData.xp = 0;
           }
-          
-          if (userData.scannedItems === undefined) {
-            updateData.scannedItems = 0;
-          }
-          
-          if (userData.achievements === undefined) {
-            updateData.achievements = [];
-          }
-          
-          if (userData.ozone === undefined) {
-            updateData.ozone = 500;
-          }
-          
-          if (!userData.inventory) {
-            updateData.inventory = [];
-          }
-          
+
+          if (userData.scannedItems === undefined) updateData.scannedItems = 0;
+          if (userData.achievements === undefined) updateData.achievements = [];
+          if (userData.ozone === undefined) updateData.ozone = 500;
+          if (!userData.inventory) updateData.inventory = [];
+
           if (Object.keys(updateData).length > 0) {
-            console.log("Добавляем недостающие поля профиля...", updateData);
             await updateDoc(userRef, updateData);
           }
         }
 
-        const unsubProfile = onSnapshot(userRef, (doc) => {
+        // Подписываемся на изменения профиля
+        unsubProfile = onSnapshot(userRef, (doc) => {
           if (doc.exists()) {
             setUserProfile(doc.data());
           }
         });
-
-        setLoading(false);
-        return () => unsubProfile();
       } else {
         setUserProfile(null);
-        setLoading(false);
       }
+
+      // Гарантированная задержка для красивой анимации прелоадера
+      setTimeout(() => {
+        setLoading(false);
+      }, 1500);
     });
 
-    return () => unsubscribe();
+    return () => {
+      unsubscribeAuth();
+      if (unsubProfile) unsubProfile();
+    };
   }, []);
+
+  if (loading) {
+    return <LoadingScreen />;
+  }
 
   const openAuth = () => setIsAuthOpen(true);
   const closeAuth = () => setIsAuthOpen(false);
   const openAbout = () => setIsAboutOpen(true);
   const closeAbout = () => setIsAboutOpen(false);
 
-  if (loading) return null;
-
   return (
     <div className="min-h-screen bg-white font-sans text-slate-900">
+      <Navbar onAuthClick={openAuth} user={user} profile={userProfile} />
+
       <Routes>
-        {/* ГЛАВНАЯ СТРАНИЦА */}
         <Route
           path="/"
           element={
             <>
-              <Navbar
-                onAuthClick={openAuth}
-                user={user}
-                profile={userProfile}
-              />
               <main>
                 <Hero
                   onAuthClick={openAuth}
@@ -159,45 +153,28 @@ function AppContent() {
           }
         />
 
-        {/* СТРАНИЦА ПРОФИЛЯ */}
         <Route
           path="/profile"
           element={
             user ? (
-              <>
-                <Navbar
-                  onAuthClick={openAuth}
-                  user={user}
-                  profile={userProfile}
-                />
-                <Profile user={user} profile={userProfile} />
-              </>
+              <Profile user={user} profile={userProfile} />
             ) : (
               <Navigate to="/" />
             )
           }
         />
 
-        {/* СТРАНИЦА МАГАЗИНА */}
         <Route
           path="/shop"
           element={
             user ? (
-              <>
-                <Navbar
-                  onAuthClick={openAuth}
-                  user={user}
-                  profile={userProfile}
-                />
-                <Shop user={user} profile={userProfile} />
-              </>
+              <Shop user={user} profile={userProfile} />
             ) : (
               <Navigate to="/" />
             )
           }
         />
 
-        {/* СТРАНИЦА СКАНЕРА */}
         <Route
           path="/scanner"
           element={
