@@ -126,10 +126,31 @@ export const translations = {
     "profile.uploadError": "Ошибка загрузки",
 
     // ── Сканер ───────────────────────────────────────────────
+    "scanner.recyclable": "Перерабатываемый",
+    "scanner.nonRecyclable": "Неперерабатываемый",
+    "scanner.adviceTitle": "Совет по сортировке",
+    "scanner.recommendedBin": "Рекомендуемый бак",
+
+    "bins.paper": "Бак для бумаги",
+    "bins.plastic": "Бак для пластика",
+    "bins.glass": "Бак для стекла",
+    "bins.metal": "Бак для металла",
+    "bins.other": "Смешанные отходы",
+
     "scanner.title": "Сканер мусора",
     "scanner.hint": "Наведи камеру на предмет и нажми 'Сканировать'",
     "scanner.takePhoto": "Начать сканирование",
     "scanner.scan": "Сканировать",
+    "scanner.advice-plastic":
+      "Ополосните пластиковую бутылку, сожмите её для экономии места и снимите этикетку перед утилизацией.",
+    "scanner.advice-glass":
+      "Убедитесь, что стекло не разбито. Удалите металлические крышки и пробки.",
+    "scanner.advice-metal":
+      "Промойте жестяную банку от остатков пищи и аккуратно сожмите.",
+    "scanner.advice-paper":
+      "Очистите картон от скотча и масляных пятен, сложите его максимально плотно.",
+    "scanner.advice-other":
+      "Данный предмет относится к смешанным отходам. Поместите его в серый бак общего мусора.",
     "scanner.analysis": "Анализируем предмет...",
     "scanner.analysisError": "Не удалось связаться с сервером анализа.",
     "scanner.serverError": "Ошибка сервера при анализе.",
@@ -516,9 +537,28 @@ export const translations = {
     "profile.uploadError": "Upload failed",
 
     // ── Сканер ───────────────────────────────────────────────
+    "scanner.recyclable": "Recyclable",
+    "scanner.nonRecyclable": "Non-Recyclable",
+    "scanner.adviceTitle": "Sorting Advice",
+    "scanner.recommendedBin": "Recommended Bin",
+    "bins.paper": "Paper & Cardboard Bin",
+    "bins.plastic": "Plastic Recycling Bin",
+    "bins.glass": "Glass Container",
+    "bins.metal": "Metal Recycling Bin",
+    "bins.other": "General Waste Bin",
     "scanner.title": "Waste Scanner",
     "scanner.hint": "Point your camera at an item and press 'Scan'",
     "scanner.takePhoto": "Take Photo",
+    "scanner.advice-plastic":
+      "Rinse the plastic bottle, crush it to save space, and remove the label before disposal.",
+    "scanner.advice-glass":
+      "Make sure the glass is not broken. Remove metal caps and lids.",
+    "scanner.advice-metal":
+      "Rinse the tin can of food residue and gently crush it.",
+    "scanner.advice-paper":
+      "Remove tape and grease stains from cardboard, and fold it as flat as possible.",
+    "scanner.advice-other":
+      "This item belongs to mixed waste. Place it in the gray general waste bin.",
     "scanner.scan": "Scan",
     "scanner.analysis": "Analyzing item...",
     "scanner.analysisError": "Unable to contact the analysis server.",
@@ -914,9 +954,30 @@ export const translations = {
     "profile.uploadError": "Upload fehlgeschlagen",
 
     // ── Сканер ───────────────────────────────────────────────
+
+    "scanner.recyclable": "Recycelbar",
+    "scanner.nonRecyclable": "Nicht recycelbar",
+    "scanner.adviceTitle": "Sortierhinweis",
+    "scanner.recommendedBin": "Empfohlene Tonne",
+    "bins.paper": "Papiertonne",
+    "bins.plastic": "Wertstofftonne (Plastik)",
+    "bins.glass": "Glascontainer",
+    "bins.metal": "Metalltonne",
+    "bins.other": "Restmülltonne",
     "scanner.title": "Müllscanner",
     "scanner.takePhoto": "Foto aufnehmen",
-    "scanner.hint": "Richte deine Kamera auf einen Artikel und drücke 'Scannen'",
+    "scanner.advice-plastic":
+      "Plastikflasche ausspülen, zusammendrücken und Etikett vor der Entsorgung entfernen.",
+    "scanner.advice-glass":
+      "Sicherstellen, dass das Glas nicht zerbrochen ist. Metalldeckel und Verschlüsse entfernen.",
+    "scanner.advice-metal":
+      "Dose von Speiseresten ausspülen und vorsichtig zusammendrücken.",
+    "scanner.advice-paper":
+      "Klebeband und Fettflecken vom Karton entfernen und so flach wie möglich falten.",
+    "scanner.advice-other":
+      "Dieser Artikel gehört zum Restmüll. In die graue Restmülltonne werfen.",
+    "scanner.hint":
+      "Richte deine Kamera auf einen Artikel und drücke 'Scannen'",
     "scanner.scan": "Scannen",
     "scanner.analysis": "Analysiere Artikel...",
     "scanner.analysisError":

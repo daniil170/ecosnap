@@ -6,38 +6,22 @@ import {
   CheckCircle2,
   Leaf,
   Coins,
-  Sparkles,
   Camera,
-  HelpCircle,
   AlertTriangle,
 } from "lucide-react";
 import { processEcoScan } from "../services/gamification";
 import { db } from "../firebase";
-import { doc, updateDoc, arrayUnion, getDoc } from "firebase/firestore";
+import { doc, updateDoc, arrayUnion } from "firebase/firestore";
 import { useLanguage } from "../context/LanguageContext";
-import { recyclingRules } from "../data/regions";
 
 const Scanner = ({ user }) => {
   const navigate = useNavigate();
-  const { t, language } = useLanguage(); // Добавили language, чтобы знать текущий язык
+  const { t, language } = useLanguage();
   const videoRef = useRef(null);
   const canvasRef = useRef(null);
   const streamRef = useRef(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState(null);
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    if (user?.uid) {
-      const fetchUserData = async () => {
-        const docSnap = await getDoc(doc(db, "users", user.uid));
-        if (docSnap.exists()) {
-          setUserData(docSnap.data());
-        }
-      };
-      fetchUserData();
-    }
-  }, [user]);
 
   useEffect(() => {
     async function startCamera() {
@@ -80,7 +64,7 @@ const Scanner = ({ user }) => {
 
       const formData = new FormData();
       formData.append("image", blob, "scan.jpg");
-      formData.append("lang", language); // ОТПРАВЛЯЕМ ЯЗЫК НА БЭКЕНД, чтобы ИИ отвечал на нужном языке
+      formData.append("lang", language);
 
       try {
         const response = await fetch("http://localhost:5000/api/analyze", {
@@ -92,55 +76,28 @@ const Scanner = ({ user }) => {
           throw new Error(t("scanner.serverError") || "Server error");
 
         const aiData = await response.json();
-        const annotation = (aiData.type || aiData.object || "").toLowerCase();
-        const scanLabel = aiData.type || aiData.object || t("scanner.item");
 
-        const gameType =
-          annotation.includes("plastic") || annotation.includes("пластик")
-            ? "plastic"
-            : annotation.includes("glass") || annotation.includes("стекло")
-              ? "glass"
-              : annotation.includes("metal") || annotation.includes("металл")
-                ? "metal"
-                : annotation.includes("paper") ||
-                    annotation.includes("бумага") ||
-                    annotation.includes("картон")
-                  ? "paper"
-                  : null;
+        // Нормализуем тип материала для внутренней игровой логики EcoSnap
+        const annotation = (aiData.material || "").toLowerCase();
+        const scanLabel = aiData.type || t("scanner.item");
 
-        if (!gameType) {
-          setIsAnalyzing(false);
-          setResult({
-            title: t("scanner.unrecognizedTitle") || "UNKNOWN OBJECT",
-            instructions:
-              t("scanner.unrecognizedInstructions") ||
-              "Please try again with better lighting.",
-            points: 0,
-            ozone: 0,
-            isUnknown: true,
-          });
-          return;
-        }
+        const gameType = annotation.includes("plastic")
+          ? "plastic"
+          : annotation.includes("glass")
+            ? "glass"
+            : annotation.includes("metal")
+              ? "metal"
+              : annotation.includes("paper")
+                ? "paper"
+                : "other";
 
-        let gameResult = { addEcoScore: aiData.ecoPoints || 20, addOzone: 20 };
+        let gameResult = { addEcoScore: aiData.ecoPoints || 20, addOzone: 15 };
 
-        if (user?.uid) {
+        if (user?.uid && gameType !== "other") {
           gameResult = await processEcoScan(user.uid, gameType);
         }
 
-        const binInstruction =
-          recyclingRules[userData?.country]?.[userData?.city]?.[gameType] ||
-          t("scanner.defaultBin");
-
-        const harmMessages = {
-          plastic: t("scanner.harm.plastic"),
-          glass: t("scanner.harm.glass"),
-          metal: t("scanner.harm.metal"),
-          paper: t("scanner.harm.paper"),
-        };
-
-        const harm = harmMessages[gameType] || t("scanner.harm.default");
-        const description = `${t("scanner.scannedPrefix") || "Scanned:"} ${scanLabel}. ${t("scanner.takeTo") || "Take to:"} ${binInstruction}.`;
+        const description = `${t("scanner.scannedPrefix") || "Scanned:"} ${scanLabel}.`;
 
         if (user?.uid) {
           try {
@@ -158,12 +115,17 @@ const Scanner = ({ user }) => {
         }
 
         setIsAnalyzing(false);
+
+        // Передаем плоские данные категории, чтобы избежать вложенностей
         setResult({
-          title: scanLabel.toUpperCase(),
-          instructions: `${t("scanner.takeTo") || "Take to"} ${binInstruction}. ${aiData.advice || ""} ${harm || ""}`,
-          points: gameResult?.addEcoScore || 20,
-          ozone: gameResult?.addOzone || 20,
-          type: gameType,
+          type: scanLabel,
+          material: gameType,
+          recyclable:
+            gameType !== "other" ? (aiData.recyclable ?? true) : false,
+          binColor: aiData.category?.color || "gray",
+          binLabelKey: aiData.category?.labelKey || "bins.other",
+          ecoPoints: gameResult?.addEcoScore || aiData.ecoPoints || 20,
+          ozone: gameResult?.addOzone || aiData.ozone || 15,
         });
       } catch (error) {
         console.error("Ошибка при сканировании:", error);
@@ -226,7 +188,6 @@ const Scanner = ({ user }) => {
           }}
         />
 
-        {/* Подсказка сверху */}
         {!result && !isAnalyzing && (
           <div className="absolute top-28 inset-x-0 flex justify-center px-8 z-20 pointer-events-none">
             <p className="px-5 py-3 bg-black/60 backdrop-blur-xl rounded-2xl text-white text-sm font-semibold tracking-wide border border-white/10 shadow-2xl text-center max-w-xs leading-snug">
@@ -250,7 +211,6 @@ const Scanner = ({ user }) => {
           </div>
         )}
 
-        {/* ЭКРАН ИИ-АНАЛИЗА */}
         {isAnalyzing && (
           <div className="absolute inset-0 flex flex-col items-center justify-center text-white z-30 transition-all duration-300">
             <div className="relative flex items-center justify-center mb-8">
@@ -269,7 +229,6 @@ const Scanner = ({ user }) => {
         )}
       </div>
 
-      {/* НИЖНЯЯ ПАНЕЛЬ */}
       {!result && !isAnalyzing && (
         <div className="absolute bottom-0 inset-x-0 pb-14 pt-8 flex justify-center items-center z-30 bg-gradient-to-t from-black/90 via-black/40 to-transparent w-full">
           <button
@@ -297,78 +256,97 @@ const Scanner = ({ user }) => {
             <div className="flex items-center gap-4">
               <div
                 className={`p-4 rounded-2xl shadow-xl ${
-                  result.isUnknown
+                  !result.recyclable
                     ? "bg-amber-50 text-amber-600 border border-amber-200"
                     : "bg-emerald-50 text-emerald-600 border border-emerald-200"
                 }`}
               >
-                {result.isUnknown ? (
+                {!result.recyclable ? (
                   <AlertTriangle size={30} className="animate-pulse" />
                 ) : (
                   <CheckCircle2 size={30} />
                 )}
               </div>
               <div>
-                {/* Исправлено: Текст заголовка теперь переводится */}
                 <span className="text-[11px] font-black uppercase tracking-widest text-slate-400 block mb-1">
-                  {result.isUnknown
-                    ? t("scanner.attention") || "Внимание"
-                    : t("scanner.successTitle") || "Успешное сканирование"}
+                  {!result.recyclable
+                    ? t("scanner.nonRecyclable") || "Неперерабатываемый"
+                    : t("scanner.recyclable") || "Перерабатываемый"}
                 </span>
-                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none">
-                  {result.title}
+                <h3 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight leading-none capitalize">
+                  {result.type}
                 </h3>
               </div>
             </div>
 
-            {!result.isUnknown && (
+            {result.recyclable && (
               <div className="px-4 py-2 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white text-xs font-black rounded-xl border border-emerald-400/20 flex items-center gap-1.5 shadow-lg shadow-emerald-500/20 tracking-wider uppercase">
-                <Leaf size={14} className="fill-white/20" />+{result.points}{" "}
-                {t("scanner.ecoScoreLabel") || "ЭКОСЧЁТ"}
+                <Leaf size={14} className="fill-white/20" />+{result.ecoPoints}{" "}
+                {t("scanner.ecoScoreLabel") || "ЭКООЧКИ"}
               </div>
             )}
           </div>
 
-          <div className="bg-slate-50 border border-slate-100 rounded-2xl p-5 sm:p-6 mb-6 shadow-inner">
+          {/* ДИНАМИЧЕСКИЙ БАК ДЛЯ СОРТИРОВКИ */}
+          <div className="mb-4 flex items-center gap-4 bg-slate-50 border border-slate-100 p-4 rounded-2xl shadow-inner">
+            <div
+              className="w-5 h-9 rounded-md shadow-md transform border border-black/5"
+              style={{ backgroundColor: result.binColor }}
+            />
+            <div>
+              <span className="text-[10px] font-black uppercase tracking-wider text-slate-400 block mb-0.5">
+                {t("scanner.recommendedBin") || "Рекомендуемый бак"}
+              </span>
+              <p className="text-base font-bold text-slate-800">
+                {t(result.binLabelKey) || result.binLabelKey}
+              </p>
+            </div>
+          </div>
+
+          {/* ТЕКСТ СОВЕТА ИЗ ЛОКАЛИЗАЦИИ */}
+          <div className="bg-blue-50/40 border border-blue-100/50 rounded-2xl p-5 sm:p-6 mb-6 shadow-sm">
+            <span className="text-[11px] font-black uppercase tracking-widest text-blue-500 block mb-2">
+              {t("scanner.adviceTitle") || "Совет по сортировке"}
+            </span>
             <p className="text-slate-700 text-base font-semibold leading-relaxed">
-              {result.instructions}
+              {/* Используем безопасные плоские ключи вроде scanner.advice-plastic */}
+              {t(`scanner.advice-${result.material}`) ||
+                t("scanner.advice-other")}
             </p>
           </div>
 
-          {/* СЕТКА НАГРАД */}
-          {!result.isUnknown && (
-            <div className="grid grid-cols-2 gap-5 mb-8">
-              <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-5 rounded-2xl border border-emerald-200/60 flex flex-col items-center justify-center text-center shadow-md relative overflow-hidden group">
-                <div className="absolute -right-3 -bottom-3 text-emerald-500/10 transform group-hover:scale-120 group-hover:rotate-12 transition-all duration-500">
-                  <Leaf size={80} className="fill-emerald-500/5" />
-                </div>
-                <div className="flex items-center gap-2 text-emerald-600 mb-1.5 z-10">
-                  <Leaf size={16} className="fill-emerald-200" />
-                  <span className="text-xs font-black uppercase tracking-wider">
-                    {t("scanner.ecoScoreLabel") || "ЭКООЧКИ"}
-                  </span>
-                </div>
-                <div className="text-3xl sm:text-4xl font-black text-emerald-700 z-10 tracking-tight">
-                  +{result.points}
-                </div>
+          {/* СЕТКА НАГРАД (XP и Озон) */}
+          <div className="grid grid-cols-2 gap-5 mb-8">
+            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100/50 p-5 rounded-2xl border border-emerald-200/60 flex flex-col items-center justify-center text-center shadow-md relative overflow-hidden group">
+              <div className="absolute -right-3 -bottom-3 text-emerald-500/10 transform group-hover:scale-120 group-hover:rotate-12 transition-all duration-500">
+                <Leaf size={80} className="fill-emerald-500/5" />
               </div>
-
-              <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 p-5 rounded-2xl border border-blue-200/60 flex flex-col items-center justify-center text-center shadow-md relative overflow-hidden group">
-                <div className="absolute -right-3 -bottom-3 text-blue-500/10 transform group-hover:scale-120 group-hover:rotate-12 transition-all duration-500">
-                  <Coins size={80} />
-                </div>
-                <div className="flex items-center gap-2 text-blue-600 mb-1.5 z-10">
-                  <Coins size={16} />
-                  <span className="text-xs font-black uppercase tracking-wider">
-                    {t("scanner.ozoneLabel") || "ОЗОН"}
-                  </span>
-                </div>
-                <div className="text-3xl sm:text-4xl font-black text-blue-700 z-10 tracking-tight">
-                  +{result.ozone}
-                </div>
+              <div className="flex items-center gap-2 text-emerald-600 mb-1.5 z-10">
+                <Leaf size={16} className="fill-emerald-200" />
+                <span className="text-xs font-black uppercase tracking-wider">
+                  {t("scanner.ecoScoreLabel") || "ЭКООЧКИ"}
+                </span>
+              </div>
+              <div className="text-3xl sm:text-4xl font-black text-emerald-700 z-10 tracking-tight">
+                +{result.ecoPoints}
               </div>
             </div>
-          )}
+
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100/50 p-5 rounded-2xl border border-blue-200/60 flex flex-col items-center justify-center text-center shadow-md relative overflow-hidden group">
+              <div className="absolute -right-3 -bottom-3 text-blue-500/10 transform group-hover:scale-120 group-hover:rotate-12 transition-all duration-500">
+                <Coins size={80} />
+              </div>
+              <div className="flex items-center gap-2 text-blue-600 mb-1.5 z-10">
+                <Coins size={16} />
+                <span className="text-xs font-black uppercase tracking-wider">
+                  {t("scanner.ozoneLabel") || "ОЗОН"}
+                </span>
+              </div>
+              <div className="text-3xl sm:text-4xl font-black text-blue-700 z-10 tracking-tight">
+                +{result.ozone}
+              </div>
+            </div>
+          </div>
 
           <button
             onClick={() => navigate("/profile")}
