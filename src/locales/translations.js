@@ -1,14 +1,50 @@
+// ============================================================
+// translations.js
+// Структура: ПЛОСКАЯ (все ключи через точку, без вложенных объектов)
+//
+// Разделы:
+//   common.*        — общие слова
+//   nav.*           — навигация
+//   hero.*          — главный экран
+//   footer.*        — подвал
+//   features.*      — блок фич на главной
+//   auth.*          — авторизация и регистрация
+//   editProfile.*   — редактирование профиля
+//   profile.*       — страница профиля
+//   scanner.*       — сканер
+//   slider.*        — слайдер советов
+//   sidebar.*       — боковая панель
+//   shop.*          — магазин
+//   shopItems.*     — товары магазина
+//   inventory.*     — инвентарь
+//   achievements.*  — достижения (список + данные каждого)
+//   activityHistory.* — история активности
+//   feedback.*      — форма обратной связи
+//   leagues.*       — лиги
+//   about.*         — страница "О проекте"
+// ============================================================
+
 export const translations = {
+  // ══════════════════════════════════════════════════════════
+  // РУССКИЙ
+  // ══════════════════════════════════════════════════════════
   ru: {
+    // ── Общие слова ─────────────────────────────────────────
     "common.and": "и",
     "common.perScan": "за сканирование",
+    "common.save": "Сохранить",
+    "common.cancel": "Отмена",
+    "common.edit": "редактировать",
 
+    // ── Навигация ────────────────────────────────────────────
     "nav.profile": "Профиль",
     "nav.shop": "Магазин",
     "nav.logout": "Выход",
     "nav.login": "Войти",
 
+    // ── Главный экран ────────────────────────────────────────
     "hero.loggedInTagline": "Система активна",
+    "hero.tagline": "Система не активна",
     "hero.title": "Сделаем планету чище вместе",
     "hero.greeting": "Привет!",
     "hero.dashboard": "Эко-защитник",
@@ -17,10 +53,11 @@ export const translations = {
     "hero.cta": "Начать сканировать",
     "hero.signup": "Зарегистрироваться",
     "hero.welcome": "Рады видеть вас, уровень",
-    "hero.tagline": "Система не активна",
 
+    // ── Подвал ───────────────────────────────────────────────
     "footer.about": "О нас",
 
+    // ── Фичи на главной ─────────────────────────────────────
     "features.rules": "Эко-чек",
     "features.rulesEco": "Проверка правил в вашем регионе.",
     "features.progress": "Прогресс",
@@ -32,51 +69,30 @@ export const translations = {
     "features.rewardsDesc": "Каждый скан приносит эко-счёт и валюту O3",
     "features.community": "Сообщество экогероев",
     "features.communityDesc": "Соревнуйся в лигах и вдохновляй других",
+
+    // ── Авторизация и регистрация ────────────────────────────
     "auth.title": "Присоединяйся к EcoSnap",
     "auth.subtitle": "Начни сканировать мусор и спасай планету",
+    "auth.loginTitle": "Войти",
+    "auth.loginSubtitle": "Начни сканировать",
+    "auth.signupTitle": "Зарегистрироваться",
+    "auth.signupSubtitle": "Начни сканировать",
     "auth.google": "Войти с Google",
+    "auth.orMethod": "Google",
     "auth.loginPlaceholder": "Почта",
     "auth.password": "Пароль",
     "auth.login": "Войти",
     "auth.signup": "Создать аккаунт",
     "auth.alreadyHave": "Уже есть аккаунт?",
     "auth.noAccount": "Нет аккаунта?",
+    "auth.forgotPassword": "Забыли пароль?",
+    "auth.privacyPolicy": "Я ознакомлен и согласен с",
+    "auth.privacyLink": "политикой конфиденциальности",
+    "auth.privacyError":
+      "Необходимо согласиться с политикой конфиденциальности для регистрации",
+    "auth.privacyClose": "Понятно",
 
-    "scanner.title": "Сканер мусора",
-    "scanner.takePhoto": "Начать сканирование",
-    "scanner.scan": "Сканировать",
-    "scanner.points": "Ты получил",
-    "scanner.ecoScore": "эко-счёта",
-    "scanner.ozone": "O3",
-    "scanner.streak": "Стрик!",
-    "scanner.close": "Закрыть",
-    "scanner.plastic": "Пластик (PET 01)",
-    "scanner.serverError": "Ошибка сервера при анализе.",
-    "scanner.unrecognizedTitle": "ПРЕДМЕТ НЕ РАСПОЗНАН",
-    "scanner.unrecognizedInstructions":
-      "Это не похоже на сортируемый мусор. Попробуйте отсканировать пластик, стекло, металл или бумагу.",
-    "scanner.defaultBin": "соответствующий контейнер",
-    "scanner.item": "предмет",
-    "scanner.harm.plastic":
-      "Пластик разлагается сотни лет, загрязняя океаны и убивая морских животных.",
-    "scanner.harm.glass":
-      "Стекло безопасно, но его производство требует много энергии и ресурсов.",
-    "scanner.harm.metal":
-      "Металлы могут загрязнять почву и воду при неправильной утилизации, вызывая отравление.",
-    "scanner.harm.paper":
-      "Бумага из деревьев способствует вырубке лесов и потере биоразнообразия.",
-    "scanner.harm.default":
-      "Этот предмет может наносить вред окружающей среде при неправильной утилизации.",
-    "scanner.scannedPrefix": "Сканирован",
-    "scanner.takeTo": "Отнести в",
-    "scanner.regionAdvice": "Следуйте правилам сортировки вашего региона.",
-    "scanner.harmPrefix": "Вред природе:",
-    "scanner.analysis": "Анализируем предмет...",
-    "scanner.analysisError": "Не удалось связаться с сервером анализа.",
-    "scanner.ecoScoreLabel": "Eco Score",
-    "scanner.ozoneLabel": "Озон (O3)",
-    "scanner.finishButton": "Завершить и в профиль",
-
+    // ── Редактирование профиля ───────────────────────────────
     "editProfile.title": "Редактировать профиль",
     "auth.nickname": "Никнейм",
     "auth.firstName": "Имя",
@@ -84,32 +100,8 @@ export const translations = {
     "auth.birthDate": "Дата рождения",
     "auth.country": "Страна",
     "auth.city": "Город",
-    "auth.orMethod": "Google",
-    "auth.loginTitle": "Войти",
-    "auth.loginSubtitle": "Начни сканировать",
-    "auth.signupTitle": "Зарегистрироваться",
-    "auth.signupSubtitle": "Начни сканировать",
-    "auth.forgotPassword": "Забыли пароль?",
-    "auth.privacyPolicy": "Я ознакомлен и согласен с",
-    "auth.privacyLink": "политикой конфиденциальности",
-    "auth.privacyError":
-      "Необходимо согласиться с политикой конфиденциальности для регистрации",
-    "auth.privacyClose": "Понятно",
-    "common.save": "Сохранить",
-    "common.edit": "редактировать",
-    "profile.uploadPhoto": "Загрузить фото",
-    "profile.uploadError": "Ошибка загрузки",
-    "common.cancel": "Отмена",
 
-    "slider.tip.1": "Пластиковые бутылки разлагаются до 450 лет. Сдавай их на переработку!",
-    "slider.tip.2": "Экономь энергию: выключай свет, когда выходишь из комнаты.",
-    "slider.fact.1": "Переработка одной тонны бумаги спасает 17 деревьев.",
-    "slider.motto.1": "Маленькие шаги ведут к большим переменам.",
-    "slider.progress.prefix": "До уровня",
-    "slider.progress.suffix": "осталось",
-    "slider.progress.scans": "скана",
-    "slider.stats.impact": "Твой вклад спас уже 5 виртуальных деревьев!",
-
+    // ── Страница профиля ─────────────────────────────────────
     "profile.ecoScore": "Эко-счёт",
     "profile.ozone": "Валюта O3",
     "profile.ozoneShort": "O3",
@@ -130,16 +122,59 @@ export const translations = {
     "profile.rewardTable.ozone": "Награда O3",
     "profile.stickerPack": "Стикеры:",
     "profile.badgeRecycle": "♻️ Эко",
+    "profile.uploadPhoto": "Загрузить фото",
+    "profile.uploadError": "Ошибка загрузки",
 
-    "feedback.button": "Отзыв",
-    "feedback.title": "Помоги нам стать лучше",
-    "feedback.placeholder": "Опишите вашу идею или проблему...",
-    "feedback.send": "Отправить",
-    "feedback.success": "Спасибо! Эко-сообщество ценит ваш вклад.",
-    "feedback.category.bug": "Ошибка",
-    "feedback.category.idea": "Идея",
-    "feedback.category.review": "Отзыв",
+    // ── Сканер ───────────────────────────────────────────────
+    "scanner.title": "Сканер мусора",
+    "scanner.hint": "Наведи камеру на предмет и нажми 'Сканировать'",
+    "scanner.takePhoto": "Начать сканирование",
+    "scanner.scan": "Сканировать",
+    "scanner.analysis": "Анализируем предмет...",
+    "scanner.analysisError": "Не удалось связаться с сервером анализа.",
+    "scanner.serverError": "Ошибка сервера при анализе.",
+    "scanner.points": "Ты получил",
+    "scanner.ecoScore": "эко-счёта",
+    "scanner.ecoScoreLabel": "Eco Score",
+    "scanner.ozone": "O3",
+    "scanner.ozoneLabel": "Озон (O3)",
+    "scanner.streak": "Стрик!",
+    "scanner.close": "Закрыть",
+    "scanner.finishButton": "Завершить и в профиль",
+    "scanner.plastic": "Пластик (PET 01)",
+    "scanner.unrecognizedTitle": "ПРЕДМЕТ НЕ РАСПОЗНАН",
+    "scanner.unrecognizedInstructions":
+      "Это не похоже на сортируемый мусор. Попробуйте отсканировать пластик, стекло, металл или бумагу.",
+    "scanner.defaultBin": "соответствующий контейнер",
+    "scanner.item": "предмет",
+    "scanner.scannedPrefix": "Сканирован",
+    "scanner.takeTo": "Отнести в",
+    "scanner.regionAdvice": "Следуйте правилам сортировки вашего региона.",
+    "scanner.harmPrefix": "Вред природе:",
+    "scanner.harm.plastic":
+      "Пластик разлагается сотни лет, загрязняя океаны и убивая морских животных.",
+    "scanner.harm.glass":
+      "Стекло безопасно, но его производство требует много энергии и ресурсов.",
+    "scanner.harm.metal":
+      "Металлы могут загрязнять почву и воду при неправильной утилизации, вызывая отравление.",
+    "scanner.harm.paper":
+      "Бумага из деревьев способствует вырубке лесов и потере биоразнообразия.",
+    "scanner.harm.default":
+      "Этот предмет может наносить вред окружающей среде при неправильной утилизации.",
 
+    // ── Слайдер советов ──────────────────────────────────────
+    "slider.tip.1":
+      "Пластиковые бутылки разлагаются до 450 лет. Сдавай их на переработку!",
+    "slider.tip.2":
+      "Экономь энергию: выключай свет, когда выходишь из комнаты.",
+    "slider.fact.1": "Переработка одной тонны бумаги спасает 17 деревьев.",
+    "slider.motto.1": "Маленькие шаги ведут к большим переменам.",
+    "slider.progress.prefix": "До уровня",
+    "slider.progress.suffix": "осталось",
+    "slider.progress.scans": "скана",
+    "slider.stats.impact": "Твой вклад спас уже 5 виртуальных деревьев!",
+
+    // ── Боковая панель ───────────────────────────────────────
     "sidebar.fight": "В БОЙ ЗА ЧИСТОТУ!",
     "sidebar.fightDesc": "Используй AI и получай награды",
     "sidebar.nextLevel": "Следующий уровень",
@@ -148,6 +183,8 @@ export const translations = {
     "sidebar.yourLeague": "Твоя лига",
     "sidebar.ecoScoreLeague": "Эко-счёт",
     "sidebar.openLeagues": "Открыть лиги",
+    "sidebar.leagueInfo":
+      "Лиги - это способ соревноваться с другими игроками на основе вашего эко-счёта. Чем выше ваш счёт, тем выше лига и круче награды!",
     "sidebar.balance": "Твой баланс",
     "sidebar.marketplace": "Маркетплейс",
     "sidebar.exchange": "Обменяй энергию на награды",
@@ -156,9 +193,8 @@ export const translations = {
     "sidebar.regularGoods": "Обычные товары",
     "sidebar.collection": "Коллекция",
     "sidebar.logout": "Выйти",
-    "sidebar.leagueInfo":
-      "Лиги - это способ соревноваться с другими игроками на основе вашего эко-счёта. Чем выше ваш счёт, тем выше лига и круче награды!",
 
+    // ── Магазин — интерфейс ──────────────────────────────────
     "shop.title": "Магазин",
     "shop.back": "Назад",
     "shop.tabAll": "Все",
@@ -172,53 +208,38 @@ export const translations = {
     "shop.price": "Цена",
     "shop.description": "Описание",
     "shop.noMoney": "Недостаточно O3",
+
+    // ── Магазин — товары ─────────────────────────────────────
     "shopItems.eco_sticker_pack.name": "Эко-стикеры",
     "shopItems.eco_sticker_pack.desc": "Набор стикеров для профиля",
-
     "shopItems.green_theme.name": "Зелёная тема",
     "shopItems.green_theme.desc": "Базовая эко-тема профиля",
-
     "shopItems.recycle_badge.name": "Бейдж переработки",
     "shopItems.recycle_badge.desc": "Показывает твою активность",
-
     "shopItems.animated_avatar.name": "Анимированный аватар",
     "shopItems.animated_avatar.desc": "Живой аватар для профиля",
-
     "shopItems.eco_trail.name": "Эко-эффект",
     "shopItems.eco_trail.desc": "След из листьев",
-
     "shopItems.nickname_color.name": "Цветной ник",
     "shopItems.nickname_color.desc": "Выделяйся среди других",
-
     "shopItems.golden_frame.name": "Золотая рамка",
     "shopItems.golden_frame.desc": "VIP рамка",
-
     "shopItems.profile_background_animated.name": "Анимированный фон",
     "shopItems.profile_background_animated.desc": "Двигающийся фон",
-
     "shopItems.eco_title.name": "Титул Эко-герой",
     "shopItems.eco_title.desc": "Особый статус",
-
     "shopItems.eco_tote.name": "Эко-сумка",
     "shopItems.eco_tote.desc": "Реальный мерч",
-
     "shopItems.tree_donation.name": "Посадка дерева",
     "shopItems.tree_donation.desc": "Помощь планете",
-
     "shopItems.eco_hoodie.name": "Эко-худи",
     "shopItems.eco_hoodie.desc": "Мерч для топов",
-
     "shopItems.forest_sponsor.name": "Спонсор леса",
     "shopItems.forest_sponsor.desc": "Посадка нескольких деревьев",
-
     "shopItems.founder_badge.name": "Бейдж основателя",
     "shopItems.founder_badge.desc": "Уникальный статус",
 
-    "achievements.collection": "Коллекция достижений",
-    "achievements.showAll": "Посмотреть все",
-    "activityHistory.title": "История активности",
-    "activityHistory.empty": "История активности пуста",
-
+    // ── Инвентарь ────────────────────────────────────────────
     "inventory.title": "Инвентарь",
     "inventory.noItems": "Инвентарь пуст",
     "inventory.selected": "Сейчас выбрано",
@@ -232,215 +253,191 @@ export const translations = {
     "inventory.close": "Закрыть",
     "inventory.saveError": "Ошибка сохранения, попробуйте ещё раз",
 
+    // ── Достижения — интерфейс ───────────────────────────────
+    "achievements.collection": "Коллекция достижений",
+    "achievements.showAll": "Посмотреть все",
+    "achievements.hide": "Скрыть",
     "achievements.Title": "Награда",
     "achievements.statusReceived": "Уже получено",
-    "achievements.howToLabel": "Как получить",
     "achievements.statusClosed": "Пока закрыто",
+    "achievements.howToLabel": "Как получить",
 
-    achievements: {
-      collection: "Коллекция достижений",
-      showAll: "Показать все",
-      hide: "Скрыть",
+    // ── Достижения — данные ──────────────────────────────────
+    "achievements.streak_10.name": "10 дней",
+    "achievements.streak_10.desc": "Вы с EcoSnap уже 10 дней подряд!",
+    "achievements.streak_10.howTo":
+      "Сканируй мусор 10 дней подряд без пропусков.",
 
-      streak_10: {
-        name: "10 дней",
-        desc: "Вы с EcoSnap уже 10 дней подряд!",
-        howTo: "Сканируй мусор 10 дней подряд без пропусков.",
-      },
-      streak_50: {
-        name: "Полгорода",
-        desc: "50 дней активной заботы об экологии",
-        howTo: "Сканируй мусор 50 дней подряд без пропусков.",
-      },
-      streak_100: {
-        name: "Центурион",
-        desc: "100 дней! Вами гордится планета",
-        howTo: "Сканируй мусор 100 дней подряд без пропусков.",
-      },
-      streak_300: {
-        name: "Эко-Бог",
-        desc: "300 дней. Статус легенды достигнут",
-        howTo: "Сканируй мусор 300 дней подряд без пропусков.",
-      },
+    "achievements.streak_50.name": "Полгорода",
+    "achievements.streak_50.desc": "50 дней активной заботы об экологии",
+    "achievements.streak_50.howTo":
+      "Сканируй мусор 50 дней подряд без пропусков.",
 
-      first_scan: {
-        name: "Старт",
-        desc: "Ваш первый вклад в чистоту планеты",
-        howTo: "Сделай свой первый скан через экран сканера.",
-      },
+    "achievements.streak_100.name": "Центурион",
+    "achievements.streak_100.desc": "100 дней! Вами гордится планета",
+    "achievements.streak_100.howTo":
+      "Сканируй мусор 100 дней подряд без пропусков.",
 
-      plastic_10: {
-        name: "Пластик-стоп",
-        desc: "10 объектов спасено от свалки",
-        howTo: "Сканируй пластик 10 раз.",
-      },
+    "achievements.streak_300.name": "Эко-Бог",
+    "achievements.streak_300.desc": "300 дней. Статус легенды достигнут",
+    "achievements.streak_300.howTo":
+      "Сканируй мусор 300 дней подряд без пропусков.",
 
-      glass_10: {
-        name: "Стеклянный глаз",
-        desc: "10 стеклянных бутылок собрано",
-        howTo: "Сканируй стекло 10 раз.",
-      },
+    "achievements.first_scan.name": "Старт",
+    "achievements.first_scan.desc": "Ваш первый вклад в чистоту планеты",
+    "achievements.first_scan.howTo":
+      "Сделай свой первый скан через экран сканера.",
 
-      paper_10: {
-        name: "Бумажный тигр",
-        desc: "10 картонных упаковок переработано",
-        howTo: "Сканируй бумагу 10 раз.",
-      },
+    "achievements.plastic_10.name": "Пластик-стоп",
+    "achievements.plastic_10.desc": "10 объектов спасено от свалки",
+    "achievements.plastic_10.howTo": "Сканируй пластик 10 раз.",
 
-      metal_10: {
-        name: "Железный чел",
-        desc: "10 жестяных банок в деле",
-        howTo: "Сканируй металл 10 раз.",
-      },
+    "achievements.glass_10.name": "Стеклянный глаз",
+    "achievements.glass_10.desc": "10 стеклянных бутылок собрано",
+    "achievements.glass_10.howTo": "Сканируй стекло 10 раз.",
 
-      rich_100: {
-        name: "Сотка",
-        desc: "Вы заработали первые 100 O3",
-        howTo: "Накопи минимум 100 O3.",
-      },
+    "achievements.paper_10.name": "Бумажный тигр",
+    "achievements.paper_10.desc": "10 картонных упаковок переработано",
+    "achievements.paper_10.howTo": "Сканируй бумагу 10 раз.",
 
-      rich_1000: {
-        name: "Миллионер",
-        desc: "На вашем счету более 1000 O3",
-        howTo: "Накопи минимум 1000 O3.",
-      },
+    "achievements.metal_10.name": "Железный чел",
+    "achievements.metal_10.desc": "10 жестяных банок в деле",
+    "achievements.metal_10.howTo": "Сканируй металл 10 раз.",
 
-      lvl_10: {
-        name: "Десятка",
-        desc: "Вы достигли 10 уровня прогресса",
-        howTo: "Достигни 10 уровня.",
-      },
+    "achievements.rich_100.name": "Сотка",
+    "achievements.rich_100.desc": "Вы заработали первые 100 O3",
+    "achievements.rich_100.howTo": "Накопи минимум 100 O3.",
 
-      lvl_50: {
-        name: "На Марс!",
-        desc: "Вы достигли 50 уровня!",
-        howTo: "Достигни 50 уровня.",
-      },
+    "achievements.rich_1000.name": "Миллионер",
+    "achievements.rich_1000.desc": "На вашем счету более 1000 O3",
+    "achievements.rich_1000.howTo": "Накопи минимум 1000 O3.",
 
-      night_owl: {
-        name: "Сова",
-        desc: "Сканирование мусора ночью",
-        howTo: "Сделай скан после 22:00.",
-      },
+    "achievements.lvl_10.name": "Десятка",
+    "achievements.lvl_10.desc": "Вы достигли 10 уровня прогресса",
+    "achievements.lvl_10.howTo": "Достигни 10 уровня.",
 
-      early_bird: {
-        name: "Пташка",
-        desc: "Сканирование мусора ранним утром",
-        howTo: "Сделай скан до 08:00.",
-      },
+    "achievements.lvl_50.name": "На Марс!",
+    "achievements.lvl_50.desc": "Вы достигли 50 уровня!",
+    "achievements.lvl_50.howTo": "Достигни 50 уровня.",
 
-      traveler: {
-        name: "Турист",
-        desc: "Скан в другом городе или стране",
-        howTo: "Сканируй вне домашнего города.",
-      },
+    "achievements.night_owl.name": "Сова",
+    "achievements.night_owl.desc": "Сканирование мусора ночью",
+    "achievements.night_owl.howTo": "Сделай скан после 22:00.",
 
-      fast_scanner: {
-        name: "Скорость",
-        desc: "3 скана менее чем за минуту",
-        howTo: "Сделай 3 скана за минуту.",
-      },
+    "achievements.early_bird.name": "Пташка",
+    "achievements.early_bird.desc": "Сканирование мусора ранним утром",
+    "achievements.early_bird.howTo": "Сделай скан до 08:00.",
 
-      eco_hero: {
-        name: "Герой",
-        desc: "Спасено более 10 виртуальных деревьев",
-        howTo: "Спаси 10 деревьев.",
-      },
+    "achievements.traveler.name": "Турист",
+    "achievements.traveler.desc": "Скан в другом городе или стране",
+    "achievements.traveler.howTo": "Сканируй вне домашнего города.",
 
-      perfect_profile: {
-        name: "Перфекционист",
-        desc: "Все данные профиля заполнены",
-        howTo: "Заполни весь профиль.",
-      },
+    "achievements.fast_scanner.name": "Скорость",
+    "achievements.fast_scanner.desc": "3 скана менее чем за минуту",
+    "achievements.fast_scanner.howTo": "Сделай 3 скана за минуту.",
 
-      inviter: {
-        name: "Друг",
-        desc: "Ваш реферальный код был использован",
-        howTo: "Пригласи друга.",
-      },
-    },
+    "achievements.eco_hero.name": "Герой",
+    "achievements.eco_hero.desc": "Спасено более 10 виртуальных деревьев",
+    "achievements.eco_hero.howTo": "Спаси 10 деревьев.",
 
-    about: {
-      title: "О проекте EcoSnap",
-      subtitle: "Твой AI-помощник в сортировке отходов",
-      whoTitle: "Кто мы такие",
-      whoDesc:
-        "Мы — команда разработчиков и энтузиастов, которым не всё равно, что происходит с окружающей средой.",
-      whoMission:
-        "EcoSnap был создан как простой и удобный инструмент, который помогает людям правильно сортировать отходы без сложных правил.",
-      whyTitle: "Почему мы это делаем",
-      problems: {
-        1: "Не знают правил",
-        2: "Путаются в категориях",
-        3: "Тратят время на поиск",
-      },
-      solution: "Мы решили это исправить с помощью AI.",
-      howTitle: "Как это работает",
-      steps: {
-        1: "Наведи камеру",
-        2: "AI определит тип",
-        3: "Получи инструкцию",
-        4: "Сделай вклад",
-      },
-      featuresTitle: "Особенности",
-      featuresList: {
-        1: "Мгновенное распознавание",
-        2: "Умные подсказки",
-        3: "Геймификация (эко-счёт)",
-        4: "Реальное влияние",
-      },
-      aboutUsTitle: "Немного о нас",
-      aboutUsDesc:
-        "Проект создан как современное решение для нового поколения, которое хочет жить осознанно и использовать технологии во благо.",
-    },
+    "achievements.perfect_profile.name": "Перфекционист",
+    "achievements.perfect_profile.desc": "Все данные профиля заполнены",
+    "achievements.perfect_profile.howTo": "Заполни весь профиль.",
 
-    leagues: {
-      // Общие параметры интерфейса
-      title: "Лиги EcoSnap",
-      currentLeague: "Текущая лига",
-      toNextLeague: "До",
-      maxReached: "Максимальная лига достигнута. Ты легенда экосистемы!",
-      threshold: "Порог",
-      points: "очков",
+    "achievements.inviter.name": "Друг",
+    "achievements.inviter.desc": "Ваш реферальный код был использован",
+    "achievements.inviter.howTo": "Пригласи друга.",
 
-      // Данные для лиг
-      seed: {
-        name: "Лига Семени",
-        desc: "Первые шаги в экопривычках.",
-      },
-      sprout: {
-        name: "Лига Ростка",
-        desc: "Ты уже стабильно сканируешь и набираешь темп.",
-      },
-      forest: {
-        name: "Лига Леса",
-        desc: "Твой вклад заметен, ты строишь зеленое будущее.",
-      },
-      ocean: {
-        name: "Лига Океана",
-        desc: "Сильный эко-игрок с большой ежедневной активностью.",
-      },
-      planet: {
-        name: "Лига Планеты",
-        desc: "Ты вдохновляешь других и влияешь на экосообщество.",
-      },
-      legend: {
-        name: "Лига Легенд",
-        desc: "Элитный защитник экологии. Максимальный ранг.",
-      },
-    },
+    // ── История активности ───────────────────────────────────
+    "activityHistory.title": "История активности",
+    "activityHistory.empty": "История активности пуста",
+
+    // ── Обратная связь ───────────────────────────────────────
+    "feedback.button": "Отзыв",
+    "feedback.title": "Помоги нам стать лучше",
+    "feedback.placeholder": "Опишите вашу идею или проблему...",
+    "feedback.send": "Отправить",
+    "feedback.success": "Спасибо! Эко-сообщество ценит ваш вклад.",
+    "feedback.category.bug": "Ошибка",
+    "feedback.category.idea": "Идея",
+    "feedback.category.review": "Отзыв",
+
+    // ── Лиги — интерфейс ─────────────────────────────────────
+    "leagues.title": "Лиги EcoSnap",
+    "leagues.currentLeague": "Текущая лига",
+    "leagues.toNextLeague": "До",
+    "leagues.maxReached":
+      "Максимальная лига достигнута. Ты легенда экосистемы!",
+    "leagues.threshold": "Порог",
+    "leagues.points": "очков",
+
+    // ── Лиги — данные ────────────────────────────────────────
+    "leagues.seed.name": "Лига Семени",
+    "leagues.seed.desc": "Первые шаги в экопривычках.",
+    "leagues.sprout.name": "Лига Ростка",
+    "leagues.sprout.desc": "Ты уже стабильно сканируешь и набираешь темп.",
+    "leagues.forest.name": "Лига Леса",
+    "leagues.forest.desc": "Твой вклад заметен, ты строишь зеленое будущее.",
+    "leagues.ocean.name": "Лига Океана",
+    "leagues.ocean.desc": "Сильный эко-игрок с большой ежедневной активностью.",
+    "leagues.planet.name": "Лига Планеты",
+    "leagues.planet.desc": "Ты вдохновляешь других и влияешь на экосообщество.",
+    "leagues.legend.name": "Лига Легенд",
+    "leagues.legend.desc": "Элитный защитник экологии. Максимальный ранг.",
+
+    // ── О проекте ────────────────────────────────────────────
+    "about.title": "О проекте EcoSnap",
+    "about.subtitle": "Твой AI-помощник в сортировке отходов",
+
+    "about.whoTitle": "Кто мы такие",
+    "about.whoDesc":
+      "Мы — команда разработчиков и энтузиастов, которым не всё равно, что происходит с окружающей средой.",
+    "about.whoMission":
+      "EcoSnap был создан как простой и удобный инструмент, который помогает людям правильно сортировать отходы без сложных правил.",
+
+    "about.whyTitle": "Почему мы это делаем",
+    "about.problems.1": "Не знают правил",
+    "about.problems.2": "Путаются в категориях",
+    "about.problems.3": "Тратят время на поиск",
+    "about.solution": "Мы решили это исправить с помощью AI.",
+
+    "about.howTitle": "Как это работает",
+    "about.steps.1": "Наведи камеру",
+    "about.steps.2": "AI определит тип",
+    "about.steps.3": "Получи инструкцию",
+    "about.steps.4": "Сделай вклад",
+
+    "about.featuresTitle": "Особенности",
+    "about.featuresList.1": "Мгновенное распознавание",
+    "about.featuresList.2": "Умные подсказки",
+    "about.featuresList.3": "Геймификация (эко-счёт)",
+    "about.featuresList.4": "Реальное влияние",
+
+    "about.aboutUsTitle": "Немного о нас",
+    "about.aboutUsDesc":
+      "Проект создан как современное решение для нового поколения, которое хочет жить осознанно и использовать технологии во благо.",
   },
 
+  // ══════════════════════════════════════════════════════════
+  // АНГЛИЙСКИЙ
+  // ══════════════════════════════════════════════════════════
   en: {
+    // ── Общие слова ─────────────────────────────────────────
     "common.and": "and",
     "common.perScan": "per Scan",
+    "common.save": "Save",
+    "common.cancel": "Cancel",
+    "common.edit": "edit",
 
+    // ── Навигация ────────────────────────────────────────────
     "nav.profile": "Profile",
     "nav.shop": "Shop",
     "nav.logout": "Logout",
     "nav.login": "Login",
 
+    // ── Главный экран ────────────────────────────────────────
     "hero.loggedInTagline": "System active",
+    "hero.tagline": "System not active",
     "hero.title": "Let's make the planet cleaner together",
     "hero.greeting": "Hi!",
     "hero.dashboard": "Eco Defender",
@@ -449,10 +446,10 @@ export const translations = {
     "hero.signup": "Sign up",
     "hero.welcome": "Welcome back, level",
 
-    "hero.tagline": "System not active",
-
+    // ── Подвал ───────────────────────────────────────────────
     "footer.about": "About us",
 
+    // ── Фичи на главной ─────────────────────────────────────
     "features.rules": "Eco Check",
     "features.rulesEco": "Check local recycling rules",
     "features.progress": "Progress",
@@ -464,53 +461,40 @@ export const translations = {
     "features.community": "Eco Heroes",
     "features.communityDesc": "Compete and inspire others",
 
+    // ── Авторизация и регистрация ────────────────────────────
     "auth.title": "Join EcoSnap",
     "auth.subtitle": "Start scanning waste",
+    "auth.loginTitle": "Log In",
+    "auth.loginSubtitle": "Start now",
+    "auth.signupTitle": "Sign Up",
+    "auth.signupSubtitle": "Start now",
     "auth.google": "Sign in with Google",
+    "auth.orMethod": "Google",
     "auth.loginPlaceholder": "Email",
     "auth.password": "Password",
     "auth.login": "Login",
     "auth.signup": "Sign up",
     "auth.alreadyHave": "Already have an account?",
     "auth.noAccount": "No account?",
+    "auth.forgotPassword": "Reset Password",
+    "auth.privacyPolicy": "I have read and agree to the",
+    "auth.privacyLink": "privacy policy",
+    "auth.privacyError": "You must agree to the privacy policy to register",
+    "auth.privacyClose": "Got it",
 
-    "scanner.title": "Waste Scanner",
-    "scanner.takePhoto": "Take Photo",
-    "scanner.scan": "Scan",
-    "scanner.points": "You earned",
-    "scanner.ecoScore": "eco-score",
-    "scanner.ozone": "OZ",
-    "scanner.streak": "Streak!",
-    "scanner.close": "Close",
-    "scanner.plastic": "Plastic (PET 01)",
-    "scanner.serverError": "Server error during analysis.",
-    "scanner.unrecognizedTitle": "ITEM NOT RECOGNIZED",
-    "scanner.unrecognizedInstructions":
-      "This does not look like recyclable waste. Try scanning plastic, glass, metal, or paper.",
-    "scanner.defaultBin": "the appropriate bin",
-    "scanner.item": "item",
-    "scanner.harm.plastic":
-      "Plastic takes centuries to decompose, polluting oceans and harming wildlife.",
-    "scanner.harm.glass":
-      "Glass is safe, but its production consumes a lot of energy and resources.",
-    "scanner.harm.metal":
-      "Metals can contaminate soil and water if disposed of incorrectly.",
-    "scanner.harm.paper":
-      "Paper contributes to deforestation and biodiversity loss.",
-    "scanner.harm.default":
-      "This item may harm the environment if disposed of improperly.",
-    "scanner.scannedPrefix": "Scanned",
-    "scanner.takeTo": "Take it to",
-    "scanner.regionAdvice": "Follow your region's recycling rules.",
-    "scanner.harmPrefix": "Environmental harm:",
-    "scanner.analysis": "Analyzing item...",
-    "scanner.analysisError": "Unable to contact the analysis server.",
-    "scanner.ecoScoreLabel": "Eco Score",
-    "scanner.ozoneLabel": "Ozone (O3)",
-    "scanner.finishButton": "Finish and go to Profile",
+    // ── Редактирование профиля ───────────────────────────────
+    "editProfile.title": "Edit Profile",
+    "auth.nickname": "Nickname",
+    "auth.firstName": "First Name",
+    "auth.lastName": "Last Name",
+    "auth.birthDate": "Date of Birth",
+    "auth.country": "Country",
+    "auth.city": "City",
 
+    // ── Страница профиля ─────────────────────────────────────
     "profile.ecoScore": "Eco Score",
     "profile.ozone": "OZ Currency",
+    "profile.ozoneShort": "OZ",
     "profile.scans": "Scans",
     "profile.level": "Level",
     "profile.achievements": "Achievements",
@@ -528,40 +512,49 @@ export const translations = {
     "profile.rewardTable.ozone": "O3 Reward",
     "profile.stickerPack": "Stickers:",
     "profile.badgeRecycle": "♻️ Eco",
-
-    "editProfile.title": "Edit Profile",
-    "auth.nickname": "Nickname",
-    "auth.firstName": "First Name",
-    "auth.lastName": "Last Name",
-    "auth.birthDate": "Date of Birth",
-    "auth.country": "Country",
-    "auth.city": "City",
-    "auth.orMethod": "Google",
-    "auth.signupTitle": "Sign Up",
-    "auth.signupSubtitle": "Start now",
-    "auth.loginTitle": "Log In",
-    "auth.loginSubtitle": "Start now",
-    "auth.privacyPolicy": "I have read and agree to the",
-    "auth.privacyLink": "privacy policy",
-    "auth.privacyError": "You must agree to the privacy policy to register",
-    "auth.privacyClose": "Got it",
-    "auth.forgotPassword": "Reset Password",
-    "common.save": "Save",
-    "common.cancel": "Cancel",
-    "common.edit": "edit",
     "profile.uploadPhoto": "Upload Photo",
     "profile.uploadError": "Upload failed",
 
-    "feedback.button": "Feedback",
-    "feedback.title": "Help us improve",
-    "feedback.placeholder": "Describe your idea or issue...",
-    "feedback.send": "Send",
-    "feedback.success": "Thanks! The eco-community values your input.",
-    "feedback.category.bug": "Bug",
-    "feedback.category.idea": "Idea",
-    "feedback.category.review": "Review",
+    // ── Сканер ───────────────────────────────────────────────
+    "scanner.title": "Waste Scanner",
+    "scanner.hint": "Point your camera at an item and press 'Scan'",
+    "scanner.takePhoto": "Take Photo",
+    "scanner.scan": "Scan",
+    "scanner.analysis": "Analyzing item...",
+    "scanner.analysisError": "Unable to contact the analysis server.",
+    "scanner.serverError": "Server error during analysis.",
+    "scanner.points": "You earned",
+    "scanner.ecoScore": "eco-score",
+    "scanner.ecoScoreLabel": "Eco Score",
+    "scanner.ozone": "OZ",
+    "scanner.ozoneLabel": "Ozone (O3)",
+    "scanner.streak": "Streak!",
+    "scanner.close": "Close",
+    "scanner.finishButton": "Finish and go to Profile",
+    "scanner.plastic": "Plastic (PET 01)",
+    "scanner.unrecognizedTitle": "ITEM NOT RECOGNIZED",
+    "scanner.unrecognizedInstructions":
+      "This does not look like recyclable waste. Try scanning plastic, glass, metal, or paper.",
+    "scanner.defaultBin": "the appropriate bin",
+    "scanner.item": "item",
+    "scanner.scannedPrefix": "Scanned",
+    "scanner.takeTo": "Take it to",
+    "scanner.regionAdvice": "Follow your region's recycling rules.",
+    "scanner.harmPrefix": "Environmental harm:",
+    "scanner.harm.plastic":
+      "Plastic takes centuries to decompose, polluting oceans and harming wildlife.",
+    "scanner.harm.glass":
+      "Glass is safe, but its production consumes a lot of energy and resources.",
+    "scanner.harm.metal":
+      "Metals can contaminate soil and water if disposed of incorrectly.",
+    "scanner.harm.paper":
+      "Paper contributes to deforestation and biodiversity loss.",
+    "scanner.harm.default":
+      "This item may harm the environment if disposed of improperly.",
 
-    "slider.tip.1": "Plastic bottles take up to 450 years to decompose. Recycle them!",
+    // ── Слайдер советов ──────────────────────────────────────
+    "slider.tip.1":
+      "Plastic bottles take up to 450 years to decompose. Recycle them!",
     "slider.tip.2": "Save energy: turn off the lights when leaving a room.",
     "slider.fact.1": "Recycling one ton of paper saves 17 trees.",
     "slider.motto.1": "Small steps lead to big changes.",
@@ -570,6 +563,7 @@ export const translations = {
     "slider.progress.scans": "scans",
     "slider.stats.impact": "Your contribution saved 5 virtual trees!",
 
+    // ── Боковая панель ───────────────────────────────────────
     "sidebar.fight": "FIGHT FOR CLEANLINESS!",
     "sidebar.fightDesc": "Use AI and earn rewards",
     "sidebar.nextLevel": "Next level",
@@ -578,6 +572,8 @@ export const translations = {
     "sidebar.yourLeague": "Your league",
     "sidebar.ecoScoreLeague": "Eco Score",
     "sidebar.openLeagues": "Open leagues",
+    "sidebar.leagueInfo":
+      "Leagues are a way to compete with other players based on your eco-score. The higher your score, the higher the league and cooler rewards!",
     "sidebar.balance": "Your balance",
     "sidebar.marketplace": "Marketplace",
     "sidebar.exchange": "Exchange energy for rewards",
@@ -586,15 +582,29 @@ export const translations = {
     "sidebar.regularGoods": "Regular Goods",
     "sidebar.collection": "Collection",
     "sidebar.logout": "Logout",
-    "sidebar.leagueInfo":
-      "Leagues are a way to compete with other players based on your eco-score. The higher your score, the higher the league and cooler rewards!",
 
+    // ── Магазин — интерфейс ──────────────────────────────────
     "shop.title": "Shop",
+    "shop.back": "Back",
+    "shop.tabAll": "All",
+    "shop.tabDigital": "Digital",
+    "shop.tabReal": "Real",
+    "shop.tabCharity": "Charity",
+    "shop.active": "Active",
+    "shop.equip": "Equip",
+    "shop.equipLoading": "Equipping...",
     "shop.buy": "Buy",
+    "shop.buyLoading": "Buying...",
     "shop.use": "Use",
     "shop.price": "Price",
     "shop.description": "Description",
     "shop.noMoney": "Not enough OZ",
+    "shop.successBuy": "Purchase successful!",
+    "shop.errorBuy": "Purchase failed",
+    "shop.successEquip": "Item equipped!",
+    "shop.errorEquip": "Equip failed",
+
+    // ── Магазин — товары ─────────────────────────────────────
     "shopItems.eco_sticker_pack.name": "Eco Stickers",
     "shopItems.eco_sticker_pack.desc": "Sticker pack for profile",
     "shopItems.green_theme.name": "Green Theme",
@@ -624,27 +634,7 @@ export const translations = {
     "shopItems.founder_badge.name": "Founder Badge",
     "shopItems.founder_badge.desc": "Unique status",
 
-    "profile.ozoneShort": "OZ",
-
-    "achievements.collection": "Achievement Collection",
-    "achievements.showAll": "Show all",
-    "activityHistory.title": "Activity History",
-    "activityHistory.empty": "Activity history is empty",
-
-    "shop.back": "Back",
-    "shop.tabAll": "All",
-    "shop.tabDigital": "Digital",
-    "shop.tabReal": "Real",
-    "shop.tabCharity": "Charity",
-    "shop.active": "Active",
-    "shop.equip": "Equip",
-    "shop.equipLoading": "Equipping...",
-    "shop.buyLoading": "Buying...",
-    "shop.successBuy": "Purchase successful!",
-    "shop.errorBuy": "Purchase failed",
-    "shop.successEquip": "Item equipped!",
-    "shop.errorEquip": "Equip failed",
-
+    // ── Инвентарь ────────────────────────────────────────────
     "inventory.title": "Inventory",
     "inventory.noItems": "Inventory is empty",
     "inventory.selected": "Currently selected",
@@ -658,218 +648,193 @@ export const translations = {
     "inventory.close": "Close",
     "inventory.saveError": "Save error, please try again",
 
+    // ── Достижения — интерфейс ───────────────────────────────
+    "achievements.collection": "Achievement Collection",
+    "achievements.showAll": "Show all",
+    "achievements.hide": "Hide",
     "achievements.Title": "Award",
     "achievements.statusReceived": "Already received",
-    "achievements.howToLabel": "How to get",
     "achievements.statusClosed": "Closed",
+    "achievements.howToLabel": "How to get",
 
-    achievements: {
-      collection: "Achievements Collection",
-      showAll: "Show all",
-      hide: "Hide",
+    // ── Достижения — данные ──────────────────────────────────
+    "achievements.streak_10.name": "10 Days",
+    "achievements.streak_10.desc":
+      "You've been with EcoSnap for 10 days in a row!",
+    "achievements.streak_10.howTo":
+      "Scan waste for 10 consecutive days without missing one.",
 
-      streak_10: {
-        name: "10 Days",
-        desc: "You've been with EcoSnap for 10 days in a row!",
-        howTo: "Scan waste for 10 consecutive days without missing one.",
-      },
-      streak_50: {
-        name: "Half the City",
-        desc: "50 days of active eco care",
-        howTo: "Scan waste for 50 consecutive days.",
-      },
-      streak_100: {
-        name: "Centurion",
-        desc: "100 days! The planet is proud of you",
-        howTo: "Scan waste for 100 consecutive days.",
-      },
-      streak_300: {
-        name: "Eco God",
-        desc: "300 days. Legendary status achieved",
-        howTo: "Scan waste for 300 consecutive days.",
-      },
+    "achievements.streak_50.name": "Half the City",
+    "achievements.streak_50.desc": "50 days of active eco care",
+    "achievements.streak_50.howTo": "Scan waste for 50 consecutive days.",
 
-      first_scan: {
-        name: "Start",
-        desc: "Your first contribution to a cleaner planet",
-        howTo: "Complete your first scan using the scanner.",
-      },
+    "achievements.streak_100.name": "Centurion",
+    "achievements.streak_100.desc": "100 days! The planet is proud of you",
+    "achievements.streak_100.howTo": "Scan waste for 100 consecutive days.",
 
-      plastic_10: {
-        name: "Plastic Stop",
-        desc: "10 plastic items saved from landfill",
-        howTo: "Scan plastic 10 times.",
-      },
+    "achievements.streak_300.name": "Eco God",
+    "achievements.streak_300.desc": "300 days. Legendary status achieved",
+    "achievements.streak_300.howTo": "Scan waste for 300 consecutive days.",
 
-      glass_10: {
-        name: "Glass Eye",
-        desc: "10 glass bottles collected",
-        howTo: "Scan glass 10 times.",
-      },
+    "achievements.first_scan.name": "Start",
+    "achievements.first_scan.desc":
+      "Your first contribution to a cleaner planet",
+    "achievements.first_scan.howTo":
+      "Complete your first scan using the scanner.",
 
-      paper_10: {
-        name: "Paper Tiger",
-        desc: "10 cardboard packages recycled",
-        howTo: "Scan paper 10 times.",
-      },
+    "achievements.plastic_10.name": "Plastic Stop",
+    "achievements.plastic_10.desc": "10 plastic items saved from landfill",
+    "achievements.plastic_10.howTo": "Scan plastic 10 times.",
 
-      metal_10: {
-        name: "Iron Hero",
-        desc: "10 metal cans recycled",
-        howTo: "Scan metal 10 times.",
-      },
+    "achievements.glass_10.name": "Glass Eye",
+    "achievements.glass_10.desc": "10 glass bottles collected",
+    "achievements.glass_10.howTo": "Scan glass 10 times.",
 
-      rich_100: {
-        name: "First Hundred",
-        desc: "You earned your first 100 O3",
-        howTo: "Collect at least 100 O3.",
-      },
+    "achievements.paper_10.name": "Paper Tiger",
+    "achievements.paper_10.desc": "10 cardboard packages recycled",
+    "achievements.paper_10.howTo": "Scan paper 10 times.",
 
-      rich_1000: {
-        name: "Millionaire",
-        desc: "You have more than 1000 O3",
-        howTo: "Collect at least 1000 O3.",
-      },
+    "achievements.metal_10.name": "Iron Hero",
+    "achievements.metal_10.desc": "10 metal cans recycled",
+    "achievements.metal_10.howTo": "Scan metal 10 times.",
 
-      lvl_10: {
-        name: "Level Ten",
-        desc: "You reached level 10",
-        howTo: "Reach level 10.",
-      },
+    "achievements.rich_100.name": "First Hundred",
+    "achievements.rich_100.desc": "You earned your first 100 O3",
+    "achievements.rich_100.howTo": "Collect at least 100 O3.",
 
-      lvl_50: {
-        name: "To Mars!",
-        desc: "You reached level 50!",
-        howTo: "Reach level 50.",
-      },
+    "achievements.rich_1000.name": "Millionaire",
+    "achievements.rich_1000.desc": "You have more than 1000 O3",
+    "achievements.rich_1000.howTo": "Collect at least 1000 O3.",
 
-      night_owl: {
-        name: "Night Owl",
-        desc: "Scanning waste at night",
-        howTo: "Complete a scan after 10 PM.",
-      },
+    "achievements.lvl_10.name": "Level Ten",
+    "achievements.lvl_10.desc": "You reached level 10",
+    "achievements.lvl_10.howTo": "Reach level 10.",
 
-      early_bird: {
-        name: "Early Bird",
-        desc: "Scanning waste early in the morning",
-        howTo: "Complete a scan before 8 AM.",
-      },
+    "achievements.lvl_50.name": "To Mars!",
+    "achievements.lvl_50.desc": "You reached level 50!",
+    "achievements.lvl_50.howTo": "Reach level 50.",
 
-      traveler: {
-        name: "Traveler",
-        desc: "Scanned in another city or country",
-        howTo: "Scan outside your home city.",
-      },
+    "achievements.night_owl.name": "Night Owl",
+    "achievements.night_owl.desc": "Scanning waste at night",
+    "achievements.night_owl.howTo": "Complete a scan after 10 PM.",
 
-      fast_scanner: {
-        name: "Speedster",
-        desc: "3 scans in under a minute",
-        howTo: "Complete 3 scans within one minute.",
-      },
+    "achievements.early_bird.name": "Early Bird",
+    "achievements.early_bird.desc": "Scanning waste early in the morning",
+    "achievements.early_bird.howTo": "Complete a scan before 8 AM.",
 
-      eco_hero: {
-        name: "Hero",
-        desc: "Saved more than 10 virtual trees",
-        howTo: "Save 10 trees.",
-      },
+    "achievements.traveler.name": "Traveler",
+    "achievements.traveler.desc": "Scanned in another city or country",
+    "achievements.traveler.howTo": "Scan outside your home city.",
 
-      perfect_profile: {
-        name: "Perfectionist",
-        desc: "All profile information completed",
-        howTo: "Fill out your entire profile.",
-      },
+    "achievements.fast_scanner.name": "Speedster",
+    "achievements.fast_scanner.desc": "3 scans in under a minute",
+    "achievements.fast_scanner.howTo": "Complete 3 scans within one minute.",
 
-      inviter: {
-        name: "Friend",
-        desc: "Your referral code was used",
-        howTo: "Invite a friend.",
-      },
-    },
+    "achievements.eco_hero.name": "Hero",
+    "achievements.eco_hero.desc": "Saved more than 10 virtual trees",
+    "achievements.eco_hero.howTo": "Save 10 trees.",
 
-    about: {
-      title: "About EcoSnap",
-      subtitle: "Your AI assistant for waste sorting",
+    "achievements.perfect_profile.name": "Perfectionist",
+    "achievements.perfect_profile.desc": "All profile information completed",
+    "achievements.perfect_profile.howTo": "Fill out your entire profile.",
 
-      whoTitle: "Who We Are",
-      whoDesc:
-        "We are a team of developers and enthusiasts who care deeply about the environment.",
-      whoMission:
-        "EcoSnap was created as a simple and convenient tool to help people sort waste correctly without complicated rules.",
+    "achievements.inviter.name": "Friend",
+    "achievements.inviter.desc": "Your referral code was used",
+    "achievements.inviter.howTo": "Invite a friend.",
 
-      whyTitle: "Why We Do This",
-      problems: {
-        1: "People don't know the rules",
-        2: "They get confused by categories",
-        3: "They waste time searching for answers",
-      },
-      solution: "We decided to solve this with AI.",
+    // ── История активности ───────────────────────────────────
+    "activityHistory.title": "Activity History",
+    "activityHistory.empty": "Activity history is empty",
 
-      howTitle: "How It Works",
-      steps: {
-        1: "Point your camera",
-        2: "AI identifies the waste type",
-        3: "Get clear instructions",
-        4: "Make an impact",
-      },
+    // ── Обратная связь ───────────────────────────────────────
+    "feedback.button": "Feedback",
+    "feedback.title": "Help us improve",
+    "feedback.placeholder": "Describe your idea or issue...",
+    "feedback.send": "Send",
+    "feedback.success": "Thanks! The eco-community values your input.",
+    "feedback.category.bug": "Bug",
+    "feedback.category.idea": "Idea",
+    "feedback.category.review": "Review",
 
-      featuresTitle: "Features",
-      featuresList: {
-        1: "Instant recognition",
-        2: "Smart recommendations",
-        3: "Gamification (eco score)",
-        4: "Real-world impact",
-      },
+    // ── Лиги — интерфейс ─────────────────────────────────────
+    "leagues.title": "EcoSnap Leagues",
+    "leagues.currentLeague": "Current League",
+    "leagues.toNextLeague": "Until",
+    "leagues.maxReached":
+      "Maximum league reached. You are an ecosystem legend!",
+    "leagues.threshold": "Threshold",
+    "leagues.points": "points",
 
-      aboutUsTitle: "A Bit About Us",
-      aboutUsDesc:
-        "This project was created as a modern solution for a new generation that wants to live consciously and use technology for good.",
-    },
+    // ── Лиги — данные ────────────────────────────────────────
+    "leagues.seed.name": "Seed League",
+    "leagues.seed.desc": "Your first steps toward eco-friendly habits.",
+    "leagues.sprout.name": "Sprout League",
+    "leagues.sprout.desc":
+      "You're scanning consistently and building momentum.",
+    "leagues.forest.name": "Forest League",
+    "leagues.forest.desc":
+      "Your contribution is noticeable — you're building a greener future.",
+    "leagues.ocean.name": "Ocean League",
+    "leagues.ocean.desc": "A strong eco-player with impressive daily activity.",
+    "leagues.planet.name": "Planet League",
+    "leagues.planet.desc": "You inspire others and shape the eco-community.",
+    "leagues.legend.name": "Legend League",
+    "leagues.legend.desc":
+      "An elite defender of the environment. The highest rank.",
 
-    leagues: {
-      title: "EcoSnap Leagues",
-      currentLeague: "Current League",
-      toNextLeague: "Until",
-      maxReached: "Maximum league reached. You are an ecosystem legend!",
-      threshold: "Threshold",
-      points: "points",
+    // ── О проекте ────────────────────────────────────────────
+    "about.title": "About EcoSnap",
+    "about.subtitle": "Your AI assistant for waste sorting",
 
-      seed: {
-        name: "Seed League",
-        desc: "Your first steps toward eco-friendly habits.",
-      },
-      sprout: {
-        name: "Sprout League",
-        desc: "You're scanning consistently and building momentum.",
-      },
-      forest: {
-        name: "Forest League",
-        desc: "Your contribution is noticeable — you're building a greener future.",
-      },
-      ocean: {
-        name: "Ocean League",
-        desc: "A strong eco-player with impressive daily activity.",
-      },
-      planet: {
-        name: "Planet League",
-        desc: "You inspire others and shape the eco-community.",
-      },
-      legend: {
-        name: "Legend League",
-        desc: "An elite defender of the environment. The highest rank.",
-      },
-    },
+    "about.whoTitle": "Who We Are",
+    "about.whoDesc":
+      "We are a team of developers and enthusiasts who care deeply about the environment.",
+    "about.whoMission":
+      "EcoSnap was created as a simple and convenient tool to help people sort waste correctly without complicated rules.",
+
+    "about.whyTitle": "Why We Do This",
+    "about.problems.1": "People don't know the rules",
+    "about.problems.2": "They get confused by categories",
+    "about.problems.3": "They waste time searching for answers",
+    "about.solution": "We decided to solve this with AI.",
+
+    "about.howTitle": "How It Works",
+    "about.steps.1": "Point your camera",
+    "about.steps.2": "AI identifies the waste type",
+    "about.steps.3": "Get clear instructions",
+    "about.steps.4": "Make an impact",
+
+    "about.featuresTitle": "Features",
+    "about.featuresList.1": "Instant recognition",
+    "about.featuresList.2": "Smart recommendations",
+    "about.featuresList.3": "Gamification (eco score)",
+    "about.featuresList.4": "Real-world impact",
+
+    "about.aboutUsTitle": "A Bit About Us",
+    "about.aboutUsDesc":
+      "This project was created as a modern solution for a new generation that wants to live consciously and use technology for good.",
   },
 
+  // ══════════════════════════════════════════════════════════
+  // НЕМЕЦКИЙ
+  // ══════════════════════════════════════════════════════════
   de: {
+    // ── Общие слова ─────────────────────────────────────────
     "common.and": "und",
     "common.perScan": "pro Scan",
+    "common.save": "Änderungen speichern",
+    "common.cancel": "Abbrechen",
+    "common.edit": "bearbeiten",
 
+    // ── Навигация ────────────────────────────────────────────
     "nav.profile": "Profil",
     "nav.shop": "Shop",
     "nav.logout": "Abmelden",
     "nav.login": "Anmelden",
 
+    // ── Главный экран ────────────────────────────────────────
     "hero.loggedInTagline": "System aktiv",
+    "hero.tagline": "System nicht aktiv",
     "hero.title": "Lasst uns gemeinsam den Planeten sauberer machen",
     "hero.greeting": "Hallo!",
     "hero.dashboard": "Öko-Verteidiger",
@@ -878,10 +843,10 @@ export const translations = {
     "hero.signup": "Registrieren",
     "hero.welcome": "Willkommen zurück, Stufe",
 
-    "hero.tagline": "System nicht aktiv",
-
+    // ── Подвал ───────────────────────────────────────────────
     "footer.about": "Über uns",
 
+    // ── Фичи на главной ─────────────────────────────────────
     "features.rules": "Öko-Check",
     "features.rulesEco": "Regeln in deiner Region prüfen",
     "features.progress": "Fortschritt",
@@ -893,40 +858,29 @@ export const translations = {
     "features.community": "Öko-Helden",
     "features.communityDesc": "Tritt Ligen bei",
 
+    // ── Авторизация и регистрация ────────────────────────────
+    "auth.title": "Tritt EcoSnap bei",
+    "auth.subtitle": "Starte jetzt",
     "auth.loginTitle": "Tritt EcoSnap bei",
     "auth.loginSubtitle": "Starte jetzt",
+    "auth.signupTitle": "Registrieren",
+    "auth.signupSubtitle": "Starte jetzt",
     "auth.google": "Mit Google anmelden",
+    "auth.orMethod": "Google",
     "auth.loginPlaceholder": "E-Mail",
     "auth.password": "Passwort",
     "auth.login": "Anmelden",
-    "auth.signupTitle": "Registrieren",
-    "auth.signupSubtitle": "Starte jetzt",
+    "auth.signup": "Registrieren",
+    "auth.alreadyHave": "Schon ein Konto?",
+    "auth.noAccount": "Noch kein Konto?",
+    "auth.forgotPassword": "Passwort zurücksetzen",
     "auth.privacyPolicy": "Ich habe die",
     "auth.privacyLink": "Datenschutzrichtlinie",
     "auth.privacyError":
       "Sie müssen der Datenschutzrichtlinie zustimmen, um sich zu registrieren",
     "auth.privacyClose": "Verstanden",
-    "auth.alreadyHave": "Schon ein Konto?",
-    "auth.noAccount": "Noch kein Konto?",
 
-    "feedback.button": "Feedback",
-    "feedback.title": "Hilf uns besser zu werden",
-    "feedback.placeholder": "Beschreiben Sie Ihre Idee oder Ihr Problem...",
-    "feedback.send": "Senden",
-    "feedback.success": "Danke! Die Eco-Community schätzt Ihren Beitrag.",
-    "feedback.category.bug": "Fehler",
-    "feedback.category.idea": "Idee",
-    "feedback.category.review": "Bewertung",
-
-    "slider.tip.1": "Plastikflaschen brauchen bis zu 450 Jahre, um zu verrotten. Recyceln!",
-    "slider.tip.2": "Energie sparen: Licht aus, wenn du den Raum verlässt.",
-    "slider.fact.1": "Das Recycling einer Tonne Papier rettet 17 Bäume.",
-    "slider.motto.1": "Kleine Schritte führen zu großen Veränderungen.",
-    "slider.progress.prefix": "Noch",
-    "slider.progress.suffix": "Scans bis Level",
-    "slider.progress.scans": "Scans",
-    "slider.stats.impact": "Dein Beitrag hat bereits 5 Bäume gerettet!",
-
+    // ── Редактирование профиля ───────────────────────────────
     "editProfile.title": "Profil bearbeiten",
     "auth.nickname": "Benutzername",
     "auth.firstName": "Vorname",
@@ -934,30 +888,58 @@ export const translations = {
     "auth.birthDate": "Geburtsdatum",
     "auth.country": "Land",
     "auth.city": "Stadt",
-    "auth.orMethod": "Google",
-    "auth.signup": "Registrieren",
-    "auth.forgotPassword": "Passwort zurücksetzen",
-    "common.save": "Änderungen speichern",
-    "common.cancel": "Abbrechen",
-    "common.edit": "bearbeiten",
+
+    // ── Страница профиля ─────────────────────────────────────
+    "profile.ecoScore": "Öko-Punkte",
+    "profile.ozone": "OZ-Währung",
+    "profile.ozoneShort": "OZ",
+    "profile.scans": "Scans",
+    "profile.level": "Stufe",
+    "profile.achievements": "Erfolge",
+    "profile.inventory": "Inventar",
+    "profile.stats": "Statistik",
+    "profile.edit": "Öko-Profil",
+    "profile.levelReward": "Level-Belohnung",
+    "profile.scanRewards": "Scan-Belohnungen",
+    "profile.nextLevel": "Auf Stufe",
+    "profile.allRewards": "Alle Belohnungen freigeschaltet",
+    "profile.notSpecified": "Nicht angegeben",
+    "profile.earth": "Erde",
+    "profile.rewardTable.level": "Ebene",
+    "profile.rewardTable.ecoScore": "Vergeben Öko-Punkte",
+    "profile.rewardTable.ozone": "Vergeben OZ-Währung",
+    "profile.stickerPack": "Aufkleber:",
+    "profile.badgeRecycle": "♻️ Öko",
     "profile.uploadPhoto": "Foto hochladen",
     "profile.uploadError": "Upload fehlgeschlagen",
 
+    // ── Сканер ───────────────────────────────────────────────
     "scanner.title": "Müllscanner",
     "scanner.takePhoto": "Foto aufnehmen",
+    "scanner.hint": "Richte deine Kamera auf einen Artikel und drücke 'Scannen'",
     "scanner.scan": "Scannen",
+    "scanner.analysis": "Analysiere Artikel...",
+    "scanner.analysisError":
+      "Server für die Analyse konnte nicht kontaktiert werden.",
+    "scanner.serverError": "Serverfehler während der Analyse.",
     "scanner.points": "Du hast erhalten",
     "scanner.ecoScore": "Öko-Punkte",
+    "scanner.ecoScoreLabel": "Öko-Punkte",
     "scanner.ozone": "OZ",
+    "scanner.ozoneLabel": "Ozon (O3)",
     "scanner.streak": "Serie!",
     "scanner.close": "Schließen",
+    "scanner.finishButton": "Fertig und zum Profil",
     "scanner.plastic": "Plastik (PET 01)",
-    "scanner.serverError": "Serverfehler während der Analyse.",
     "scanner.unrecognizedTitle": "ARTIKEL NICHT ERKANNT",
     "scanner.unrecognizedInstructions":
       "Das sieht nicht wie recycelbarer Abfall aus. Versuche, Plastik, Glas, Metall oder Papier zu scannen.",
     "scanner.defaultBin": "den entsprechenden Container",
     "scanner.item": "Artikel",
+    "scanner.scannedPrefix": "Gescannt",
+    "scanner.takeTo": "Bringe es zu",
+    "scanner.regionAdvice": "Befolge die Recyclingregeln deiner Region.",
+    "scanner.harmPrefix": "Umweltschaden:",
     "scanner.harm.plastic":
       "Kunststoff braucht Jahrhunderte, um sich zu zersetzen, verschmutzt die Ozeane und schadet der Tierwelt.",
     "scanner.harm.glass":
@@ -968,66 +950,40 @@ export const translations = {
       "Papier trägt zur Abholzung und zum Verlust der Artenvielfalt bei.",
     "scanner.harm.default":
       "Dieser Artikel kann der Umwelt schaden, wenn er unsachgemäß entsorgt wird.",
-    "scanner.scannedPrefix": "Gescannt",
-    "scanner.takeTo": "Bringe es zu",
-    "scanner.regionAdvice": "Befolge die Recyclingregeln deiner Region.",
-    "scanner.harmPrefix": "Umweltschaden:",
-    "scanner.analysis": "Analysiere Artikel...",
-    "scanner.analysisError":
-      "Server für die Analyse konnte nicht kontaktiert werden.",
-    "scanner.ecoScoreLabel": "Öko-Punkte",
-    "scanner.ozoneLabel": "Ozon (O3)",
-    "scanner.finishButton": "Fertig und zum Profil",
 
-    "profile.ecoScore": "Öko-Punkte",
-    "profile.ozone": "OZ-Währung",
-    "profile.scans": "Scans",
-    "profile.level": "Stufe",
-    "profile.achievements": "Erfolge",
-    "profile.inventory": "Inventar",
-    "profile.stats": "Statistik",
-    "profile.edit": "Öko-Profil",
+    // ── Слайдер советов ──────────────────────────────────────
+    "slider.tip.1":
+      "Plastikflaschen brauchen bis zu 450 Jahre, um zu verrotten. Recyceln!",
+    "slider.tip.2": "Energie sparen: Licht aus, wenn du den Raum verlässt.",
+    "slider.fact.1": "Das Recycling einer Tonne Papier rettet 17 Bäume.",
+    "slider.motto.1": "Kleine Schritte führen zu großen Veränderungen.",
+    "slider.progress.prefix": "Noch",
+    "slider.progress.suffix": "Scans bis Level",
+    "slider.progress.scans": "Scans",
+    "slider.stats.impact": "Dein Beitrag hat bereits 5 Bäume gerettet!",
 
-    "sidebar.league": "Öko-Rangliste",
-    "sidebar.exchange": "Energie gegen Belohnungen tauschen",
-
-    "shop.title": "Shop",
-    "shop.buy": "Kaufen",
-    "shop.use": "Nutzen",
-    "shop.price": "Preis",
-    "shop.description": "Beschreibung",
-    "shop.noMoney": "Nicht genug OZ",
-    "profile.ozoneShort": "OZ",
-
-    "profile.levelReward": "Level-Belohnung",
-    "profile.scanRewards": "Scan-Belohnungen",
-    "profile.nextLevel": "Auf Stufe",
-    "profile.allRewards": "Alle Belohnungen freigeschaltet",
-    "profile.notSpecified": "Nicht angegeben",
-    "profile.earth": "Erde",
-    "profile.rewardTable.level": "Ebene",
-    "profile.rewardTable.ecoScore": "Vergeben Öko-Punkte ",
-    "profile.rewardTable.ozone": "Vergeben OZ-Währung",
-    "profile.stickerPack": "Aufkleber:",
-    "profile.badgeRecycle": "♻️ Öko",
-
+    // ── Боковая панель ───────────────────────────────────────
     "sidebar.fight": "KAMPF FÜR SAUBERKEIT!",
     "sidebar.fightDesc": "Nutze KI und verdiene Belohnungen",
     "sidebar.nextLevel": "Nächste Stufe",
+    "sidebar.league": "Öko-Rangliste",
     "sidebar.leagueDesc": "Dein Weg durch die Ligen",
     "sidebar.yourLeague": "Deine Liga",
     "sidebar.ecoScoreLeague": "Öko-Punkte",
     "sidebar.openLeagues": "Ligen öffnen",
+    "sidebar.leagueInfo":
+      "Ligen bieten die Möglichkeit, sich mit anderen Spielern anhand eurer Öko-Punktzahl zu messen. Je höher eure Punktzahl, desto höher die Liga und desto besser die Belohnungen!",
     "sidebar.balance": "Dein Kontostand",
     "sidebar.marketplace": "Marktplatz",
+    "sidebar.exchange": "Energie gegen Belohnungen tauschen",
     "sidebar.digitalGoods": "Digitale Güter",
     "sidebar.activatable": "Aktivierbar",
     "sidebar.regularGoods": "Normale Güter",
     "sidebar.collection": "Sammlung",
     "sidebar.logout": "Abmelden",
-    "sidebar.leagueInfo":
-      "Ligen bieten die Möglichkeit, sich mit anderen Spielern anhand eurer Öko-Punktzahl zu messen. Je höher eure Punktzahl, desto höher die Liga und desto besser die Belohnungen!",
 
+    // ── Магазин — интерфейс ──────────────────────────────────
+    "shop.title": "Shop",
     "shop.back": "Zurück",
     "shop.tabAll": "Alle",
     "shop.tabDigital": "Digital",
@@ -1036,11 +992,18 @@ export const translations = {
     "shop.active": "Aktiv",
     "shop.equip": "Aktivieren",
     "shop.equipLoading": "Aktiviere...",
+    "shop.buy": "Kaufen",
     "shop.buyLoading": "Kaufe...",
+    "shop.use": "Nutzen",
+    "shop.price": "Preis",
+    "shop.description": "Beschreibung",
+    "shop.noMoney": "Nicht genug OZ",
     "shop.successBuy": "Kauf erfolgreich!",
     "shop.errorBuy": "Kauf fehlgeschlagen",
     "shop.successEquip": "Aktiviert!",
     "shop.errorEquip": "Aktivierung fehlgeschlagen",
+
+    // ── Магазин — товары ─────────────────────────────────────
     "shopItems.eco_sticker_pack.name": "Öko-Sticker",
     "shopItems.eco_sticker_pack.desc": "Sticker für dein Profil",
     "shopItems.green_theme.name": "Grünes Design",
@@ -1070,16 +1033,7 @@ export const translations = {
     "shopItems.founder_badge.name": "Gründer-Abzeichen",
     "shopItems.founder_badge.desc": "Einzigartiger Status",
 
-    "achievements.collection": "Sammlung von Errungenschaften",
-    "achievements.showAll": "Alle anzeigen",
-    "activityHistory.title": "Aktivitätsverlauf",
-    "activityHistory.empty": "Aktivitätsverlauf ist leer",
-
-    "achievements.Title": "Vergeben",
-    "achievements.statusReceived": "Bereits erhalten",
-    "achievements.howToLabel": "Wie man erhält",
-    "achievements.statusClosed": "Geschlossen",
-
+    // ── Инвентарь ────────────────────────────────────────────
     "inventory.title": "Inventar",
     "inventory.noItems": "Inventar ist leer",
     "inventory.selected": "Aktuell ausgewählt",
@@ -1093,204 +1047,179 @@ export const translations = {
     "inventory.close": "Schließen",
     "inventory.saveError": "Speicherfehler, bitte erneut versuchen",
 
-    achievements: {
-      collection: "Erfolgsübersicht",
-      showAll: "Alle anzeigen",
-      hide: "Ausblenden",
+    // ── Достижения — интерфейс ───────────────────────────────
+    "achievements.collection": "Sammlung von Errungenschaften",
+    "achievements.showAll": "Alle anzeigen",
+    "achievements.hide": "Ausblenden",
+    "achievements.Title": "Vergeben",
+    "achievements.statusReceived": "Bereits erhalten",
+    "achievements.statusClosed": "Geschlossen",
+    "achievements.howToLabel": "Wie man erhält",
 
-      streak_10: {
-        name: "10 Tage",
-        desc: "Du bist schon 10 Tage in Folge mit EcoSnap dabei!",
-        howTo: "Scanne 10 Tage hintereinander ohne Unterbrechung.",
-      },
-      streak_50: {
-        name: "Halbe Stadt",
-        desc: "50 Tage aktiver Einsatz für die Umwelt",
-        howTo: "Scanne 50 Tage hintereinander.",
-      },
-      streak_100: {
-        name: "Zenturio",
-        desc: "100 Tage! Der Planet ist stolz auf dich",
-        howTo: "Scanne 100 Tage hintereinander.",
-      },
-      streak_300: {
-        name: "Öko-Gott",
-        desc: "300 Tage. Legendären Status erreicht",
-        howTo: "Scanne 300 Tage hintereinander.",
-      },
+    // ── Достижения — данные ──────────────────────────────────
+    "achievements.streak_10.name": "10 Tage",
+    "achievements.streak_10.desc":
+      "Du bist schon 10 Tage in Folge mit EcoSnap dabei!",
+    "achievements.streak_10.howTo":
+      "Scanne 10 Tage hintereinander ohne Unterbrechung.",
 
-      first_scan: {
-        name: "Start",
-        desc: "Dein erster Beitrag für einen sauberen Planeten",
-        howTo: "Führe deinen ersten Scan aus.",
-      },
+    "achievements.streak_50.name": "Halbe Stadt",
+    "achievements.streak_50.desc": "50 Tage aktiver Einsatz für die Umwelt",
+    "achievements.streak_50.howTo": "Scanne 50 Tage hintereinander.",
 
-      plastic_10: {
-        name: "Plastik-Stopp",
-        desc: "10 Plastikobjekte vor der Deponie gerettet",
-        howTo: "Scanne 10-mal Plastik.",
-      },
+    "achievements.streak_100.name": "Zenturio",
+    "achievements.streak_100.desc": "100 Tage! Der Planet ist stolz auf dich",
+    "achievements.streak_100.howTo": "Scanne 100 Tage hintereinander.",
 
-      glass_10: {
-        name: "Glasauge",
-        desc: "10 Glasflaschen gesammelt",
-        howTo: "Scanne 10-mal Glas.",
-      },
+    "achievements.streak_300.name": "Öko-Gott",
+    "achievements.streak_300.desc": "300 Tage. Legendären Status erreicht",
+    "achievements.streak_300.howTo": "Scanne 300 Tage hintereinander.",
 
-      paper_10: {
-        name: "Papiertiger",
-        desc: "10 Kartonverpackungen recycelt",
-        howTo: "Scanne 10-mal Papier.",
-      },
+    "achievements.first_scan.name": "Start",
+    "achievements.first_scan.desc":
+      "Dein erster Beitrag für einen sauberen Planeten",
+    "achievements.first_scan.howTo": "Führe deinen ersten Scan aus.",
 
-      metal_10: {
-        name: "Eisenheld",
-        desc: "10 Metalldosen recycelt",
-        howTo: "Scanne 10-mal Metall.",
-      },
+    "achievements.plastic_10.name": "Plastik-Stopp",
+    "achievements.plastic_10.desc":
+      "10 Plastikobjekte vor der Deponie gerettet",
+    "achievements.plastic_10.howTo": "Scanne 10-mal Plastik.",
 
-      rich_100: {
-        name: "Die Ersten 100",
-        desc: "Du hast deine ersten 100 O3 verdient",
-        howTo: "Sammle mindestens 100 O3.",
-      },
+    "achievements.glass_10.name": "Glasauge",
+    "achievements.glass_10.desc": "10 Glasflaschen gesammelt",
+    "achievements.glass_10.howTo": "Scanne 10-mal Glas.",
 
-      rich_1000: {
-        name: "Millionär",
-        desc: "Du besitzt mehr als 1000 O3",
-        howTo: "Sammle mindestens 1000 O3.",
-      },
+    "achievements.paper_10.name": "Papiertiger",
+    "achievements.paper_10.desc": "10 Kartonverpackungen recycelt",
+    "achievements.paper_10.howTo": "Scanne 10-mal Papier.",
 
-      lvl_10: {
-        name: "Zehner",
-        desc: "Du hast Level 10 erreicht",
-        howTo: "Erreiche Level 10.",
-      },
+    "achievements.metal_10.name": "Eisenheld",
+    "achievements.metal_10.desc": "10 Metalldosen recycelt",
+    "achievements.metal_10.howTo": "Scanne 10-mal Metall.",
 
-      lvl_50: {
-        name: "Zum Mars!",
-        desc: "Du hast Level 50 erreicht!",
-        howTo: "Erreiche Level 50.",
-      },
+    "achievements.rich_100.name": "Die Ersten 100",
+    "achievements.rich_100.desc": "Du hast deine ersten 100 O3 verdient",
+    "achievements.rich_100.howTo": "Sammle mindestens 100 O3.",
 
-      night_owl: {
-        name: "Nachteule",
-        desc: "Müll nachts gescannt",
-        howTo: "Führe einen Scan nach 22 Uhr durch.",
-      },
+    "achievements.rich_1000.name": "Millionär",
+    "achievements.rich_1000.desc": "Du besitzt mehr als 1000 O3",
+    "achievements.rich_1000.howTo": "Sammle mindestens 1000 O3.",
 
-      early_bird: {
-        name: "Frühaufsteher",
-        desc: "Müll früh am Morgen gescannt",
-        howTo: "Führe einen Scan vor 8 Uhr durch.",
-      },
+    "achievements.lvl_10.name": "Zehner",
+    "achievements.lvl_10.desc": "Du hast Level 10 erreicht",
+    "achievements.lvl_10.howTo": "Erreiche Level 10.",
 
-      traveler: {
-        name: "Reisender",
-        desc: "In einer anderen Stadt oder einem anderen Land gescannt",
-        howTo: "Scanne außerhalb deiner Heimatstadt.",
-      },
+    "achievements.lvl_50.name": "Zum Mars!",
+    "achievements.lvl_50.desc": "Du hast Level 50 erreicht!",
+    "achievements.lvl_50.howTo": "Erreiche Level 50.",
 
-      fast_scanner: {
-        name: "Blitz",
-        desc: "3 Scans in weniger als einer Minute",
-        howTo: "Führe 3 Scans innerhalb einer Minute durch.",
-      },
+    "achievements.night_owl.name": "Nachteule",
+    "achievements.night_owl.desc": "Müll nachts gescannt",
+    "achievements.night_owl.howTo": "Führe einen Scan nach 22 Uhr durch.",
 
-      eco_hero: {
-        name: "Held",
-        desc: "Mehr als 10 virtuelle Bäume gerettet",
-        howTo: "Rette 10 Bäume.",
-      },
+    "achievements.early_bird.name": "Frühaufsteher",
+    "achievements.early_bird.desc": "Müll früh am Morgen gescannt",
+    "achievements.early_bird.howTo": "Führe einen Scan vor 8 Uhr durch.",
 
-      perfect_profile: {
-        name: "Perfektionist",
-        desc: "Alle Profildaten ausgefüllt",
-        howTo: "Fülle dein gesamtes Profil aus.",
-      },
+    "achievements.traveler.name": "Reisender",
+    "achievements.traveler.desc":
+      "In einer anderen Stadt oder einem anderen Land gescannt",
+    "achievements.traveler.howTo": "Scanne außerhalb deiner Heimatstadt.",
 
-      inviter: {
-        name: "Freund",
-        desc: "Dein Empfehlungscode wurde verwendet",
-        howTo: "Lade einen Freund ein.",
-      },
-    },
+    "achievements.fast_scanner.name": "Blitz",
+    "achievements.fast_scanner.desc": "3 Scans in weniger als einer Minute",
+    "achievements.fast_scanner.howTo":
+      "Führe 3 Scans innerhalb einer Minute durch.",
 
-    about: {
-      title: "Über EcoSnap",
-      subtitle: "Dein KI-Assistent für Mülltrennung",
+    "achievements.eco_hero.name": "Held",
+    "achievements.eco_hero.desc": "Mehr als 10 virtuelle Bäume gerettet",
+    "achievements.eco_hero.howTo": "Rette 10 Bäume.",
 
-      whoTitle: "Wer wir sind",
-      whoDesc:
-        "Wir sind ein Team aus Entwicklern und Enthusiasten, denen die Umwelt nicht egal ist.",
-      whoMission:
-        "EcoSnap wurde als einfaches und praktisches Tool entwickelt, um Menschen dabei zu helfen, Abfälle korrekt zu trennen – ohne komplizierte Regeln.",
+    "achievements.perfect_profile.name": "Perfektionist",
+    "achievements.perfect_profile.desc": "Alle Profildaten ausgefüllt",
+    "achievements.perfect_profile.howTo": "Fülle dein gesamtes Profil aus.",
 
-      whyTitle: "Warum wir das tun",
-      problems: {
-        1: "Viele kennen die Regeln nicht",
-        2: "Kategorien sorgen für Verwirrung",
-        3: "Die Suche nach Antworten kostet Zeit",
-      },
-      solution: "Wir haben beschlossen, dieses Problem mit KI zu lösen.",
+    "achievements.inviter.name": "Freund",
+    "achievements.inviter.desc": "Dein Empfehlungscode wurde verwendet",
+    "achievements.inviter.howTo": "Lade einen Freund ein.",
 
-      howTitle: "So funktioniert es",
-      steps: {
-        1: "Richte die Kamera aus",
-        2: "Die KI erkennt die Abfallart",
-        3: "Erhalte klare Anweisungen",
-        4: "Leiste deinen Beitrag",
-      },
+    // ── История активности ───────────────────────────────────
+    "activityHistory.title": "Aktivitätsverlauf",
+    "activityHistory.empty": "Aktivitätsverlauf ist leer",
 
-      featuresTitle: "Besondere Funktionen",
-      featuresList: {
-        1: "Sofortige Erkennung",
-        2: "Intelligente Hinweise",
-        3: "Gamification (Öko-Score)",
-        4: "Echter Einfluss",
-      },
+    // ── Обратная связь ───────────────────────────────────────
+    "feedback.button": "Feedback",
+    "feedback.title": "Hilf uns besser zu werden",
+    "feedback.placeholder": "Beschreiben Sie Ihre Idee oder Ihr Problem...",
+    "feedback.send": "Senden",
+    "feedback.success": "Danke! Die Eco-Community schätzt Ihren Beitrag.",
+    "feedback.category.bug": "Fehler",
+    "feedback.category.idea": "Idee",
+    "feedback.category.review": "Bewertung",
 
-      aboutUsTitle: "Ein bisschen über uns",
-      aboutUsDesc:
-        "Dieses Projekt wurde als moderne Lösung für eine neue Generation entwickelt, die bewusst leben und Technologie sinnvoll einsetzen möchte.",
-    },
-    leagues: {
-      title: "EcoSnap-Ligen",
-      currentLeague: "Aktuelle Liga",
-      toNextLeague: "Bis zur nächsten Liga",
-      maxReached:
-        "Maximale Liga erreicht. Du bist eine Legende des Ökosystems!",
-      threshold: "Schwelle",
-      points: "Punkte",
+    // ── Лиги — интерфейс ─────────────────────────────────────
+    "leagues.title": "EcoSnap-Ligen",
+    "leagues.currentLeague": "Aktuelle Liga",
+    "leagues.toNextLeague": "Bis zur nächsten Liga",
+    "leagues.maxReached":
+      "Maximale Liga erreicht. Du bist eine Legende des Ökosystems!",
+    "leagues.threshold": "Schwelle",
+    "leagues.points": "Punkte",
 
-      seed: {
-        name: "Samen-Liga",
-        desc: "Deine ersten Schritte zu umweltfreundlichen Gewohnheiten.",
-      },
-      sprout: {
-        name: "Keimling-Liga",
-        desc: "Du scannst regelmäßig und gewinnst an Tempo.",
-      },
-      forest: {
-        name: "Wald-Liga",
-        desc: "Dein Beitrag ist sichtbar – du baust eine grünere Zukunft.",
-      },
-      ocean: {
-        name: "Ozean-Liga",
-        desc: "Ein starker Öko-Spieler mit hoher täglicher Aktivität.",
-      },
-      planet: {
-        name: "Planeten-Liga",
-        desc: "Du inspirierst andere und prägst die Umwelt-Community.",
-      },
-      legend: {
-        name: "Legenden-Liga",
-        desc: "Ein elitärer Beschützer der Umwelt. Der höchste Rang.",
-      },
-    },
+    // ── Лиги — данные ────────────────────────────────────────
+    "leagues.seed.name": "Samen-Liga",
+    "leagues.seed.desc":
+      "Deine ersten Schritte zu umweltfreundlichen Gewohnheiten.",
+    "leagues.sprout.name": "Keimling-Liga",
+    "leagues.sprout.desc": "Du scannst regelmäßig und gewinnst an Tempo.",
+    "leagues.forest.name": "Wald-Liga",
+    "leagues.forest.desc":
+      "Dein Beitrag ist sichtbar – du baust eine grünere Zukunft.",
+    "leagues.ocean.name": "Ozean-Liga",
+    "leagues.ocean.desc":
+      "Ein starker Öko-Spieler mit hoher täglicher Aktivität.",
+    "leagues.planet.name": "Planeten-Liga",
+    "leagues.planet.desc":
+      "Du inspirierst andere und prägst die Umwelt-Community.",
+    "leagues.legend.name": "Legenden-Liga",
+    "leagues.legend.desc":
+      "Ein elitärer Beschützer der Umwelt. Der höchste Rang.",
+
+    // ── О проекте ────────────────────────────────────────────
+    "about.title": "Über EcoSnap",
+    "about.subtitle": "Dein KI-Assistent für Mülltrennung",
+
+    "about.whoTitle": "Wer wir sind",
+    "about.whoDesc":
+      "Wir sind ein Team aus Entwicklern und Enthusiasten, denen die Umwelt nicht egal ist.",
+    "about.whoMission":
+      "EcoSnap wurde als einfaches und praktisches Tool entwickelt, um Menschen dabei zu helfen, Abfälle korrekt zu trennen – ohne komplizierte Regeln.",
+
+    "about.whyTitle": "Warum wir das tun",
+    "about.problems.1": "Viele kennen die Regeln nicht",
+    "about.problems.2": "Kategorien sorgen für Verwirrung",
+    "about.problems.3": "Die Suche nach Antworten kostet Zeit",
+    "about.solution": "Wir haben beschlossen, dieses Problem mit KI zu lösen.",
+
+    "about.howTitle": "So funktioniert es",
+    "about.steps.1": "Richte die Kamera aus",
+    "about.steps.2": "Die KI erkennt die Abfallart",
+    "about.steps.3": "Erhalte klare Anweisungen",
+    "about.steps.4": "Leiste deinen Beitrag",
+
+    "about.featuresTitle": "Besondere Funktionen",
+    "about.featuresList.1": "Sofortige Erkennung",
+    "about.featuresList.2": "Intelligente Hinweise",
+    "about.featuresList.3": "Gamification (Öko-Score)",
+    "about.featuresList.4": "Echter Einfluss",
+
+    "about.aboutUsTitle": "Ein bisschen über uns",
+    "about.aboutUsDesc":
+      "Dieses Projekt wurde als moderne Lösung für eine neue Generation entwickelt, die bewusst leben und Technologie sinnvoll einsetzen möchte.",
   },
 };
 
+// ── Определение языка ────────────────────────────────────────
 export const detectLanguage = () => {
   const stored = localStorage.getItem("language");
   if (stored) return stored;
