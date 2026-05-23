@@ -9,22 +9,26 @@ const LeagueModal = ({ userData, onClose }) => {
     getLeagueProgress(userData);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
-      <div className="bg-white rounded-[2.5rem] p-8 w-full max-w-3xl shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/70 backdrop-blur-md transition-colors duration-300">
+      <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-8 w-full max-w-3xl shadow-2xl transition-colors duration-300">
         <div className="flex justify-between items-center mb-6">
-          <h2 className="text-2xl font-extrabold text-slate-800 flex items-center gap-2">
-            <Trophy className="text-emerald-500" /> {t("leagues.title")}
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-white flex items-center gap-2 transition-colors duration-300">
+            <Trophy className="text-emerald-500 dark:text-emerald-400 transition-colors duration-300" />{" "}
+            {t("leagues.title")}
           </h2>
           <button
             onClick={onClose}
-            className="p-2 hover:bg-slate-100 rounded-full transition-colors"
+            className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors duration-300"
           >
-            <X size={22} className="text-slate-400" />
+            <X
+              size={22}
+              className="text-slate-400 dark:text-slate-500 transition-colors duration-300"
+            />
           </button>
         </div>
 
         <div
-          className={`rounded-3xl p-5 bg-gradient-to-r ${currentLeague.color} text-white mb-5`}
+          className={`rounded-3xl p-5 bg-gradient-to-r ${currentLeague.color} text-white mb-5 transition-colors duration-300`}
         >
           <p className="text-xs uppercase tracking-widest font-black opacity-80">
             {t("leagues.currentLeague")}
@@ -69,29 +73,32 @@ const LeagueModal = ({ userData, onClose }) => {
                 key={league.id}
                 className={`rounded-2xl border p-4 transition-all ${
                   isCurrent
-                    ? "border-emerald-300 bg-emerald-50"
+                    ? "border-emerald-300 dark:border-emerald-700 bg-emerald-50 dark:bg-emerald-900/30"
                     : isUnlocked
-                      ? "border-slate-200 bg-white"
-                      : "border-slate-100 bg-slate-50 opacity-75"
+                      ? "border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-700/50"
+                      : "border-slate-100 dark:border-slate-700 bg-slate-50 dark:bg-slate-800 opacity-75"
                 }`}
               >
                 <div className="flex items-start justify-between">
                   <div className="flex items-center gap-2">
                     <span className="text-2xl">{league.icon}</span>
                     <div>
-                      <p className="font-bold text-slate-800">
+                      <p className="font-bold text-slate-800 dark:text-white transition-colors duration-300">
                         {t(league.nameKey)}
                       </p>
-                      <p className="text-xs text-slate-500">
+                      <p className="text-xs text-slate-500 dark:text-slate-400 transition-colors duration-300">
                         {t(league.descKey)}
                       </p>
                     </div>
                   </div>
                   {isCurrent && (
-                    <ArrowUpRight size={16} className="text-emerald-500" />
+                    <ArrowUpRight
+                      size={16}
+                      className="text-emerald-500 dark:text-emerald-400 transition-colors duration-300"
+                    />
                   )}
                 </div>
-                <p className="mt-3 text-xs font-black uppercase tracking-wider text-slate-500">
+                <p className="mt-3 text-xs font-black uppercase tracking-wider text-slate-500 dark:text-slate-400 transition-colors duration-300">
                   {t("leagues.threshold")}: {league.minScore.toLocaleString()}{" "}
                   {t("leagues.points")}
                 </p>

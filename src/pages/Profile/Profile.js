@@ -5,7 +5,7 @@ import { applyItemEffect } from "../../data/itemEffects";
 import { syncUserAchievements } from "../../services/gamification";
 
 import ProfileHeader from "./components/ProfileHeader";
-import EcoSlider from "./components/EcoSlider"; 
+import EcoSlider from "./components/EcoSlider";
 import StatsGrid from "./components/StatsGrid";
 import AchievementsList from "./components/AchievementsList";
 import ActivityHistory from "./components/ActivityHistory";
@@ -94,17 +94,19 @@ const Profile = ({ user }) => {
 
   if (!userData) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-50">
+      <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-900 transition-colors duration-300">
         <div className="animate-pulse flex flex-col items-center">
-          <div className="w-12 h-12 bg-emerald-200 rounded-full mb-4"></div>
-          <div className="text-slate-400 font-medium">Загрузка профиля...</div>
+          <div className="w-12 h-12 bg-emerald-200 dark:bg-emerald-900/50 rounded-full mb-4 transition-colors duration-300"></div>
+          <div className="text-slate-400 dark:text-slate-500 font-medium transition-colors duration-300">
+            Загрузка профиля...
+          </div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12 font-sans text-slate-900">
+    <div className="min-h-screen bg-white dark:bg-slate-900 pt-24 pb-12 font-sans text-slate-900 dark:text-white transition-colors duration-300">
       <div className="max-w-6xl mx-auto px-6">
         <ProfileHeader
           userData={userData}
@@ -114,18 +116,14 @@ const Profile = ({ user }) => {
 
         <div className="grid lg:grid-cols-3 gap-8 mt-8">
           <div className="lg:col-span-2 space-y-8">
-            {/* Визуально привлекательный слайдер с советами и прогрессом */}
             <EcoSlider userData={userData} />
-
             <StatsGrid userData={userData} />
-
             <AchievementsList
               userData={userData}
               setSelectedAch={setSelectedAch}
               showAllAch={showAllAch}
               setShowAllAch={setShowAllAch}
             />
-
             <ActivityHistory activityHistory={userData.activityHistory || []} />
           </div>
 

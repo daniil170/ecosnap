@@ -21,7 +21,7 @@ import AboutModal from "./components/AboutModal";
 import Profile from "./pages/Profile/Profile";
 import Shop from "./pages/Shop/Shop";
 import LoadingScreen from "./components/LoadingScreen";
-import FeedbackSystem from "./components/FeedbackSystem"; // Импорт новой системы фидбека
+import FeedbackSystem from "./components/FeedbackSystem";
 
 function AppContent() {
   const [user, setUser] = useState(null);
@@ -61,7 +61,6 @@ function AppContent() {
           const userData = userSnap.data();
           const updateData = {};
 
-          // Синхронизация XP и старых полей
           if (userData.xp === undefined && userData.ecoScore !== undefined) {
             updateData.xp = userData.ecoScore;
           } else if (userData.xp === undefined) {
@@ -78,7 +77,6 @@ function AppContent() {
           }
         }
 
-        // Подписка на изменения профиля в реальном времени
         unsubProfile = onSnapshot(userRef, (doc) => {
           if (doc.exists()) {
             setUserProfile(doc.data());
@@ -88,7 +86,6 @@ function AppContent() {
         setUserProfile(null);
       }
 
-      // Искусственная задержка для прелоадера
       setTimeout(() => {
         setLoading(false);
       }, 1500);
@@ -110,7 +107,7 @@ function AppContent() {
   const closeAbout = () => setIsAboutOpen(false);
 
   return (
-    <div className="min-h-screen bg-white font-sans text-slate-900 relative">
+    <div className="min-h-screen bg-white dark:bg-slate-900 font-sans text-slate-900 dark:text-slate-100 relative transition-colors duration-300">
       <Navbar onAuthClick={openAuth} user={user} profile={userProfile} />
 
       <Routes>
@@ -125,12 +122,12 @@ function AppContent() {
                   user={user}
                 />
                 <div className="max-w-7xl mx-auto px-6">
-                  <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent" />
+                  <div className="h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent dark:via-slate-700" />
                 </div>
                 <Features />
 
                 <section className="max-w-7xl mx-auto px-6 py-20">
-                  <div className="bg-slate-900 rounded-[3rem] p-8 md:p-24 text-center relative overflow-hidden shadow-2xl">
+                  <div className="bg-slate-900 dark:bg-slate-950 rounded-[3rem] p-8 md:p-24 text-center relative overflow-hidden shadow-2xl border border-transparent dark:border-slate-800/50">
                     <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-500/20 blur-[100px]" />
                     <div className="relative z-10 space-y-6">
                       <h2 className="text-3xl md:text-5xl font-bold text-white tracking-tight leading-tight">
@@ -192,7 +189,6 @@ function AppContent() {
       <AuthModal isOpen={isAuthOpen} onClose={closeAuth} />
       <AboutModal isOpen={isAboutOpen} onClose={closeAbout} />
 
-      {/* Глобальная кнопка фидбека */}
       <FeedbackSystem user={user} />
     </div>
   );

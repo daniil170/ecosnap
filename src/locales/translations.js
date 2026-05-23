@@ -437,6 +437,8 @@ export const translations = {
     "about.aboutUsTitle": "Немного о нас",
     "about.aboutUsDesc":
       "Проект создан как современное решение для нового поколения, которое хочет жить осознанно и использовать технологии во благо.",
+    "activityHistory.showMore": "Показать все",
+    "activityHistory.showLess": "Свернуть",
   },
 
   // ══════════════════════════════════════════════════════════
@@ -853,11 +855,13 @@ export const translations = {
     "about.aboutUsTitle": "A Bit About Us",
     "about.aboutUsDesc":
       "This project was created as a modern solution for a new generation that wants to live consciously and use technology for good.",
+    "activityHistory.showMore": "Show all",
+    "activityHistory.showLess": "Show less",
   },
 
   // ══════════════════════════════════════════════════════════
   // НЕМЕЦКИЙ
-  // ══════════════════════════════════════════════════════════
+  // ══════════════════════════════════════════════════════
   de: {
     // ── Общие слова ─────────────────────────────────────────
     "common.and": "und",
@@ -1277,6 +1281,8 @@ export const translations = {
     "about.aboutUsTitle": "Ein bisschen über uns",
     "about.aboutUsDesc":
       "Dieses Projekt wurde als moderne Lösung für eine neue Generation entwickelt, die bewusst leben und Technologie sinnvoll einsetzen möchte.",
+    "activityHistory.showMore": "Show all",
+    "activityHistory.showLess": "Show less",  
   },
 };
 

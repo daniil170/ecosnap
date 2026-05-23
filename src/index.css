@@ -9,6 +9,18 @@
   }
 }
 
+@layer base {
+  body {
+    /* Светлая тема (по умолчанию) */
+    @apply bg-slate-50 text-slate-900 transition-colors duration-300;
+  }
+  
+  /* Темная тема */
+  .dark body {
+    @apply bg-slate-900 text-slate-100;
+  }
+}
+
 @keyframes scan {
   0% { transform: translateY(0); opacity: 0; }
   50% { opacity: 1; }

@@ -13,11 +13,14 @@ import {
 import { useLanguage } from "../../context/LanguageContext";
 
 const RARITY_STYLES = {
-  common: "border-slate-200 bg-slate-50",
-  rare: "border-blue-200 bg-blue-50/30",
-  epic: "border-purple-200 bg-purple-50/30",
-  legendary: "border-yellow-200 bg-yellow-50/30",
-  mythic: "border-red-200 bg-red-50/30",
+  common:
+    "border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-800",
+  rare: "border-blue-200 dark:border-blue-900/50 bg-blue-50/30 dark:bg-blue-900/20",
+  epic: "border-purple-200 dark:border-purple-900/50 bg-purple-50/30 dark:bg-purple-900/20",
+  legendary:
+    "border-yellow-200 dark:border-yellow-900/50 bg-yellow-50/30 dark:bg-yellow-900/20",
+  mythic:
+    "border-red-200 dark:border-red-900/50 bg-red-50/30 dark:bg-red-900/20",
 };
 
 const Shop = ({ user, profile }) => {
@@ -107,13 +110,13 @@ const Shop = ({ user, profile }) => {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 pt-24 pb-12 px-6">
+    <div className="min-h-screen bg-white dark:bg-slate-900 pt-24 pb-12 px-6 transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <Link
             to="/profile"
-            className="flex items-center gap-2 text-slate-500 hover:text-slate-900"
+            className="flex items-center gap-2 text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition-colors duration-300"
           >
             <ArrowLeft size={20} />
             <span className="font-bold uppercase text-xs">
@@ -121,9 +124,12 @@ const Shop = ({ user, profile }) => {
             </span>
           </Link>
 
-          <div className="bg-white px-6 py-3 rounded-2xl shadow-sm border border-slate-100 flex items-center gap-3">
-            <Zap size={18} className="text-orange-500 fill-orange-500" />
-            <span className="font-black text-lg">
+          <div className="bg-white dark:bg-slate-800 px-6 py-3 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-700 flex items-center gap-3 transition-colors duration-300">
+            <Zap
+              size={18}
+              className="text-orange-500 dark:text-orange-400 fill-orange-500 dark:fill-orange-400 transition-colors duration-300"
+            />
+            <span className="font-black text-lg text-slate-900 dark:text-white transition-colors duration-300">
               {safeProfile.ozone || 0} {t("profile.ozoneShort")}
             </span>
           </div>
@@ -142,8 +148,8 @@ const Shop = ({ user, profile }) => {
               onClick={() => setActiveTab(tab.id)}
               className={`px-6 py-2 rounded-full font-bold uppercase text-xs transition-all ${
                 activeTab === tab.id
-                  ? "bg-slate-900 text-white"
-                  : "bg-white text-slate-400"
+                  ? "bg-slate-900 dark:bg-emerald-600 text-white"
+                  : "bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-700"
               }`}
             >
               {tab.label}
@@ -164,29 +170,33 @@ const Shop = ({ user, profile }) => {
               <div
                 key={item.id}
                 className={`p-6 rounded-[2.5rem] border-2 shadow-sm transition-all ${
-                  RARITY_STYLES[item.rarity] || "bg-white"
+                  RARITY_STYLES[item.rarity] || "bg-white dark:bg-slate-800"
                 }`}
               >
                 <div className="flex justify-between items-start mb-4">
                   <div className="text-4xl">{item.icon}</div>
-                  <span className="text-[10px] font-black uppercase tracking-widest opacity-60">
+                  <span className="text-[10px] font-black uppercase tracking-widest opacity-60 text-slate-700 dark:text-slate-300 transition-colors duration-300">
                     {item.rarity}
                   </span>
                 </div>
 
-                <h3 className="font-bold text-lg">{t(item.nameKey)}</h3>
+                <h3 className="font-bold text-lg text-slate-900 dark:text-white transition-colors duration-300">
+                  {t(item.nameKey)}
+                </h3>
 
-                <p className="text-slate-500 text-sm mb-6">{t(item.descKey)}</p>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mb-6 transition-colors duration-300">
+                  {t(item.descKey)}
+                </p>
 
                 {isOwned ? (
                   <button
                     disabled={loading === item.id}
                     onClick={() => handleEquip(item)}
-                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${
+                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm transition-all ${
                       isEquipped
-                        ? "bg-emerald-500 text-white"
-                        : "bg-white border border-emerald-500 text-emerald-500"
-                    }`}
+                        ? "bg-emerald-500 dark:bg-emerald-600 text-white hover:bg-emerald-600 dark:hover:bg-emerald-500"
+                        : "bg-white dark:bg-slate-700 border border-emerald-500 dark:border-emerald-400 text-emerald-500 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-slate-600"
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     {loading === item.id
                       ? t("shop.equipLoading")
@@ -198,11 +208,11 @@ const Shop = ({ user, profile }) => {
                   <button
                     disabled={!canAfford || loading === item.id}
                     onClick={() => handlePurchase(item)}
-                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm ${
+                    className={`w-full py-4 rounded-2xl font-black uppercase text-sm transition-all ${
                       canAfford
-                        ? "bg-slate-900 text-white"
-                        : "bg-slate-200 text-slate-400 cursor-not-allowed"
-                    }`}
+                        ? "bg-slate-900 dark:bg-emerald-600 text-white hover:bg-slate-800 dark:hover:bg-emerald-500"
+                        : "bg-slate-200 dark:bg-slate-700 text-slate-400 dark:text-slate-500 cursor-not-allowed"
+                    } disabled:opacity-50 disabled:cursor-not-allowed`}
                   >
                     {loading === item.id
                       ? t("shop.buyLoading")

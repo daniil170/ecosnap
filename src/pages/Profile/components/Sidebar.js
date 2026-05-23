@@ -1,3 +1,4 @@
+// Sidebar.jsx
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Camera, Zap, LogOut, Package, Sparkles } from "lucide-react";
@@ -34,7 +35,7 @@ const Sidebar = ({
       {/* Карточка — В бой за чистоту */}
       <div
         onClick={() => navigate("/scanner")}
-        className="rounded-3xl p-5 cursor-pointer"
+        className="rounded-3xl p-5 cursor-pointer transition-colors duration-300"
         style={{ background: "#1a2535" }}
       >
         <div
@@ -65,7 +66,10 @@ const Sidebar = ({
       </div>
 
       {/* Карточка — Лига Мастеров */}
-      <div className="rounded-3xl p-5" style={{ background: "#1db97e" }}>
+      <div
+        className="rounded-3xl p-5 transition-colors duration-300"
+        style={{ background: "#1db97e" }}
+      >
         <p className="font-black text-white text-base italic mb-0.5">
           {t("sidebar.league")}
         </p>
@@ -119,7 +123,7 @@ const Sidebar = ({
       {/* Карточка — Маркетплейс */}
       <div
         onClick={() => navigate("/shop")}
-        className="rounded-3xl p-5 cursor-pointer relative overflow-hidden"
+        className="rounded-3xl p-5 cursor-pointer relative overflow-hidden transition-colors duration-300"
         style={{ background: "#f57c20" }}
       >
         <div
@@ -165,7 +169,7 @@ const Sidebar = ({
       {/* Карточка — Цифровой инвентарь */}
       <button
         onClick={onOpenDigitalInventory}
-        className="w-full rounded-3xl p-5 relative overflow-hidden transition-all hover:-translate-y-1 active:scale-95 text-left"
+        className="w-full rounded-3xl p-5 relative overflow-hidden transition-all hover:-translate-y-1 active:scale-95 text-left duration-300"
         style={{ background: "#6366f1" }}
       >
         <div
@@ -196,7 +200,7 @@ const Sidebar = ({
       {/* Карточка — Обычные товары */}
       <button
         onClick={onOpenRegularInventory}
-        className="w-full rounded-3xl p-5 relative overflow-hidden transition-all hover:-translate-y-1 active:scale-95 text-left"
+        className="w-full rounded-3xl p-5 relative overflow-hidden transition-all hover:-translate-y-1 active:scale-95 text-left duration-300"
         style={{ background: "#0ea5e9" }}
       >
         <div

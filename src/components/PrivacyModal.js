@@ -194,33 +194,35 @@ const PrivacyModal = ({ isOpen, onClose }) => {
   const currentContent = content[language] || content.en;
 
   return (
-    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-sm">
-      <div className="bg-white rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200">
+    <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/70 backdrop-blur-sm transition-colors duration-300">
+      <div className="bg-white dark:bg-slate-800 rounded-3xl w-full max-w-2xl max-h-[85vh] flex flex-col shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-200 transition-colors duration-300">
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b border-slate-100 bg-emerald-50/50">
+        <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-slate-700 bg-emerald-50/50 dark:bg-emerald-900/20 transition-colors duration-300">
           <div className="flex items-center gap-3">
-            <div className="p-2 bg-emerald-100 rounded-lg text-emerald-600">
+            <div className="p-2 bg-emerald-100 dark:bg-emerald-900/50 rounded-lg text-emerald-600 dark:text-emerald-400 transition-colors duration-300">
               <ShieldCheck size={24} />
             </div>
-            <h2 className="text-xl font-bold text-slate-800">
+            <h2 className="text-xl font-bold text-slate-800 dark:text-white transition-colors duration-300">
               {currentContent.title}
             </h2>
           </div>
 
           <button
             onClick={onClose}
-            className="p-2 hover:bg-white rounded-full shadow-sm transition-all text-slate-400 hover:text-slate-600"
+            className="p-2 hover:bg-white dark:hover:bg-slate-700 rounded-full shadow-sm transition-all text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300"
           >
             <X size={24} />
           </button>
         </div>
 
         {/* Content */}
-        <div className="p-8 overflow-y-auto custom-scrollbar text-slate-600 space-y-6">
+        <div className="p-8 overflow-y-auto custom-scrollbar text-slate-600 dark:text-slate-300 space-y-6 transition-colors duration-300">
           {currentContent.sections.map((section, idx) => (
             <div key={idx}>
-              <div className="flex items-center gap-2 mb-2 text-slate-800">
-                {section.icon}
+              <div className="flex items-center gap-2 mb-2 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+                <span className="text-emerald-600 dark:text-emerald-400">
+                  {section.icon}
+                </span>
                 <h3 className="font-bold">{section.title}</h3>
               </div>
 
@@ -232,7 +234,7 @@ const PrivacyModal = ({ isOpen, onClose }) => {
                 <ul className="space-y-2 pl-7 mt-2">
                   {section.list.map((item, i) => (
                     <li key={i} className="text-sm flex items-start gap-2">
-                      <span className="mt-1.5 w-1.5 h-1.5 bg-emerald-400 rounded-full shrink-0" />
+                      <span className="mt-1.5 w-1.5 h-1.5 bg-emerald-400 dark:bg-emerald-500 rounded-full shrink-0 transition-colors duration-300" />
                       {item}
                     </li>
                   ))}
@@ -241,13 +243,13 @@ const PrivacyModal = ({ isOpen, onClose }) => {
             </div>
           ))}
 
-          <div className="p-4 bg-slate-50 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 mt-8">
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+          <div className="p-4 bg-slate-50 dark:bg-slate-700/50 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3 mt-8 transition-colors duration-300">
+            <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 transition-colors duration-300">
               <Mail size={14} />
               EcoTrack2026@outlook.com
             </div>
 
-            <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
+            <div className="flex items-center gap-2 text-xs font-medium text-slate-500 dark:text-slate-400 transition-colors duration-300">
               <Globe size={14} />
               DE / KZ
             </div>
@@ -255,10 +257,10 @@ const PrivacyModal = ({ isOpen, onClose }) => {
         </div>
 
         {/* Footer */}
-        <div className="p-6 border-t border-slate-100 bg-slate-50/50 flex justify-end">
+        <div className="p-6 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-700/30 flex justify-end transition-colors duration-300">
           <button
             onClick={onClose}
-            className="px-8 py-3 bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 transition-all shadow-lg shadow-emerald-200 active:scale-95"
+            className="px-8 py-3 bg-emerald-600 dark:bg-emerald-600 text-white rounded-2xl font-bold hover:bg-emerald-700 dark:hover:bg-emerald-500 transition-all shadow-lg shadow-emerald-200 dark:shadow-emerald-900/50 active:scale-95"
           >
             {t("auth.privacyClose")}
           </button>

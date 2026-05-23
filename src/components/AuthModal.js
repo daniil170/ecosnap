@@ -28,7 +28,7 @@ import {
 } from "firebase/auth";
 import { useLanguage } from "../context/LanguageContext";
 import { countries, cities } from "../data/regions";
-import PrivacyModal from "./PrivacyModal"; // Импортируем новую модалку
+import PrivacyModal from "./PrivacyModal";
 
 const AuthModal = ({ isOpen, onClose }) => {
   const { t } = useLanguage();
@@ -145,21 +145,21 @@ const AuthModal = ({ isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       <div
-        className="absolute inset-0 bg-slate-900/60 backdrop-blur-sm"
+        className="absolute inset-0 bg-slate-900/60 dark:bg-slate-950/70 backdrop-blur-sm transition-colors duration-300"
         onClick={onClose}
       />
 
-      <div className="relative w-full max-w-md bg-white rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-300 shadow-emerald-500/10">
+      <div className="relative w-full max-w-md bg-white dark:bg-slate-800 rounded-[2.5rem] shadow-2xl overflow-hidden max-h-[90vh] overflow-y-auto animate-in fade-in zoom-in duration-300 shadow-emerald-500/10 dark:shadow-emerald-900/20 transition-colors duration-300">
         <button
           onClick={onClose}
-          className="absolute top-6 right-6 p-2 hover:bg-slate-100 rounded-full transition-colors z-10"
+          className="absolute top-6 right-6 p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors z-10"
         >
-          <X size={20} className="text-slate-400" />
+          <X size={20} className="text-slate-400 dark:text-slate-500" />
         </button>
 
         <div className="p-8 sm:p-10">
           <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-slate-900 mb-2">
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-2 transition-colors duration-300">
               {isReset
                 ? t("auth.resetTitle")
                 : isLogin
@@ -173,13 +173,13 @@ const AuthModal = ({ isOpen, onClose }) => {
               <>
                 <div className="relative">
                   <User
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors duration-300"
                     size={18}
                   />
                   <input
                     type="text"
                     placeholder={t("auth.nickname")}
-                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 transition-colors duration-300"
                     value={nickname}
                     onChange={(e) => setNickname(e.target.value)}
                     required
@@ -190,7 +190,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   <input
                     type="text"
                     placeholder={t("auth.firstName")}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 transition-colors duration-300"
                     value={firstName}
                     onChange={(e) => setFirstName(e.target.value)}
                     required
@@ -198,7 +198,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                   <input
                     type="text"
                     placeholder={t("auth.lastName")}
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                    className="w-full px-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 transition-colors duration-300"
                     value={lastName}
                     onChange={(e) => setLastName(e.target.value)}
                     required
@@ -207,12 +207,12 @@ const AuthModal = ({ isOpen, onClose }) => {
 
                 <div className="relative">
                   <Calendar
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                    className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors duration-300"
                     size={18}
                   />
                   <input
                     type="date"
-                    className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-500"
+                    className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-500 dark:text-slate-400 transition-colors duration-300"
                     value={birthDate}
                     onChange={(e) => setBirthDate(e.target.value)}
                     required
@@ -222,7 +222,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 <div className="grid grid-cols-2 gap-3">
                   <div className="relative">
                     <Globe
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors duration-300"
                       size={18}
                     />
                     <select
@@ -231,7 +231,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                         setCountry(e.target.value);
                         setCity("");
                       }}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white transition-colors duration-300"
                       required
                     >
                       <option value="">{t("auth.country")}</option>
@@ -244,13 +244,13 @@ const AuthModal = ({ isOpen, onClose }) => {
                   </div>
                   <div className="relative">
                     <MapPin
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                      className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors duration-300"
                       size={18}
                     />
                     <select
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
-                      className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                      className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white transition-colors duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
                       required
                       disabled={!country}
                     >
@@ -269,13 +269,13 @@ const AuthModal = ({ isOpen, onClose }) => {
 
             <div className="relative">
               <Mail
-                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors duration-300"
                 size={18}
               />
               <input
                 type="text"
                 placeholder={t("auth.loginPlaceholder") || "Email или Ник"}
-                className="w-full pl-12 pr-4 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                className="w-full pl-12 pr-4 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 transition-colors duration-300"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -285,13 +285,13 @@ const AuthModal = ({ isOpen, onClose }) => {
             {!isReset && (
               <div className="relative">
                 <Lock
-                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 transition-colors duration-300"
                   size={18}
                 />
                 <input
                   type={showPassword ? "text" : "password"}
                   placeholder={t("auth.password")}
-                  className="w-full pl-12 pr-12 py-3 bg-slate-50 border border-slate-100 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none"
+                  className="w-full pl-12 pr-12 py-3 bg-slate-50 dark:bg-slate-700 border border-slate-100 dark:border-slate-600 rounded-2xl focus:ring-2 focus:ring-emerald-500 outline-none text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 transition-colors duration-300"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -299,7 +299,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500 hover:text-slate-600 dark:hover:text-slate-300 transition-colors duration-300"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -313,17 +313,17 @@ const AuthModal = ({ isOpen, onClose }) => {
                   id="privacy"
                   checked={agreedToPrivacy}
                   onChange={(e) => setAgreedToPrivacy(e.target.checked)}
-                  className="mt-1 w-5 h-5 rounded border-slate-300 text-emerald-600 focus:ring-emerald-500 cursor-pointer accent-emerald-600"
+                  className="mt-1 w-5 h-5 rounded border-slate-300 dark:border-slate-600 text-emerald-600 dark:text-emerald-500 focus:ring-emerald-500 cursor-pointer accent-emerald-600 dark:accent-emerald-500 transition-colors duration-300"
                 />
                 <label
                   htmlFor="privacy"
-                  className="text-xs text-slate-500 leading-tight cursor-pointer select-none"
+                  className="text-xs text-slate-500 dark:text-slate-400 leading-tight cursor-pointer select-none transition-colors duration-300"
                 >
                   {t("auth.privacyPolicy") || "Я ознакомлен и согласен с"}{" "}
                   <button
                     type="button"
                     onClick={() => setIsPrivacyOpen(true)}
-                    className="text-emerald-600 font-bold hover:underline"
+                    className="text-emerald-600 dark:text-emerald-400 font-bold hover:underline transition-colors duration-300"
                   >
                     {t("auth.privacyLink") || "политикой конфиденциальности"}
                   </button>
@@ -335,13 +335,13 @@ const AuthModal = ({ isOpen, onClose }) => {
               <button
                 type="button"
                 onClick={() => setIsReset(true)}
-                className="text-xs text-emerald-600 font-bold block w-full text-right hover:underline"
+                className="text-xs text-emerald-600 dark:text-emerald-400 font-bold block w-full text-right hover:underline transition-colors duration-300"
               >
                 {t("auth.forgotPassword")}
               </button>
             )}
 
-            <button className="w-full bg-slate-900 text-white py-4 rounded-2xl font-bold hover:bg-emerald-600 transition-all shadow-lg mt-2">
+            <button className="w-full bg-slate-900 dark:bg-emerald-600 text-white py-4 rounded-2xl font-bold hover:bg-emerald-600 dark:hover:bg-emerald-500 transition-all shadow-lg mt-2">
               {isReset
                 ? t("auth.reset")
                 : isLogin
@@ -352,12 +352,14 @@ const AuthModal = ({ isOpen, onClose }) => {
 
           {!isReset && (
             <>
-              <div className="relative my-6 text-center text-xs text-slate-400 uppercase">
-                {t("auth.orMethod")}
+              <div className="relative my-6 text-center text-xs text-slate-400 dark:text-slate-500 uppercase transition-colors duration-300">
+                <span className="relative px-3 bg-white dark:bg-slate-800 transition-colors duration-300">
+                  {t("auth.orMethod")}
+                </span>
               </div>
               <button
                 onClick={handleGoogleLogin}
-                className="flex items-center justify-center gap-3 w-full py-4 border border-slate-100 rounded-2xl hover:bg-slate-50 transition-all"
+                className="flex items-center justify-center gap-3 w-full py-4 border border-slate-100 dark:border-slate-600 rounded-2xl hover:bg-slate-50 dark:hover:bg-slate-700 transition-all text-slate-900 dark:text-white"
               >
                 <img
                   src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg"
@@ -369,11 +371,11 @@ const AuthModal = ({ isOpen, onClose }) => {
             </>
           )}
 
-          <p className="text-center mt-8 text-sm text-slate-500">
+          <p className="text-center mt-8 text-sm text-slate-500 dark:text-slate-400 transition-colors duration-300">
             {isReset ? (
               <button
                 onClick={() => setIsReset(false)}
-                className="font-bold text-slate-900"
+                className="font-bold text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-300"
               >
                 {t("auth.backToLogin")}
               </button>
@@ -385,7 +387,7 @@ const AuthModal = ({ isOpen, onClose }) => {
                     setIsLogin(!isLogin);
                     setIsReset(false);
                   }}
-                  className="ml-2 font-bold text-slate-900 hover:text-emerald-600"
+                  className="ml-2 font-bold text-slate-900 dark:text-white hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors duration-300"
                 >
                   {isLogin ? t("auth.signup") : t("auth.login")}
                 </button>

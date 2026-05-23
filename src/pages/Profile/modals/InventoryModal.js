@@ -76,34 +76,37 @@ const InventoryModal = ({ onClose, userData, userId }) => {
     .filter(({ item }) => item);
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-md">
-      <div className="bg-white rounded-[2.5rem] p-10 w-full max-w-2xl shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 dark:bg-slate-950/70 backdrop-blur-md transition-colors duration-300">
+      <div className="bg-white dark:bg-slate-800 rounded-[2.5rem] p-10 w-full max-w-2xl shadow-2xl transition-colors duration-300">
         {/* HEADER */}
         <div className="flex justify-between items-center mb-8">
-          <h2 className="text-2xl font-extrabold text-slate-800 flex items-center gap-3">
-            <Backpack className="text-emerald-500 w-8 h-8" />
+          <h2 className="text-2xl font-extrabold text-slate-800 dark:text-white flex items-center gap-3 transition-colors duration-300">
+            <Backpack className="text-emerald-500 dark:text-emerald-400 w-8 h-8 transition-colors duration-300" />
             {t("inventory.title")}
           </h2>
 
           <button
             onClick={onClose}
-            className="p-3 hover:bg-slate-100 rounded-full transition-colors"
+            className="p-3 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors duration-300"
           >
-            <X size={24} className="text-slate-400" />
+            <X
+              size={24}
+              className="text-slate-400 dark:text-slate-500 transition-colors duration-300"
+            />
           </button>
         </div>
 
         {/* EMPTY */}
         {inventory.length === 0 ? (
-          <p className="text-center text-slate-400 py-12 text-lg">
+          <p className="text-center text-slate-400 dark:text-slate-500 py-12 text-lg transition-colors duration-300">
             {t("inventory.noItems")}
           </p>
         ) : (
           <>
             {/* SELECTED BLOCK */}
             {hasDigitalItems && (
-              <div className="mb-6 rounded-2xl border border-emerald-100 bg-emerald-50/50 p-4">
-                <div className="text-xs font-black uppercase tracking-wider text-emerald-700 mb-3">
+              <div className="mb-6 rounded-2xl border border-emerald-100 dark:border-emerald-900/50 bg-emerald-50/50 dark:bg-emerald-900/20 p-4 transition-colors duration-300">
+                <div className="text-xs font-black uppercase tracking-wider text-emerald-700 dark:text-emerald-400 transition-colors duration-300 mb-3">
                   {t("inventory.selected")}
                 </div>
 
@@ -112,7 +115,7 @@ const InventoryModal = ({ onClose, userData, userId }) => {
                     {selectedEntries.map(({ slot, item }) => (
                       <span
                         key={slot}
-                        className="inline-flex items-center gap-2 rounded-full bg-white px-3 py-1.5 text-xs font-bold text-slate-700 border border-emerald-100"
+                        className="inline-flex items-center gap-2 rounded-full bg-white dark:bg-slate-700 px-3 py-1.5 text-xs font-bold text-slate-700 dark:text-slate-300 border border-emerald-100 dark:border-emerald-900/50 transition-colors duration-300"
                       >
                         <span>{item.icon}</span>
                         <span>{item.name}</span>
@@ -120,7 +123,7 @@ const InventoryModal = ({ onClose, userData, userId }) => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-slate-500">
+                  <p className="text-sm text-slate-500 dark:text-slate-400 transition-colors duration-300">
                     {t("inventory.noneActive")}
                   </p>
                 )}
@@ -139,36 +142,41 @@ const InventoryModal = ({ onClose, userData, userId }) => {
                     onClick={() => toggleItem(item)}
                     className={`flex flex-col items-center gap-4 p-6 rounded-3xl border-2 transition-all ${
                       isActive
-                        ? "bg-emerald-50 border-emerald-500 shadow-lg scale-[1.02]"
-                        : "bg-white border-slate-100 hover:border-emerald-200 hover:shadow-md"
+                        ? "bg-emerald-50 dark:bg-emerald-900/30 border-emerald-500 dark:border-emerald-400 shadow-lg dark:shadow-emerald-900/50 scale-[1.02]"
+                        : "bg-white dark:bg-slate-700 border-slate-100 dark:border-slate-600 hover:border-emerald-200 dark:hover:border-emerald-900/50 hover:shadow-md dark:hover:shadow-slate-900/30"
                     }`}
                   >
                     <div className="text-5xl relative">
                       {item.icon || "📦"}
 
                       {isActive && (
-                        <div className="absolute -top-2 -right-2 bg-emerald-500 rounded-full p-1.5">
-                          <Check size={16} className="text-white" />
+                        <div className="absolute -top-2 -right-2 bg-emerald-500 dark:bg-emerald-400 rounded-full p-1.5 transition-colors duration-300">
+                          <Check
+                            size={16}
+                            className="text-white dark:text-slate-900 transition-colors duration-300"
+                          />
                         </div>
                       )}
                     </div>
 
                     <div className="text-center">
                       <div
-                        className={`text-sm font-extrabold ${
-                          isActive ? "text-emerald-800" : "text-slate-800"
+                        className={`text-sm font-extrabold transition-colors duration-300 ${
+                          isActive
+                            ? "text-emerald-800 dark:text-emerald-300"
+                            : "text-slate-800 dark:text-white"
                         }`}
                       >
                         {t(item.nameKey)}
                       </div>
 
                       {isActive && (
-                        <div className="text-[10px] uppercase font-black text-emerald-600 mt-1">
+                        <div className="text-[10px] uppercase font-black text-emerald-600 dark:text-emerald-400 mt-1 transition-colors duration-300">
                           {t("inventory.active")}
                         </div>
                       )}
 
-                      <div className="text-xs text-slate-500 mt-2 line-clamp-2">
+                      <div className="text-xs text-slate-500 dark:text-slate-400 mt-2 line-clamp-2 transition-colors duration-300">
                         {item.descKey ? t(item.descKey) : t("inventory.noDesc")}
                       </div>
                     </div>
@@ -178,7 +186,7 @@ const InventoryModal = ({ onClose, userData, userId }) => {
             </div>
 
             {!hasDigitalItems && (
-              <p className="text-center text-slate-400 py-8 text-sm">
+              <p className="text-center text-slate-400 dark:text-slate-500 py-8 text-sm transition-colors duration-300">
                 {t("inventory.noDigital")}
               </p>
             )}
@@ -191,7 +199,7 @@ const InventoryModal = ({ onClose, userData, userId }) => {
             <button
               onClick={handleAutoOptimize}
               disabled={isSaving || !hasDigitalItems}
-              className="w-full py-4 bg-slate-100 text-slate-700 text-sm font-bold rounded-2xl hover:bg-slate-200"
+              className="w-full py-4 bg-slate-100 dark:bg-slate-700 text-slate-700 dark:text-slate-300 text-sm font-bold rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
             >
               {t("inventory.autoOptimize")}
             </button>
@@ -199,7 +207,7 @@ const InventoryModal = ({ onClose, userData, userId }) => {
             <button
               onClick={handleApply}
               disabled={isSaving || !hasChanges}
-              className="w-full py-4 bg-emerald-500 text-white text-sm font-bold rounded-2xl flex items-center justify-center gap-3"
+              className="w-full py-4 bg-emerald-500 dark:bg-emerald-600 text-white text-sm font-bold rounded-2xl flex items-center justify-center gap-3 hover:bg-emerald-600 dark:hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-300"
             >
               {isSaving ? (
                 <Loader2 className="animate-spin" size={20} />
